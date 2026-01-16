@@ -12,10 +12,10 @@ namespace UnasciiEngine {
 	class UAE_API Application
 	{
 	public:
-		Application();
+		Application(const WindowInfo& mWinInfo);
 		~Application();
 
-		void createWindow(const WindowInfo& pWinInfo);
+		bool init();
 		void run();
 
 		inline Window& getWindow() { return *mWindow; }

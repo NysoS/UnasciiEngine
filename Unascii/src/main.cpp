@@ -7,7 +7,11 @@
 
 int main()
 {
-    UnasciiEngine::Application app;
+    UnasciiEngine::WindowInfo lInfo;
+    lInfo.foregroundColor = UnasciiEngine::ForegroundColor::Red;
+
+    UnasciiEngine::Application app(lInfo);
+    app.init();
     app.run();
 
     return 0;

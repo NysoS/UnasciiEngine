@@ -4,20 +4,23 @@
 #include <iostream>
 
 namespace UnasciiEngine {
-	Application::Application()
+	Application::Application(const WindowInfo& pWinInfo)
+		: mWindow(nullptr)
+		, mIsRunning(false)
 	{
+		if (!mWindow)
+		{
+			mWindow = std::unique_ptr<Window>(Window::Create(pWinInfo));
+		}
 	}
 
 	Application::~Application()
 	{
 	}
 
-	void Application::createWindow(const WindowInfo& pWinInfo)
+	bool Application::init()
 	{
-		if (!mWindow)
-		{
-			mWindow = std::unique_ptr<Window>(Window::Create(pWinInfo));
-		}
+		return mWindow->init();
 	}
 
 	void Application::run()
