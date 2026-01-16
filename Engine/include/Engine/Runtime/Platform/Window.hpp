@@ -13,6 +13,7 @@ namespace UnasciiEngine {
 
 	struct UAE_API WindowInfo
 	{
+		const char* mTitle = "Unascii Termminal";
 		int mWidth = 800;
 		int mHeight = 600;
 		int fontSize = 10;
@@ -24,9 +25,10 @@ namespace UnasciiEngine {
 		Window() = default;
 		virtual ~Window() {};
 
-		virtual bool init(const WindowInfo& lWinInfo) = 0;
+		virtual bool init() = 0;
+		virtual void render() = 0;
 
-		static Window* Create(const WindowInfo& lWinInfo = WindowInfo());
+		static Window* Create(const WindowInfo& pWinInfo = WindowInfo());
 	};
 
 }

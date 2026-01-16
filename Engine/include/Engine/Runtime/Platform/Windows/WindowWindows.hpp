@@ -7,12 +7,17 @@ namespace UnasciiEngine {
 	class UAE_API WindowWindows : public Window
 	{
 	public:
-		WindowWindows(const WindowInfo& lWinInfo);
+		explicit WindowWindows(const WindowInfo& pWinInfo);
 		virtual ~WindowWindows();
 
-		virtual bool init(const WindowInfo& lWinInfo) override;
+		WindowWindows(WindowWindows&&) = delete;
+		WindowWindows& operator=(const WindowWindows&) = delete;
+
+		virtual bool init() override;
+		virtual void render() override;
 
 	private:
+		WindowInfo mWinInfo;
 		unsigned short getForegroundColor(ForegroundColor lColor);
 		void* mOutHandle;
 	};

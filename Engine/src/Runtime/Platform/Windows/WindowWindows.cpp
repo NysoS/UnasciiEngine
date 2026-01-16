@@ -1,35 +1,35 @@
 #include "Engine/Runtime/Platform/Windows/WindowWindows.hpp"
 
 #include <windows.h>
-#include <wchar.h>
+#include <iostream>
 
 namespace UnasciiEngine {
-	WindowWindows::WindowWindows(const WindowInfo& lWinInfo)
+	WindowWindows::WindowWindows(const WindowInfo& pWinInfo)
 		: Window()
+		, mWinInfo(pWinInfo)
+		, mOutHandle(nullptr)
 	{
-		if (!init(lWinInfo))
-		{
-			throw;
-		}
 	}
 
 	WindowWindows::~WindowWindows()
 	{
 	}
 
-	bool WindowWindows::init(const WindowInfo& lWinInfo)
+	bool WindowWindows::init()
 	{
 		AllocConsole();
+
+		SetConsoleTitle(mWinInfo.mTitle);
 
 		mOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (mOutHandle == INVALID_HANDLE_VALUE)
 		{
 			return false;
 		}
-
+		
 		CONSOLE_FONT_INFOEX lFontInfoEx{};
 		lFontInfoEx.cbSize = sizeof(lFontInfoEx);
-		lFontInfoEx.dwFontSize.Y = lWinInfo.fontSize;
+		lFontInfoEx.dwFontSize.Y = mWinInfo.fontSize;
 		lFontInfoEx.nFont = 0;
 		wcscpy_s(lFontInfoEx.FaceName, L"Consolas");
 		if (!SetCurrentConsoleFontEx(mOutHandle, FALSE, &lFontInfoEx))
@@ -43,8 +43,8 @@ namespace UnasciiEngine {
 			return false;
 		}
 
-		const int lBufferX = lWinInfo.mWidth / lSizeInfo.dwFontSize.X;
-		const int lBufferY = lWinInfo.mHeight / lSizeInfo.dwFontSize.Y;
+		const int lBufferX = mWinInfo.mWidth / lSizeInfo.dwFontSize.X;
+		const int lBufferY = mWinInfo.mHeight / lSizeInfo.dwFontSize.Y;
 
 		COORD lBufferSize{ (SHORT)lBufferX, (SHORT)lBufferY };
 		if (!SetConsoleScreenBufferSize(mOutHandle, lBufferSize))
@@ -63,13 +63,17 @@ namespace UnasciiEngine {
 			return false;
 		}
 
-		WORD lForegroundColor = getForegroundColor(lWinInfo.foregroundColor);
+		WORD lForegroundColor = getForegroundColor(mWinInfo.foregroundColor);
 		if (!SetConsoleTextAttribute(mOutHandle, lForegroundColor))
 		{
 			return false;
 		}
 
 		return true;
+	}
+
+	void WindowWindows::render()
+	{
 	}
 
 	unsigned short WindowWindows::getForegroundColor(ForegroundColor lColor)
@@ -90,9 +94,9 @@ namespace UnasciiEngine {
 		return 0x0;
 	}
 
-	Window* Window::Create(const WindowInfo& lWinInfo)
+	Window* Window::Create(const WindowInfo& pWinInfo)
 	{
-		return new WindowWindows(lWinInfo);
+		return new WindowWindows(pWinInfo);
 	}
 
 }
