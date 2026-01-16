@@ -3,11 +3,12 @@
 #include <windows.h>
 #include <wchar.h>
 
-#include "Core/Application.hpp"
+#include <Engine/Core/Application.hpp>
 
 int main()
 {
-    Application app;
+    UnasciiEngine::Application app;
+    app.run();
 
     return 0;
 }
