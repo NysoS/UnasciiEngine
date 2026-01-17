@@ -1,7 +1,7 @@
+#include "Engine/uaepch.h"
 #include "Engine/Runtime/Platform/Windows/WindowWindows.hpp"
 
 #include <windows.h>
-#include <iostream>
 
 namespace UnasciiEngine {
 	WindowWindows::WindowWindows(const WindowInfo& pWinInfo)

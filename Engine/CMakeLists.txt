@@ -41,6 +41,7 @@ target_include_directories(
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE UNASCII_BUILD_DLL)
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/uaepch.h")
 
 install(
     DIRECTORY ${INC_DIR}/

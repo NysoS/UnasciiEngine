@@ -4,7 +4,7 @@
 #include "Engine/Engine.hpp"
 #include "Engine/Runtime/Platform/Window.hpp"
 
-#include <memory>
+#include "Engine/uaepch.h"
 
 class Window;
 

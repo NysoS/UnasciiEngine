@@ -2,6 +2,7 @@
 #define WINDOW_HPP
 
 #include "Engine/Engine.hpp"
+#include "Engine/Core/Types.hpp"
 
 namespace UnasciiEngine {
 	enum class UAE_API ForegroundColor {
@@ -13,10 +14,10 @@ namespace UnasciiEngine {
 
 	struct UAE_API WindowInfo
 	{
-		const char* mTitle = "Unascii Termminal";
-		int mWidth = 800;
-		int mHeight = 600;
-		int fontSize = 10;
+		StringC mTitle = "Unascii Termminal";
+		u32 mWidth = 800;
+		u32 mHeight = 600;
+		u32 fontSize = 10;
 		ForegroundColor foregroundColor = ForegroundColor::White;
 	};
 
