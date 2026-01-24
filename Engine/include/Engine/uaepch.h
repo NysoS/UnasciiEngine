@@ -1,6 +1,7 @@
 #ifndef UAEPCH_H
 #define UAEPCH_H
 
+#include <stdint.h>
 #include <iostream>
 #include <memory>
 #include <utility>

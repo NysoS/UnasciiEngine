@@ -2,6 +2,7 @@
 #define WINDOW_WINDOWS_HPP
 
 #include "Engine/Runtime/Platform/Window.hpp"
+#include "Engine/Core/UADef.hpp"
 
 namespace UnasciiEngine {
 	class UAE_API WindowWindows : public Window
@@ -19,7 +20,7 @@ namespace UnasciiEngine {
 	private:
 		WindowInfo mWinInfo;
 		unsigned short getForegroundColor(ForegroundColor lColor);
-		void* mOutHandle;
+		Handle mOutHandle;
 	};
 }
 

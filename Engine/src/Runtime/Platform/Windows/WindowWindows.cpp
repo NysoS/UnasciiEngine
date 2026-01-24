@@ -21,8 +21,8 @@ namespace UnasciiEngine {
 
 		SetConsoleTitle(mWinInfo.mTitle);
 
-		mOutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (mOutHandle == INVALID_HANDLE_VALUE)
+		HANDLE lHandleConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (lHandleConsole == INVALID_HANDLE_VALUE)
 		{
 			return false;
 		}
@@ -32,13 +32,13 @@ namespace UnasciiEngine {
 		lFontInfoEx.dwFontSize.Y = mWinInfo.fontSize;
 		lFontInfoEx.nFont = 0;
 		wcscpy_s(lFontInfoEx.FaceName, L"Consolas");
-		if (!SetCurrentConsoleFontEx(mOutHandle, FALSE, &lFontInfoEx))
+		if (!SetCurrentConsoleFontEx(lHandleConsole, FALSE, &lFontInfoEx))
 		{
 			return false;
 		}
 
 		CONSOLE_FONT_INFO lSizeInfo;
-		if (!GetCurrentConsoleFont(mOutHandle, FALSE, &lSizeInfo))
+		if (!GetCurrentConsoleFont(lHandleConsole, FALSE, &lSizeInfo))
 		{
 			return false;
 		}
@@ -47,7 +47,7 @@ namespace UnasciiEngine {
 		const int lBufferY = mWinInfo.mHeight / lSizeInfo.dwFontSize.Y;
 
 		COORD lBufferSize{ (SHORT)lBufferX, (SHORT)lBufferY };
-		if (!SetConsoleScreenBufferSize(mOutHandle, lBufferSize))
+		if (!SetConsoleScreenBufferSize(lHandleConsole, lBufferSize))
 		{
 			return false;
 		}
@@ -58,17 +58,18 @@ namespace UnasciiEngine {
 			(SHORT)(lBufferX - 1),
 			(SHORT)(lBufferY - 1)
 		};
-		if (!SetConsoleWindowInfo(mOutHandle, TRUE, &lWindow))
+		if (!SetConsoleWindowInfo(lHandleConsole, TRUE, &lWindow))
 		{
 			return false;
 		}
 
 		WORD lForegroundColor = getForegroundColor(mWinInfo.foregroundColor);
-		if (!SetConsoleTextAttribute(mOutHandle, lForegroundColor))
+		if (!SetConsoleTextAttribute(lHandleConsole, lForegroundColor))
 		{
 			return false;
 		}
 
+		mOutHandle = (Handle)lHandleConsole;
 		return true;
 	}
 

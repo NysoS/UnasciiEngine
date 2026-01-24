@@ -11,6 +11,7 @@ file(GLOB_RECURSE SOURCES
 file(GLOB_RECURSE HEADERS
     CONFIGURE_DEPENDS
     ${INC_DIR}/*.hpp
+    ${INC_DIR}/*.h
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
