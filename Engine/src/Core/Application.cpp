@@ -1,7 +1,6 @@
+#include "Engine/uaepch.h"
 #include "Engine/Core/Application.hpp"
 #include "Engine/Runtime/Platform/Window.hpp"
-
-#include <iostream>
 
 namespace UnasciiEngine {
 	Application::Application(const WindowInfo& pWinInfo)
