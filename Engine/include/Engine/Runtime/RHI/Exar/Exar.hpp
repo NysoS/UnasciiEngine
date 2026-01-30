@@ -30,6 +30,12 @@ namespace UnasciiEngine::RHI::EXAR {
 		EXAR_ALIGN_DEFAULT = 0,
 		EXAR_ALIGN_SIMD = 1
 	};
+
+	enum class ExarAllocatorType : uint32_t
+	{
+		EXAR_ALLOCATOR_AREA = 0,
+		EXAR_ALLOCATOR_MANUALY = 1
+	};
 };
 
 #endif // !EXAR_HPP
