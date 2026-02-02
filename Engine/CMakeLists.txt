@@ -11,6 +11,7 @@ file(GLOB_RECURSE SOURCES
 file(GLOB_RECURSE HEADERS
     CONFIGURE_DEPENDS
     ${INC_DIR}/*.hpp
+    ${INC_DIR}/*.h
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
@@ -41,6 +42,7 @@ target_include_directories(
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE UNASCII_BUILD_DLL)
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/uaepch.h")
 
 install(
     DIRECTORY ${INC_DIR}/

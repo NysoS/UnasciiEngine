@@ -1,0 +1,19 @@
+#ifndef UAEPCH_H
+#define UAEPCH_H
+
+#include <stdint.h>
+#include <iostream>
+#include <memory>
+#include <utility>
+#include <algorithm>
+#include <functional>
+#include <cmath>
+
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+
+#endif // UAEPCH_H
