@@ -2,37 +2,46 @@
 #define EXAR_BUFFER_VIEW_HPP
 
 #include "Engine/uaepch.h"
+#include "Engine/Core/Types.hpp"
+
+#include <span>
 
 namespace UnasciiEngine::RHI::EXAR
 {
+	class ExarBuffer;
+
 	class ExarBufferView {
-		using iterator = const uint8_t*;
-		using value_type = uint8_t;
+		using iterator = std::span<const u8>::iterator;
+		using value_type = std::span<const u8>::value_type;
 	public:
-		ExarBufferView(const uint8_t* pData, size_t pSize)
-			: mData(pData)
-			, mSize(pSize)
+		ExarBufferView(const u8* pData, size_t pSize)
+			: mData(pData, pSize)
 			, mCursor(0)
 		{
 		}
 
-		inline iterator begin() const noexcept { return mData; }
-		inline iterator end() const noexcept { return mData + mSize; }
-		inline iterator current() const noexcept { return mData + mCursor; }
-		inline bool empty() const noexcept { return mSize == 0; }
+		ExarBufferView(const ExarBuffer& pBuffer);
+
+		inline iterator begin() const noexcept { return mData.begin(); }
+		inline iterator end() const noexcept { return mData.end(); }
+		inline iterator current() const noexcept { return mData.begin() + mCursor; }
+		inline bool empty() const noexcept { return mData.empty(); }
+		inline size_t size() const noexcept { return mData.size(); }
+		inline size_t remaining() const noexcept { return mData.size() - mCursor; }
 
 		template<typename DataType>
 		inline DataType get(size_t pOffset) const noexcept {
-			if (pOffset + sizeof(DataType) > mSize) {
+			if (pOffset + sizeof(DataType) > mData.size()) {
 				return DataType{};
 			}
 
-			return *reinterpret_cast<const DataType*>(mData + pOffset);
+			DataType lValue;
+			std::memcpy(&lValue, mData.data() + pOffset, sizeof(DataType));
+			return lValue;
 		}
 
 	private:
-		const uint8_t* mData = nullptr;
-		size_t mSize = 0;
+		std::span<const u8> mData;
 		size_t mCursor = 0;
 	};
 }

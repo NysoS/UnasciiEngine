@@ -6,6 +6,8 @@
 
 namespace UnasciiEngine::RHI::EXAR
 {
+	class ExarBufferView;
+
 	class ExarBuffer : IExarBuffer 
 	{
 	public:
@@ -18,6 +20,7 @@ namespace UnasciiEngine::RHI::EXAR
 		virtual ExarBufferDesc getDesc() const noexcept;
 		virtual RHIHandle getDevice() const noexcept;
 		MemHandle getData() const noexcept;
+		[[nodiscard]] ExarBufferView getView() const;
 
 	private:
 		ExarBufferDesc mDesc;
