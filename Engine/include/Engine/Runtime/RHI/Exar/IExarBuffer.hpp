@@ -3,7 +3,7 @@
 
 #include "Exar.hpp"
 #include "IExarRessource.hpp"
-#include "ExarBufferDesc.hpp"
+#include "ExarBufferTypes.hpp"
 
 namespace UnasciiEngine::RHI::EXAR {
 	struct IExarBuffer : IExarRessource
