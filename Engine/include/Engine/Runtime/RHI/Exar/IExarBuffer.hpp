@@ -6,7 +6,7 @@
 #include "ExarBufferTypes.hpp"
 
 namespace UnasciiEngine::RHI::EXAR {
-	struct IExarBuffer : IExarRessource
+	class IExarBuffer : public IExarRessource
 	{
 		virtual ExarBufferDesc getDesc() const noexcept = 0;
 	};

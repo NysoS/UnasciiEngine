@@ -1,5 +1,7 @@
 #include "Engine/Runtime/RHI/Exar/Internal/MemoryArena.hpp"
 
+#include <memoryapi.h>
+
 UnasciiEngine::RHI::EXAR::MemoryArena& UnasciiEngine::RHI::EXAR::MemoryArena::instanceMemory()
 {
 	static MemoryArena sMemAren;
@@ -7,13 +9,16 @@ UnasciiEngine::RHI::EXAR::MemoryArena& UnasciiEngine::RHI::EXAR::MemoryArena::in
 }
 
 UnasciiEngine::RHI::EXAR::MemoryArena::MemoryArena()
-	: mRessources({})
+	: mMemory(nullptr)
+	, mOffset(0)
+	, mMemorySizeReserved(0)
+	, mMemorySizeRemaining(0)
 {
 }
 
 UnasciiEngine::RHI::EXAR::MemoryArena::~MemoryArena()
 {
-	for (auto& lRes : mRessources)
+	/*for (auto& lRes : mRessources)
 	{
 		if (lRes.ptr)
 		{
@@ -21,31 +26,72 @@ UnasciiEngine::RHI::EXAR::MemoryArena::~MemoryArena()
 			lRes.ptr = nullptr;
 		}
 	}
-	mRessources.clear();
+	mRessources.clear();*/
+
+	VirtualFree(mMemory, 0, MEM_RELEASE);
 }
 
-UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::MemoryArena::alloc(std::span<const u8> pData)
+UnasciiEngine::u8* UnasciiEngine::RHI::EXAR::MemoryArena::alloc(size_t pSize)
 {
-	size_t lSize = pData.size();
+	if (mMemorySizeRemaining < pSize) return nullptr;
 
-	// alocation with real size of data
-	void* lRawMemory = std::malloc(lSize);
+	u8* lMemoryCommit = mMemory + mOffset;
 
-	// check rawptr before copy
-	if (!lRawMemory) return nullptr;
+	void* lResult = VirtualAlloc(lMemoryCommit, pSize, MEM_COMMIT, PAGE_READWRITE);
 
-	// copy span data
-	std::memcpy(lRawMemory, pData.data(), lSize);
+	if (!lResult) return nullptr;
 
-	// cast ptr on memhandle
-	MemHandle lHandle = static_cast<MemHandle>(lRawMemory);
+	u8* lRessource = static_cast<u8*>(lResult);
 
-	MemoryRessources lRessources;
-	lRessources.ptr = lHandle;
-	lRessources.size = lSize;
-	lRessources.index = mRessources.size();
+	mOffset += pSize;
+	mMemorySizeRemaining -= pSize;
 
-	mRessources.push_back(lRessources);
-
-	return lHandle;
+	return lRessource;
 }
+
+UnasciiEngine::u8* UnasciiEngine::RHI::EXAR::MemoryArena::allocAligned(size_t pSize, size_t pAlign)
+{
+	return nullptr;
+}
+
+bool UnasciiEngine::RHI::EXAR::MemoryArena::dealloc(size_t pSize, u8*& pRessource)
+{
+	if (VirtualFree(pRessource, pSize, MEM_DECOMMIT))
+	{
+		if (pRessource + pSize == mMemory + mOffset)
+		{
+			mOffset -= pSize;
+			mMemorySizeRemaining += pSize;
+		}
+		pRessource = nullptr;
+		return true;
+	}
+
+	return false;
+}
+
+//UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::MemoryArena::alloc(std::span<const u8> pData)
+//{
+//	size_t lSize = pData.size();
+//
+//	// alocation with real size of data
+//	void* lRawMemory = std::malloc(lSize);
+//
+//	// check rawptr before copy
+//	if (!lRawMemory) return nullptr;
+//
+//	// copy span data
+//	std::memcpy(lRawMemory, pData.data(), lSize);
+//
+//	// cast ptr on memhandle
+//	MemHandle lHandle = static_cast<MemHandle>(lRawMemory);
+//
+//	MemoryRessources lRessources;
+//	lRessources.ptr = lHandle;
+//	lRessources.size = lSize;
+//	lRessources.index = mRessources.size();
+//
+//	mRessources.push_back(lRessources);
+//
+//	return lHandle;
+//}

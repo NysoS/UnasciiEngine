@@ -5,7 +5,7 @@
 #include "IExarObject.hpp"
 
 namespace UnasciiEngine::RHI::EXAR {
-	struct IExarRessource : IExarObject
+	class IExarRessource : public IExarObject
 	{
 	};
 }

@@ -7,8 +7,8 @@
 namespace UnasciiEngine::RHI::EXAR
 {
 	class ExarBufferView;
-
-	class ExarBuffer : IExarBuffer 
+	
+	class ExarBuffer : public IExarBuffer 
 	{
 	public:
 		ExarBuffer();
@@ -18,14 +18,18 @@ namespace UnasciiEngine::RHI::EXAR
 		ExarBuffer& operator=(const ExarBuffer&) = delete;
 
 		virtual ExarBufferDesc getDesc() const noexcept;
-		virtual RHIHandle getDevice() const noexcept;
+		virtual inline IExarDevice* getDevice() const noexcept override {
+			return mDevice;
+		}
 		MemHandle getData() const noexcept;
 		[[nodiscard]] ExarBufferView getView() const;
 
 	private:
 		ExarBufferDesc mDesc;
-		RHIHandle mDevice; // raw ptn because now owner memory allocation
+		IExarDevice* mDevice; // raw ptn because not owner memory allocation
 		MemHandle mData;
+
+		friend class ExarDevice;
 	};
 }
 

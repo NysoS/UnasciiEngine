@@ -5,9 +5,11 @@
 
 namespace UnasciiEngine::RHI::EXAR {
 
-	struct IExarObject
+	class IExarDevice;
+
+	class IExarObject
 	{
-		virtual inline RHIHandle getDevice() const noexcept = 0;
+		virtual inline IExarDevice* getDevice() const noexcept = 0;
 	};
 }
 

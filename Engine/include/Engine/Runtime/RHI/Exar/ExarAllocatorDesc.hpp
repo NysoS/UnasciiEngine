@@ -7,6 +7,7 @@ namespace UnasciiEngine::RHI::EXAR {
 	struct ExarAllocatorAreaDesc
 	{
 		size_t totalSize = 0;
+		//align
 		uint32_t maxAllocation = 0;
 	};
 }

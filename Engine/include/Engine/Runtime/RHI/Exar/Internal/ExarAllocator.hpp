@@ -2,12 +2,16 @@
 #define EXAR_ALLOCATOR_HPP
 
 #include "Engine/uaepch.h"
+#include "Engine/Core/Types.hpp"
 #include "Engine/Runtime/RHI/Exar/ExarAllocatorDesc.hpp"
 #include "Engine/Runtime/RHI/RHIDef.hpp"
 
+#include <span>
+
 namespace UnasciiEngine::RHI::EXAR
 {
-	class ExarAllocator {
+	class ExarAllocator 
+	{
 	public:
 
 		explicit ExarAllocator(const ExarAllocatorAreaDesc& pDesc);
@@ -16,7 +20,7 @@ namespace UnasciiEngine::RHI::EXAR
 		ExarAllocator(const ExarAllocator&) = delete;
 		ExarAllocator& operator=(const ExarAllocator&) = delete;
 
-		MemHandle alloc(const size_t pSize, const void* pData);
+		MemHandle alloc(std::span<const u8> pRessource);
 	};
 }
 

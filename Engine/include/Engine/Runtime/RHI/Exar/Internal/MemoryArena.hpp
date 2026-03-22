@@ -2,7 +2,6 @@
 #define MEMORY_ARENA_HPP
 
 #include "Engine/Core/Types.hpp"
-#include "Engine/Runtime/RHI/RHIDef.hpp"
 
 #include <span>
 #include <vector>
@@ -11,9 +10,12 @@ namespace UnasciiEngine::RHI::EXAR
 {
 	struct MemoryRessources
 	{
-		MemHandle ptr;
+	private:
+		u8* ptr;
 		size_t size;
 		u32 index;
+
+		friend class MemoryArena;
 	};
 
 	class MemoryArena final
@@ -25,9 +27,17 @@ namespace UnasciiEngine::RHI::EXAR
 		MemoryArena();
 		~MemoryArena();
 
-		MemHandle alloc(std::span<const u8> pData);
+		// pRessource is reference
+		u8* alloc(size_t pSize);
+		u8* allocAligned(size_t pSize, size_t pAlign);
+		bool dealloc(size_t pSize, u8*& pRessource);
+		
+		u8* mMemory; // Fake VRam reserved
+		size_t mOffset;
+		size_t mMemorySizeReserved;
+		size_t mMemorySizeRemaining;
 
-		std::vector<MemoryRessources> mRessources;
+		friend class ExarAllocator;
 	};
 }
 

@@ -21,7 +21,7 @@ namespace UnasciiEngine::RHI::EXAR {
 	enum class ExarAllocLocation : uint32_t
 	{
 		EXAR_ALLOC_HEAP = 0,
-		EXAR_ALLOC_STACK = 1,
+		EXAR_ALLOC_SCRATCH = 1, // Ring buffer
 		EXAR_ALLOC_SIMD = 2
 	};
 

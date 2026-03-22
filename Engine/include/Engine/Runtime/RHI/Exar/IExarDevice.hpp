@@ -2,9 +2,12 @@
 #define IEXAR_DEVICE_HPP
 
 namespace UnasciiEngine::RHI::EXAR {
-	struct IExarDevice
-	{
+	struct ExarBufferDesc;
+	class IExarBuffer;
 
+	class IExarDevice
+	{
+		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) = 0;
 	};
 }
 
