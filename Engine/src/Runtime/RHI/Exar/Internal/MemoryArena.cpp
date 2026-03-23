@@ -8,6 +8,12 @@ UnasciiEngine::RHI::EXAR::MemoryArena& UnasciiEngine::RHI::EXAR::MemoryArena::in
 	return sMemAren;
 }
 
+std::shared_ptr<UnasciiEngine::RHI::EXAR::MemoryArena> UnasciiEngine::RHI::EXAR::MemoryArena::sharedInstanceMemory()
+{
+	static std::shared_ptr<MemoryArena> sInstance = std::make_shared<MemoryArena>();
+	return sInstance;
+}
+
 UnasciiEngine::RHI::EXAR::MemoryArena::MemoryArena()
 	: mMemory(nullptr)
 	, mOffset(0)
@@ -68,6 +74,11 @@ bool UnasciiEngine::RHI::EXAR::MemoryArena::dealloc(size_t pSize, u8*& pRessourc
 	}
 
 	return false;
+}
+
+size_t UnasciiEngine::RHI::EXAR::MemoryArena::getMemorySizeRemaining() const noexcept
+{
+	return mMemorySizeRemaining;
 }
 
 //UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::MemoryArena::alloc(std::span<const u8> pData)

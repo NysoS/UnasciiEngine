@@ -7,6 +7,8 @@
 namespace UnasciiEngine::RHI::EXAR {
 	class IExarRessource : public IExarObject
 	{
+	public:
+
 	};
 }
 

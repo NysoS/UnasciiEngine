@@ -8,7 +8,9 @@
 namespace UnasciiEngine::RHI::EXAR {
 	class IExarBuffer : public IExarRessource
 	{
+	public:
 		virtual ExarBufferDesc getDesc() const noexcept = 0;
+		virtual MemHandle getCPUAddress() const noexcept = 0;
 	};
 }
 

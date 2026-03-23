@@ -21,7 +21,7 @@ namespace UnasciiEngine::RHI::EXAR
 		virtual inline IExarDevice* getDevice() const noexcept override {
 			return mDevice;
 		}
-		MemHandle getData() const noexcept;
+		virtual MemHandle getCPUAddress() const noexcept override;
 		[[nodiscard]] ExarBufferView getView() const;
 
 	private:

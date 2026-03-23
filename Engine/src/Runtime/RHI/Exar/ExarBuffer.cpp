@@ -17,7 +17,7 @@ UnasciiEngine::RHI::EXAR::ExarBufferDesc UnasciiEngine::RHI::EXAR::ExarBuffer::g
 	return mDesc;
 }
 
-UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarBuffer::getData() const noexcept
+UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarBuffer::getCPUAddress() const noexcept
 {
 	return mData;
 }

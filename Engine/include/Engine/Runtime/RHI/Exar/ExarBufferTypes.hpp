@@ -8,7 +8,7 @@
 namespace UnasciiEngine::RHI::EXAR
 {
 	struct ExarBufferDesc {
-		u64 size;
+		size_t size;
 		ExarUsage usage;
 		ExarBindFlag bindFlags;
 	};

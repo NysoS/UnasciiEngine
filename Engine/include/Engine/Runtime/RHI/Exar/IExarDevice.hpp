@@ -7,7 +7,9 @@ namespace UnasciiEngine::RHI::EXAR {
 
 	class IExarDevice
 	{
+	public:
 		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) = 0;
+		virtual bool GetResourceMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept = 0;
 	};
 }
 
