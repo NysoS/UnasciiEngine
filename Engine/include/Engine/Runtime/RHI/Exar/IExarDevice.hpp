@@ -19,6 +19,7 @@ namespace UnasciiEngine::RHI::EXAR {
 		virtual void createMemory(size_t pMemorySize) = 0;
 
 		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) = 0;
+
 		virtual ExarMemoryRequirement getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept = 0;
 		
 		virtual MemHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept = 0;
