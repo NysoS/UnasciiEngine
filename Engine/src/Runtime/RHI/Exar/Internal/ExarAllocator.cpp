@@ -28,7 +28,7 @@ UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarAllocator::alloc(con
 	u8* lVRam = reinterpret_cast<u8*>(mVram->getMemoryHandle());
 	if (!lVRam) return nullptr;
 	
-	u8* lTargetAddr = lVRam + mOffset;
+	u8* lTargetAddr = lVRam + lAlignedOffset;
 	void* lAddMem = VirtualAlloc(lTargetAddr, pRequirement.sizeInBytes, MEM_COMMIT, PAGE_READWRITE);
 	if (!lAddMem) return nullptr;
 

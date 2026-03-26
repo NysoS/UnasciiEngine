@@ -20,7 +20,7 @@ UnasciiEngine::RHI::EXAR::IExarBuffer* UnasciiEngine::RHI::EXAR::ExarDevice::cre
 	return lBuffer;
 }
 
-bool UnasciiEngine::RHI::EXAR::ExarDevice::GetResourceMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept
+bool UnasciiEngine::RHI::EXAR::ExarDevice::GetBufferMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept
 {
 	if (!pBuffer) return false;
 

@@ -18,7 +18,7 @@ namespace UnasciiEngine::RHI::EXAR
 
 		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) override;
 
-		virtual bool GetResourceMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept override;
+		virtual bool GetBufferMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept override;
 	
 	private:
 		std::shared_ptr<MemoryArena> mMemoryArena;
