@@ -1,9 +1,10 @@
 #include "Engine/Runtime/RHI/Exar/ExarDevice.hpp"
 #include "Engine/Runtime/RHI/Exar/IExarBuffer.hpp"
 #include "Engine/Runtime/RHI/Exar/Internal/ExarBuffer.hpp"
-#include "Engine/Runtime/RHI/Exar/Internal/MemoryArena.hpp"
+#include "Engine/Runtime/RHI/Exar/Internal/ExarAllocator.hpp"
 
 UnasciiEngine::RHI::EXAR::ExarDevice::ExarDevice()
+	: mAllocator(nullptr)
 {
 }
 
@@ -20,20 +21,29 @@ UnasciiEngine::RHI::EXAR::IExarBuffer* UnasciiEngine::RHI::EXAR::ExarDevice::cre
 	return lBuffer;
 }
 
-bool UnasciiEngine::RHI::EXAR::ExarDevice::GetBufferMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept
+UnasciiEngine::RHI::EXAR::ExarMemoryRequirement UnasciiEngine::RHI::EXAR::ExarDevice::getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept
 {
-	if (!pBuffer) return false;
+	ExarMemoryRequirement lMemRequirement{ 0, 0 };
+
+	if (!mAllocator || !pBuffer) return lMemRequirement;
 
 	size_t lSize = pBuffer->getDesc().size;
 	size_t lAling = 32;
 
-	if (!mMemoryArena.use_count() <= 0) return false;
+	size_t lRemainingMem = mAllocator->getMemorySizeRemaining();
+	if (lSize > lRemainingMem) return lMemRequirement;
 
-	size_t lRemainingMem = mMemoryArena->getMemorySizeRemaining();
-	if (lSize > lRemainingMem) return false;
+	lMemRequirement.align = lAling;
+	lMemRequirement.sizeInBytes = lSize;
 
-	pMemRequirement->align = lAling;
-	pMemRequirement->sizeInBytes = lSize;
+	return lMemRequirement;
+}
 
-	return true;
+UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarDevice::allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
+{
+	if (!mAllocator) return nullptr;
+
+	if (pRequirement.align <= 0 && pRequirement.sizeInBytes <= 0) return nullptr;
+
+	return mAllocator->alloc(pDesc, pRequirement);
 }

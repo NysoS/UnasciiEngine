@@ -24,6 +24,10 @@ namespace UnasciiEngine::RHI::EXAR
 		virtual MemHandle getCPUAddress() const noexcept override;
 		[[nodiscard]] ExarBufferView getView() const;
 
+		virtual void setData(MemHandle pData) noexcept override {
+			mData = pData;
+		}
+
 	private:
 		ExarBufferDesc mDesc;
 		IExarDevice* mDevice; // raw ptn because not owner memory allocation

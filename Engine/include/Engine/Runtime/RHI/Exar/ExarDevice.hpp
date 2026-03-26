@@ -3,11 +3,10 @@
 
 #include "Engine/uaepch.h"
 #include "Engine/Runtime/RHI/Exar/IExarDevice.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarMemoryRequirements.hpp"
 
 namespace UnasciiEngine::RHI::EXAR
 {
-	class MemoryArena;
+	class ExarAllocator;
 	class IExarBuffer;
 
 	class ExarDevice : public IExarDevice
@@ -17,11 +16,12 @@ namespace UnasciiEngine::RHI::EXAR
 		virtual ~ExarDevice();
 
 		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) override;
+		virtual ExarMemoryRequirement getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept override;
+		
+		virtual MemHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept override;
 
-		virtual bool GetBufferMemoryRequirements(const IExarBuffer* pBuffer, ExarMemoryRequirement*& pMemRequirement) noexcept override;
-	
 	private:
-		std::shared_ptr<MemoryArena> mMemoryArena;
+		std::unique_ptr<ExarAllocator> mAllocator;
 	};
 }
 

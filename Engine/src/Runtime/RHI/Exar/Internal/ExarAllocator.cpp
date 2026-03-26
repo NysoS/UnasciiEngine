@@ -1,16 +1,15 @@
 #include "Engine/Runtime/RHI/Exar/Internal/ExarAllocator.hpp"
 #include "Engine/Runtime/RHI/Exar/Internal/ExarDeviceMemory.hpp"
-#include "Engine/Runtime/RHI/Exar/Internal/MemoryArena.hpp"
 #include "Engine/Runtime/RHI/Exar/IExarRessource.hpp"
 
-UnasciiEngine::RHI::EXAR::ExarAllocator::ExarAllocator(ExarDeviceMemory* pDeviceMemory)
-	: mVram(pDeviceMemory)
+UnasciiEngine::RHI::EXAR::ExarAllocator::ExarAllocator(size_t pMemorySize)
+	: mVram(std::make_unique<ExarDeviceMemory>(pMemorySize))
 	, mOffset(0)
 	, mMemorySizeRemaining(0)
 {
-	if (pDeviceMemory)
+	if (mVram)
 	{
-		mMemorySizeRemaining = pDeviceMemory->getMemorySize();
+		mMemorySizeRemaining = mVram->getMemorySize();
 	}
 }
 

@@ -17,7 +17,7 @@ namespace UnasciiEngine::RHI::EXAR
 	class ExarAllocator 
 	{
 	public:
-		explicit ExarAllocator(ExarDeviceMemory* pDeviceMemory);
+		explicit ExarAllocator(size_t pMemorySize);
 		~ExarAllocator();
 
 		ExarAllocator(const ExarAllocator&) = delete;
@@ -26,8 +26,12 @@ namespace UnasciiEngine::RHI::EXAR
 		MemHandle alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept;
 		bool dealloc(size_t pSize, MemHandle& pRessource) noexcept;
 
+		inline size_t getMemorySizeRemaining() const noexcept {
+			return mMemorySizeRemaining;
+		}
+
 	private:
-		ExarDeviceMemory* mVram; // Device has a owner ptr
+		std::unique_ptr<ExarDeviceMemory> mVram; // Device has a owner ptr
 		size_t mOffset;
 		size_t mMemorySizeRemaining;
 	};
