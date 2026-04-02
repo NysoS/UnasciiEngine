@@ -1,7 +1,9 @@
 #ifndef IEXAR_DEVICE_HPP //Exarare
 #define IEXAR_DEVICE_HPP
 
+#include "Engine/uaepch.h"
 #include "Engine/Runtime/RHI/RHIDef.hpp"
+#include "Engine/Core/Types.hpp"
 #include "Engine/Runtime/RHI/Exar/ExarMemoryRequirements.hpp"
 
 namespace UnasciiEngine::RHI::EXAR {
@@ -16,7 +18,8 @@ namespace UnasciiEngine::RHI::EXAR {
 	class IExarDevice
 	{
 	public:
-		virtual void createMemory(size_t pMemorySize) = 0;
+		virtual ~IExarDevice() {};
+		virtual bool createMemory(size_t pMemorySize) = 0;
 
 		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) = 0;
 
@@ -24,12 +27,14 @@ namespace UnasciiEngine::RHI::EXAR {
 		
 		virtual MemHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept = 0;
 		
+		virtual bool updateResourceData(MemHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
+
 		template <ResourceTypeName ResourceType>
 		bool bindResource(ResourceType* pBuffer, MemHandle pResourceMemory)
 		{
 			if (!pBuffer || !pResourceMemory) return false;
 
-			pBuffer->setData(pResourceMemory);
+			pBuffer->setCPUAddress(pResourceMemory);
 			return true;
 		}
 	};

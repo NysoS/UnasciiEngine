@@ -9,7 +9,7 @@ namespace UnasciiEngine::RHI::EXAR {
 	{
 	public:
 		virtual MemHandle getCPUAddress() const noexcept = 0;
-		virtual void setData(MemHandle pData) noexcept = 0;
+		virtual void setCPUAddress(MemHandle pData) noexcept = 0;
 	};
 }
 

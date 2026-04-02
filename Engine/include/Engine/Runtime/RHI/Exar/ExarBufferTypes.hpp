@@ -15,6 +15,12 @@ namespace UnasciiEngine::RHI::EXAR
 
 	struct ExarBufferInitData {
 		const u8* data;
+		size_t size;
+
+		operator std::span<const u8> () const
+		{
+			return std::span<const u8>(data, size);
+		}
 	};
 }
 

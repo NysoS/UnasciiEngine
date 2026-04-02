@@ -9,6 +9,14 @@
 
 #include <span>
 
+#ifdef _DEBUG
+#include <iostream>
+#define LOG_ALLOC(type, value) \
+	std::cout << type << " [ " << value << " ] " << std::endl
+#else 
+#define LOG_ALLOC(type, value)
+#endif
+
 namespace UnasciiEngine::RHI::EXAR
 {
 	class ExarDeviceMemory;

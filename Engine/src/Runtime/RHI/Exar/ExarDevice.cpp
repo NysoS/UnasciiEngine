@@ -3,6 +3,8 @@
 #include "Engine/Runtime/RHI/Exar/Internal/ExarBuffer.hpp"
 #include "Engine/Runtime/RHI/Exar/Internal/ExarAllocator.hpp"
 
+#include <assert.h>
+
 UnasciiEngine::RHI::EXAR::ExarDevice::ExarDevice()
 	: mAllocator(nullptr)
 {
@@ -10,6 +12,16 @@ UnasciiEngine::RHI::EXAR::ExarDevice::ExarDevice()
 
 UnasciiEngine::RHI::EXAR::ExarDevice::~ExarDevice()
 {
+}
+
+bool UnasciiEngine::RHI::EXAR::ExarDevice::createMemory(size_t pMemorySize)
+{
+	mAllocator = std::make_unique<ExarAllocator>(pMemorySize);
+	if (mAllocator)
+	{
+		return true;
+	}
+	return false;
 }
 
 UnasciiEngine::RHI::EXAR::IExarBuffer* UnasciiEngine::RHI::EXAR::ExarDevice::createBuffer(const ExarBufferDesc& pDesc)
@@ -28,7 +40,7 @@ UnasciiEngine::RHI::EXAR::ExarMemoryRequirement UnasciiEngine::RHI::EXAR::ExarDe
 	if (!mAllocator || !pBuffer) return lMemRequirement;
 
 	size_t lSize = pBuffer->getDesc().size;
-	size_t lAling = 32;
+	size_t lAling = 16;
 
 	size_t lRemainingMem = mAllocator->getMemorySizeRemaining();
 	if (lSize > lRemainingMem) return lMemRequirement;
@@ -43,7 +55,27 @@ UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarDevice::allocateReso
 {
 	if (!mAllocator) return nullptr;
 
-	if (pRequirement.align <= 0 && pRequirement.sizeInBytes <= 0) return nullptr;
+	if (pRequirement.sizeInBytes <= 0) return nullptr;
 
-	return mAllocator->alloc(pDesc, pRequirement);
+	size_t lAlign = ((size_t)pDesc.align > 0) ? (size_t)pDesc.align : pRequirement.align;
+	
+	ExarMemoryRequirement lMemReq = pRequirement;
+	lMemReq.align = lAlign;
+
+	return mAllocator->alloc(pDesc, lMemReq);
+}
+
+bool UnasciiEngine::RHI::EXAR::ExarDevice::updateResourceData(MemHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
+{
+	void* lPtr = static_cast<void*>(pMemHandle);
+	if (!lPtr || pData.empty()) return false;
+
+	assert(lPtr != nullptr);
+	assert(pData.data() != nullptr);
+
+	if (pData.size() > pRequirement.sizeInBytes) return false;
+
+	std::memcpy(lPtr, pData.data(), pData.size());
+	
+	return true;
 }

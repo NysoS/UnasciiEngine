@@ -17,22 +17,43 @@ UnasciiEngine::RHI::EXAR::ExarAllocator::~ExarAllocator()
 {
 }
 
-UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement)
+UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
 {
-	size_t lAlignedOffset = (mOffset + (pRequirement.align - 1)) & ~(pRequirement.align - 1);
+	// Telemetri allocator //
+	// Desc
+	LOG_ALLOC("---------------", "");
+	size_t lAlignValue = pRequirement.align;
+
+	LOG_ALLOC("AllocDescTotalSize", pDesc.totalSize);
+	LOG_ALLOC("AllocDescAlignMemory", (size_t)lAlignValue);
+	LOG_ALLOC("AllocDescAllocLocation", (u32)pDesc.allocLocation);
+
+	LOG_ALLOC("---------------", "");
+	LOG_ALLOC("Actual memory size remaining", mMemorySizeRemaining);
+
+	LOG_ALLOC("Current offset", mOffset);
+	size_t lAlignedOffset = (mOffset + (lAlignValue - 1)) & ~(lAlignValue - 1);
+	LOG_ALLOC("Aligned offset", lAlignedOffset);
 
 	size_t lSizeWithPadding = (lAlignedOffset - mOffset) + pRequirement.sizeInBytes;
+	LOG_ALLOC("Data size", pRequirement.sizeInBytes);
+	LOG_ALLOC("Data size with padding", lSizeWithPadding);
 	if (mMemorySizeRemaining < lSizeWithPadding) return nullptr;
 
 	u8* lVRam = reinterpret_cast<u8*>(mVram->getMemoryHandle());
 	if (!lVRam) return nullptr;
 	
+	LOG_ALLOC("LVram", (uintptr_t)lVRam);
 	u8* lTargetAddr = lVRam + lAlignedOffset;
+	LOG_ALLOC("TargetOffset", (uintptr_t)lTargetAddr);
 	void* lAddMem = VirtualAlloc(lTargetAddr, pRequirement.sizeInBytes, MEM_COMMIT, PAGE_READWRITE);
 	if (!lAddMem) return nullptr;
 
 	mOffset += lSizeWithPadding;
 	mMemorySizeRemaining -= lSizeWithPadding;
+
+	LOG_ALLOC("New offset", mOffset);
+	LOG_ALLOC("Memory Size Remaining after allocation", mMemorySizeRemaining);
 
 	// cast to opac pointer (imcomplete struct) for bind on buffer
 	return static_cast<MemHandle>(lAddMem);

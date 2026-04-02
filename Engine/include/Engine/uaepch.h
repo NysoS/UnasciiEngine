@@ -15,5 +15,6 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include <span>
 
 #endif // UAEPCH_H

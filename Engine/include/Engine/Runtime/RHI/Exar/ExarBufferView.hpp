@@ -4,16 +4,15 @@
 #include "Engine/uaepch.h"
 #include "Engine/Core/Types.hpp"
 
-#include <span>
-
 namespace UnasciiEngine::RHI::EXAR
 {
 	class ExarBuffer;
 
 	class ExarBufferView {
+	public:
 		using iterator = std::span<const u8>::iterator;
 		using value_type = std::span<const u8>::value_type;
-	public:
+
 		ExarBufferView(const u8* pData, size_t pSize)
 			: mData(pData, pSize)
 			, mCursor(0)

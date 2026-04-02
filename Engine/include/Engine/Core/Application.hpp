@@ -6,8 +6,6 @@
 
 #include "Engine/uaepch.h"
 
-class Window;
-
 namespace UnasciiEngine {
 	class UAE_API Application
 	{

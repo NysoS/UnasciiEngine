@@ -25,7 +25,7 @@ namespace UnasciiEngine::RHI::EXAR {
 		EXAR_ALLOC_SIMD = 2
 	};
 
-	enum class ExarAlignMemory : uint32_t
+	enum class ExarAlignMemory : size_t
 	{
 		EXAR_ALIGN_16 = 16,
 		EXAR_ALIGN_32 = 32,
