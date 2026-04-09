@@ -2,7 +2,7 @@
 #include "Engine/Core/Application.hpp"
 #include "Engine/Runtime/Platform/Window.hpp"
 
-#include "Engine/Runtime/RHI/Exar/Test/BufferAllocTest.hpp"
+//#include "Exar/Test/BufferAllocTest.hpp"
 
 namespace UnasciiEngine {
 	Application::Application(const WindowInfo& pWinInfo)
@@ -21,7 +21,7 @@ namespace UnasciiEngine {
 
 	bool Application::init()
 	{
-		UnasciiEngine::RHI::EXAR::BufferAllocTest lBufferTest;
+		//UnasciiEngine::RHI::EXAR::BufferAllocTest lBufferTest;
 
 		return mWindow->init();
 	}

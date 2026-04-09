@@ -1,11 +1,11 @@
 #ifndef EXAR_ALLOCATOR_HPP
 #define EXAR_ALLOCATOR_HPP
 
-#include "Engine/uaepch.h"
-#include "Engine/Core/Types.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarAllocatorDesc.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarMemoryRequirements.hpp"
-#include "Engine/Runtime/RHI/RHIDef.hpp"
+#include "Exar/exarpch.h"
+#include "Exar/Types.hpp"
+#include "Exar/ExarAllocatorDesc.hpp"
+#include "Exar/ExarMemoryRequirements.hpp"
+#include "Exar/Def.hpp"
 
 #include <span>
 
@@ -17,7 +17,7 @@
 #define LOG_ALLOC(type, value)
 #endif
 
-namespace UnasciiEngine::RHI::EXAR
+namespace Exar
 {
 	class ExarDeviceMemory;
 	class IExarRessource;
@@ -31,8 +31,8 @@ namespace UnasciiEngine::RHI::EXAR
 		ExarAllocator(const ExarAllocator&) = delete;
 		ExarAllocator& operator=(const ExarAllocator&) = delete;
 
-		MemHandle alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept;
-		bool dealloc(size_t pSize, MemHandle& pRessource) noexcept;
+		MemoryHandle alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept;
+		bool dealloc(size_t pSize, MemoryHandle& pRessource) noexcept;
 
 		inline size_t getMemorySizeRemaining() const noexcept {
 			return mMemorySizeRemaining;

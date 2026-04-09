@@ -1,12 +1,13 @@
 #ifndef IEXAR_DEVICE_HPP //Exarare
 #define IEXAR_DEVICE_HPP
 
-#include "Engine/uaepch.h"
-#include "Engine/Runtime/RHI/RHIDef.hpp"
-#include "Engine/Core/Types.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarMemoryRequirements.hpp"
+#include "Exar/exarpch.h"
+#include "Exar/Exar.hpp"
+#include "Exar/Def.hpp"
+#include "Exar/Types.hpp"
+#include "Exar/ExarMemoryRequirements.hpp"
 
-namespace UnasciiEngine::RHI::EXAR {
+namespace Exar {
 	struct ExarBufferDesc;
 	class IExarBuffer;
 	class IExarRessource;
@@ -15,7 +16,7 @@ namespace UnasciiEngine::RHI::EXAR {
 	template <typename Type>
 	concept ResourceTypeName = std::derived_from<Type, IExarRessource>;
 
-	class IExarDevice
+	class EXA_API IExarDevice
 	{
 	public:
 		virtual ~IExarDevice() {};
@@ -25,12 +26,12 @@ namespace UnasciiEngine::RHI::EXAR {
 
 		virtual ExarMemoryRequirement getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept = 0;
 		
-		virtual MemHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept = 0;
+		virtual MemoryHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept = 0;
 		
-		virtual bool updateResourceData(MemHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
+		virtual bool updateResourceData(MemoryHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
 
 		template <ResourceTypeName ResourceType>
-		bool bindResource(ResourceType* pBuffer, MemHandle pResourceMemory)
+		bool bindResource(ResourceType* pBuffer, MemoryHandle pResourceMemory)
 		{
 			if (!pBuffer || !pResourceMemory) return false;
 

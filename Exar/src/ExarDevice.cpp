@@ -1,20 +1,20 @@
-#include "Engine/Runtime/RHI/Exar/ExarDevice.hpp"
-#include "Engine/Runtime/RHI/Exar/IExarBuffer.hpp"
-#include "Engine/Runtime/RHI/Exar/Internal/ExarBuffer.hpp"
-#include "Engine/Runtime/RHI/Exar/Internal/ExarAllocator.hpp"
+#include "Exar/ExarDevice.hpp"
+#include "Exar/IExarBuffer.hpp"
+#include "Exar/Internal/ExarBuffer.hpp"
+#include "Exar/Internal/ExarAllocator.hpp"
 
 #include <assert.h>
 
-UnasciiEngine::RHI::EXAR::ExarDevice::ExarDevice()
+Exar::ExarDevice::ExarDevice()
 	: mAllocator(nullptr)
 {
 }
 
-UnasciiEngine::RHI::EXAR::ExarDevice::~ExarDevice()
+Exar::ExarDevice::~ExarDevice()
 {
 }
 
-bool UnasciiEngine::RHI::EXAR::ExarDevice::createMemory(size_t pMemorySize)
+bool Exar::ExarDevice::createMemory(size_t pMemorySize)
 {
 	mAllocator = std::make_unique<ExarAllocator>(pMemorySize);
 	if (mAllocator)
@@ -24,7 +24,7 @@ bool UnasciiEngine::RHI::EXAR::ExarDevice::createMemory(size_t pMemorySize)
 	return false;
 }
 
-UnasciiEngine::RHI::EXAR::IExarBuffer* UnasciiEngine::RHI::EXAR::ExarDevice::createBuffer(const ExarBufferDesc& pDesc)
+Exar::IExarBuffer* Exar::ExarDevice::createBuffer(const ExarBufferDesc& pDesc)
 {
 	ExarBuffer* lBuffer = new ExarBuffer();
 	lBuffer->mDesc = pDesc;
@@ -33,7 +33,7 @@ UnasciiEngine::RHI::EXAR::IExarBuffer* UnasciiEngine::RHI::EXAR::ExarDevice::cre
 	return lBuffer;
 }
 
-UnasciiEngine::RHI::EXAR::ExarMemoryRequirement UnasciiEngine::RHI::EXAR::ExarDevice::getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept
+Exar::ExarMemoryRequirement Exar::ExarDevice::getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept
 {
 	ExarMemoryRequirement lMemRequirement{ 0, 0 };
 
@@ -51,7 +51,7 @@ UnasciiEngine::RHI::EXAR::ExarMemoryRequirement UnasciiEngine::RHI::EXAR::ExarDe
 	return lMemRequirement;
 }
 
-UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarDevice::allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
+Exar::MemoryHandle Exar::ExarDevice::allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
 {
 	if (!mAllocator) return nullptr;
 
@@ -65,7 +65,7 @@ UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarDevice::allocateReso
 	return mAllocator->alloc(pDesc, lMemReq);
 }
 
-bool UnasciiEngine::RHI::EXAR::ExarDevice::updateResourceData(MemHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
+bool Exar::ExarDevice::updateResourceData(MemoryHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
 {
 	void* lPtr = static_cast<void*>(pMemHandle);
 	if (!lPtr || pData.empty()) return false;

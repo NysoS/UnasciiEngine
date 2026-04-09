@@ -1,10 +1,10 @@
 #ifndef EXAR_DEVICE_MEMORY_HPP
 #define EXAR_DEVICE_MEMORY_HPP
 
-#include "Engine/Core/Types.hpp"
-#include "Engine/Runtime/RHI/RHIDef.hpp"
+#include "Exar/Types.hpp"
+#include "Exar/Def.hpp"
 
-namespace UnasciiEngine::RHI::EXAR
+namespace Exar
 {
 	class ExarDeviceMemory final
 	{
@@ -15,11 +15,11 @@ namespace UnasciiEngine::RHI::EXAR
 		ExarDeviceMemory(const ExarDeviceMemory&) = delete;
 		ExarDeviceMemory& operator=(const ExarDeviceMemory&) = delete;
 
-		MemHandle getMemoryHandle();
+		MemoryHandle getMemoryHandle();
 		size_t getMemorySize() const;
 
 	private:
-		MemHandle mHandle;
+		MemoryHandle mHandle;
 		size_t mSize;
 	};
 }

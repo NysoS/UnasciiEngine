@@ -1,10 +1,10 @@
 #ifndef EXAR_BUFFER_VIEW_HPP
 #define EXAR_BUFFER_VIEW_HPP
 
-#include "Engine/uaepch.h"
-#include "Engine/Core/Types.hpp"
+#include "Exar/exarpch.h"
+#include "Exar/Types.hpp"
 
-namespace UnasciiEngine::RHI::EXAR
+namespace Exar
 {
 	class ExarBuffer;
 

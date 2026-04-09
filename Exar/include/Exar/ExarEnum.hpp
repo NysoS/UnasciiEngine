@@ -1,9 +1,9 @@
-#ifndef EXAR_HPP
-#define EXAR_HPP
+#ifndef EXAR_ENUM_HPP
+#define EXAR_ENUM_HPP
 
-#include "Engine/uaepch.h"
+#include "Exar/exarpch.h"
 
-namespace UnasciiEngine::RHI::EXAR {
+namespace Exar {
 	enum class ExarUsage : uint32_t
 	{
 		EXAR_USAGE_DEFAULT = 0,
@@ -39,4 +39,4 @@ namespace UnasciiEngine::RHI::EXAR {
 	};
 };
 
-#endif // !EXAR_HPP
+#endif // !EXAR_ENUM_HPP

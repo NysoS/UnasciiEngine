@@ -1,14 +1,15 @@
 #ifndef IEXAR_BUFFER_HPP
 #define IEXAR_BUFFER_HPP
 
-#include "Exar.hpp"
-#include "IExarRessource.hpp"
-#include "ExarBufferTypes.hpp"
+#include "Exar/exarpch.h"
+#include "Exar/Exar.hpp"
+#include "Exar/IExarRessource.hpp"
+#include "Exar/ExarBufferTypes.hpp"
 
-namespace UnasciiEngine::RHI::EXAR {
+namespace Exar {
 	class ExarBufferView;
 
-	class IExarBuffer : public IExarRessource
+	class EXA_API IExarBuffer : public IExarRessource
 	{
 	public:
 		virtual ExarBufferDesc getDesc() const noexcept = 0;

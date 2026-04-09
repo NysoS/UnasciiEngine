@@ -1,13 +1,14 @@
 #ifndef IEXAR_OBJECT_HPP
 #define IEXAR_OBJECT_HPP
 
-#include "Engine/Runtime/RHI/RHIDef.hpp"
+#include "Exar/Exar.hpp"
+#include "Exar/Def.hpp"
 
-namespace UnasciiEngine::RHI::EXAR {
+namespace Exar {
 
 	class IExarDevice;
 
-	class IExarObject
+	class EXA_API IExarObject
 	{
 		virtual inline IExarDevice* getDevice() const noexcept = 0;
 	};

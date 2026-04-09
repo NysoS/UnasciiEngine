@@ -1,14 +1,14 @@
-#include "Engine/Runtime/RHI/Exar/Test/BufferAllocTest.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarDevice.hpp"
-#include "Engine/Runtime/RHI/Exar/Internal/ExarBuffer.hpp"
-#include "Engine/Runtime/RHI/Exar/Exar.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarAllocatorDesc.hpp"
-#include "Engine/Runtime/RHI/Exar/ExarBufferView.hpp"
+#include "Exar/Test/BufferAllocTest.hpp"
+#include "Exar/ExarDevice.hpp"
+#include "Exar/Internal/ExarBuffer.hpp"
+#include "Exar/Exar.hpp"
+#include "Exar/ExarAllocatorDesc.hpp"
+#include "Exar/ExarBufferView.hpp"
 
 #include <algorithm>
 #include <random>
 
-UnasciiEngine::RHI::EXAR::BufferAllocTest::BufferAllocTest()
+Exar::BufferAllocTest::BufferAllocTest()
 	: mDevice(std::make_unique<ExarDevice>())
 {
 	bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
@@ -37,7 +37,7 @@ UnasciiEngine::RHI::EXAR::BufferAllocTest::BufferAllocTest()
 	lAllocDesc.allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
 	lAllocDesc.totalSize = lMemRequired.sizeInBytes;
 
-	MemHandle lAddAllocated = mDevice->allocateResourceMemory(lAllocDesc, lMemRequired);
+	MemoryHandle lAddAllocated = mDevice->allocateResourceMemory(lAllocDesc, lMemRequired);
 	if (!lAddAllocated)
 	{
 		std::cerr << "Error to trying allocate" << std::endl;
@@ -93,7 +93,7 @@ UnasciiEngine::RHI::EXAR::BufferAllocTest::BufferAllocTest()
 	lAllocDesc2.allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
 	lAllocDesc2.totalSize = lMemRequired2.sizeInBytes;
 
-	MemHandle lAddAllocated2 = mDevice->allocateResourceMemory(lAllocDesc2, lMemRequired2);
+	MemoryHandle lAddAllocated2 = mDevice->allocateResourceMemory(lAllocDesc2, lMemRequired2);
 	if (!lAddAllocated2)
 	{
 		std::cerr << "Error to trying allocate" << std::endl;
@@ -134,11 +134,11 @@ UnasciiEngine::RHI::EXAR::BufferAllocTest::BufferAllocTest()
 	}*/
 }
 
-UnasciiEngine::RHI::EXAR::BufferAllocTest::~BufferAllocTest()
+Exar::BufferAllocTest::~BufferAllocTest()
 {
 }
 
-std::vector<UnasciiEngine::u8> UnasciiEngine::RHI::EXAR::BufferAllocTest::initRandomBufferValue(size_t pSize)
+std::vector<Exar::u8> Exar::BufferAllocTest::initRandomBufferValue(size_t pSize)
 {
 	std::vector<u8> testBuffer(pSize, 0);
 

@@ -1,7 +1,7 @@
 #ifndef EXAR_MEMORY_REQUIREMENTS_HPP
 #define EXAR_MEMORY_REQUIREMENTS_HPP
 
-namespace UnasciiEngine::RHI::EXAR
+namespace Exar
 {
 	struct ExarMemoryRequirement
 	{

@@ -1,10 +1,10 @@
 #ifndef EXAR_BUFFER_HPP
 #define EXAR_BUFFER_HPP
 
-#include "Engine/Runtime/RHI/Exar/IExarBuffer.hpp"
-#include "Engine/Runtime/RHI/RHIDef.hpp"
+#include "Exar/IExarBuffer.hpp"
+#include "Exar/Def.hpp"
 
-namespace UnasciiEngine::RHI::EXAR
+namespace Exar
 {
 	class ExarBufferView;
 	
@@ -24,16 +24,16 @@ namespace UnasciiEngine::RHI::EXAR
 		
 		[[nodiscard]] virtual ExarBufferView getView() const override;
 
-		virtual MemHandle getCPUAddress() const noexcept override;
+		virtual MemoryHandle getCPUAddress() const noexcept override;
 
-		virtual void setCPUAddress(MemHandle pData) noexcept override {
+		virtual void setCPUAddress(MemoryHandle pData) noexcept override {
 			mData = pData;
 		}
 
 	private:
 		ExarBufferDesc mDesc;
 		IExarDevice* mDevice; // raw ptn because not owner memory allocation
-		MemHandle mData;
+		MemoryHandle mData;
 
 		friend class ExarDevice;
 	};

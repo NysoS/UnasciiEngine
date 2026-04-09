@@ -1,11 +1,11 @@
 #ifndef EXAR_BUFFER_TYPES_HPP
 #define EXAR_BUFFER_TYPES_HPP
 
-#include "Engine/uaepch.h"
-#include "Engine/Core/Types.hpp"
-#include "Engine/Runtime/RHI/Exar/Exar.hpp"
+#include "Exar/exarpch.h"
+#include "Exar/Types.hpp"
+#include "Exar/ExarEnum.hpp"
 
-namespace UnasciiEngine::RHI::EXAR
+namespace Exar
 {
 	struct ExarBufferDesc {
 		size_t size;

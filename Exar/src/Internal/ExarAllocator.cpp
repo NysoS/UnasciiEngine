@@ -1,8 +1,8 @@
-#include "Engine/Runtime/RHI/Exar/Internal/ExarAllocator.hpp"
-#include "Engine/Runtime/RHI/Exar/Internal/ExarDeviceMemory.hpp"
-#include "Engine/Runtime/RHI/Exar/IExarRessource.hpp"
+#include "Exar/Internal/ExarAllocator.hpp"
+#include "Exar/Internal/ExarDeviceMemory.hpp"
+#include "Exar/IExarRessource.hpp"
 
-UnasciiEngine::RHI::EXAR::ExarAllocator::ExarAllocator(size_t pMemorySize)
+Exar::ExarAllocator::ExarAllocator(size_t pMemorySize)
 	: mVram(std::make_unique<ExarDeviceMemory>(pMemorySize))
 	, mOffset(0)
 	, mMemorySizeRemaining(0)
@@ -13,11 +13,11 @@ UnasciiEngine::RHI::EXAR::ExarAllocator::ExarAllocator(size_t pMemorySize)
 	}
 }
 
-UnasciiEngine::RHI::EXAR::ExarAllocator::~ExarAllocator()
+Exar::ExarAllocator::~ExarAllocator()
 {
 }
 
-UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
+Exar::MemoryHandle Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
 {
 	// Telemetri allocator //
 	// Desc
@@ -56,10 +56,10 @@ UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarAllocator::alloc(con
 	LOG_ALLOC("Memory Size Remaining after allocation", mMemorySizeRemaining);
 
 	// cast to opac pointer (imcomplete struct) for bind on buffer
-	return static_cast<MemHandle>(lAddMem);
+	return static_cast<MemoryHandle>(lAddMem);
 }
 
-bool UnasciiEngine::RHI::EXAR::ExarAllocator::dealloc(size_t pSize, MemHandle& pRessource) noexcept
+bool Exar::ExarAllocator::dealloc(size_t pSize, MemoryHandle& pRessource) noexcept
 {
 	if (pSize <= 0) return false;
 
@@ -80,10 +80,3 @@ bool UnasciiEngine::RHI::EXAR::ExarAllocator::dealloc(size_t pSize, MemHandle& p
 
 	return true;
 }
-
-//UnasciiEngine::RHI::MemHandle UnasciiEngine::RHI::EXAR::ExarAllocator::alloc(std::span<const u8> pRessource)
-//{
-//	//MemoryArena::instanceMemory().alloc(pRessource.size());
-//
-//	return nullptr;
-//}

@@ -1,10 +1,10 @@
 #ifndef EXAR_ALLOCATOR_DESC_HPP
 #define EXAR_ALLOCATOR_DESC_HPP
 
-#include "Engine/uaepch.h"
-#include "Engine/Runtime/RHI/Exar/Exar.hpp"
+#include "Exar/exarpch.h"
+#include "Exar/ExarEnum.hpp"
 
-namespace UnasciiEngine::RHI::EXAR {
+namespace Exar {
 	struct ExarAllocatorDesc
 	{
 		size_t totalSize = 0;
