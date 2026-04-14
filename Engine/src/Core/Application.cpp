@@ -2,7 +2,8 @@
 #include "Engine/Core/Application.hpp"
 #include "Engine/Runtime/Platform/Window.hpp"
 
-//#include "Exar/Test/BufferAllocTest.hpp"
+#include "Engine/Runtime/RHI/Manager.hpp"
+#include "Engine/Runtime/RHI/Test/IRHITest.hpp"
 
 namespace UnasciiEngine {
 	Application::Application(const WindowInfo& pWinInfo)
@@ -21,7 +22,7 @@ namespace UnasciiEngine {
 
 	bool Application::init()
 	{
-		//UnasciiEngine::RHI::EXAR::BufferAllocTest lBufferTest;
+		std::unique_ptr<RHI::Test::IRHIBufferAllocationTest> lBufferAllocTest = RHI::Factory::createBufferAllocationTest();
 
 		return mWindow->init();
 	}

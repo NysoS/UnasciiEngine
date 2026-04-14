@@ -1,12 +1,28 @@
 #include "Engine/Runtime/RHI/RHIDef.hpp"
 #include "Engine/Runtime/RHI/IDevice.hpp"
-#include "Engine/Runtime/RHI/DeviceFactory.hpp"
+#include "Engine/Runtime/RHI/IDeviceFactory.hpp"
+#include "Engine/Runtime/RHI/Manager.hpp"
 
 namespace UnasciiEngine::RHI
 {
 	#pragma comment(lib, "Exar.lib")
 	extern "C" __declspec(dllimport) void* RHI_Exar_CreateDevice(size_t pSize);
 	extern "C" __declspec(dllimport) bool RHI_Exar_DestroyDevice(void* pHandle);
+
+#ifdef _DEBUG
+#include "Engine/Runtime/RHI/Test/IRHITest.hpp"
+
+	extern "C" __declspec(dllimport) void RHI_Verif_Allocation();
+	class ExarTest : public UnasciiEngine::RHI::Test::IRHIBufferAllocationTest {
+	public:
+		ExarTest() = default;
+		virtual ~ExarTest() = default;
+
+		virtual void execute() override {
+			RHI_Verif_Allocation();
+		}
+	};
+#endif // DEBUG
 
 	class ExarDeviceBridge;
 
@@ -21,6 +37,21 @@ namespace UnasciiEngine::RHI
 		bool DestroyDevice(IDevice* pDevice) override;
 	};
 
+	namespace Factory
+	{
+#ifdef _DEBUG
+		std::unique_ptr<Test::IRHIBufferAllocationTest> createBufferAllocationTest()
+		{
+			return std::make_unique<ExarTest>();
+		}
+#endif // _DEBUG
+
+		std::unique_ptr<IDeviceFactory> createDeviceFactory()
+		{
+			return std::make_unique<ExarDeviceFactory>();
+		}
+	}
+
 	class ExarDeviceBridge : public IDevice
 	{
 	public:
@@ -30,7 +61,7 @@ namespace UnasciiEngine::RHI
 			: mHandle(phandle)
 		{
 		}
-
+		
 		virtual ~ExarDeviceBridge()
 		{
 			mHandle = nullptr;
