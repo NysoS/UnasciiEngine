@@ -2,6 +2,8 @@
 #include "Exar/IExarBuffer.hpp"
 #include "Exar/Internal/ExarBuffer.hpp"
 #include "Exar/Internal/ExarAllocator.hpp"
+#include "Exar/ISwapchain.hpp"
+#include "Exar/Internal/Swapchain.hpp"
 
 #include <assert.h>
 
@@ -78,4 +80,22 @@ bool Exar::ExarDevice::updateResourceData(MemoryHandle& pMemHandle, const ExarMe
 	std::memcpy(lPtr, pData.data(), pData.size());
 	
 	return true;
+}
+
+Exar::ISwapchain* Exar::ExarDevice::createSwapchain(const SwapchainDesc& pDesc)
+{
+	Swapchain* lSwapchain = new Swapchain();
+	lSwapchain->mDesc = pDesc;
+	lSwapchain->mDevice = this;
+
+	return lSwapchain;
+}
+
+Exar::ExarResult Exar::ExarDevice::destroySwapchain(ISwapchain* pSwapchain)
+{
+	if (!pSwapchain) return ExarResult::EXAR_NULL_POINTER;
+
+	delete pSwapchain;
+
+	return ExarResult::EXAR_SUCCESS;
 }

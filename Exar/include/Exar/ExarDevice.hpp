@@ -23,6 +23,10 @@ namespace Exar
 		
 		virtual MemoryHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept override;
 		virtual bool updateResourceData(MemoryHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept override;
+
+		virtual ISwapchain* createSwapchain(const SwapchainDesc& pDesc) override;
+		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) override;
+
 	private:
 		std::unique_ptr<ExarAllocator> mAllocator;
 	};

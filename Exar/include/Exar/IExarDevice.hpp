@@ -7,11 +7,14 @@
 #include "Exar/Types.hpp"
 #include "Exar/ExarMemoryRequirements.hpp"
 
+#include "Exar/SwapchainDesc.hpp"
+
 namespace Exar {
 	struct ExarBufferDesc;
 	class IExarBuffer;
 	class IExarRessource;
 	struct ExarAllocatorDesc;
+	class ISwapchain;
 
 	template <typename Type>
 	concept ResourceTypeName = std::derived_from<Type, IExarRessource>;
@@ -38,6 +41,9 @@ namespace Exar {
 			pBuffer->setCPUAddress(pResourceMemory);
 			return true;
 		}
+
+		virtual ISwapchain* createSwapchain(const SwapchainDesc& pDesc) = 0;
+		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) = 0;
 	};
 }
 

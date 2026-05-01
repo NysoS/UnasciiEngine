@@ -5,6 +5,18 @@
 
 namespace Exar {
 	DECLARE_EXAR_HANDLE(MemoryHandle);
+	DECLARE_EXAR_HANDLE(Surface);
+	DECLARE_EXAR_HANDLE(Image);
+
+#define EXAR_NULL_HANDLE nullptr
+
+	enum class ExarResult
+	{
+		EXAR_SUCCESS = 0,
+		EXAR_NULL_POINTER,
+		EXAR_ERROR_RESOURCES_LOST,
+		EXAR_ERROR_MEMORY_MAP_FAILED
+	};
 }
 
 #endif // EXAR_DEF_HPP

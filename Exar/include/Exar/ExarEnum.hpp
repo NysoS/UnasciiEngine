@@ -7,8 +7,8 @@ namespace Exar {
 	enum class ExarUsage : uint32_t
 	{
 		EXAR_USAGE_DEFAULT = 0,
-		EXAR_USAGE_IMMUTABLE = 1,
-		EXAR_USAGE_DYNAMIC = 2
+		EXAR_USAGE_IMMUTABLE,
+		EXAR_USAGE_DYNAMIC
 	};
 
 	enum class ExarBindFlag : uint32_t
@@ -35,7 +35,38 @@ namespace Exar {
 	enum class ExarAllocatorType : uint32_t
 	{
 		EXAR_ALLOCATOR_AREA = 0,
-		EXAR_ALLOCATOR_MANUALY = 1
+		EXAR_ALLOCATOR_MANUALY
+	};
+
+	enum class PixelFormat : uint32_t
+	{
+		B8G8R8A8_UNORM = 0,		// BGRA
+		B8G8R8A8_UNORM_SRGB,	// BGRA sRGB (correction gama only gpu)
+		R8G8B8A8_UNORM,			// RGBA
+		R8G8B8A8_UNORM_SRGB,	// RGBA sRGB
+		R16G16B16A16_FLOAT,		// RGBA 16F
+		R32G32B32A32_FLOAT,		// RGBA 32F
+		D32_SFLOAT,				// depth 32F
+		D24_UNORM_S8_UINT		// depth 24 + stencil 8
+	};
+
+	enum class ColorSpace : uint32_t
+	{
+		COLOR_SPACE_SRGB_NONLINEAR = 0,
+		COLOR_SPACE_SRGB_LINEAR
+	};
+
+	enum class ImageUsageFlags : uint32_t
+	{
+		TRANSFER_DST = 0x1L,
+		COLOR_ATTACHMENT = 0x2L,
+		SAMPLED_BIT = 0x4L
+	};
+
+	enum class SharingMode : uint32_t
+	{
+		EXCLUSIVE = 0,
+		CONCURRENT
 	};
 };
 
