@@ -29,7 +29,7 @@ namespace Exar {
 
 		virtual ExarMemoryRequirement getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept = 0;
 		
-		virtual MemoryHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept = 0;
+		virtual ExarResult allocateResourceMemory(void** pMemory, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept = 0;
 		
 		virtual bool updateResourceData(MemoryHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
 
@@ -42,7 +42,10 @@ namespace Exar {
 			return true;
 		}
 
-		virtual ISwapchain* createSwapchain(const SwapchainDesc& pDesc) = 0;
+		virtual ExarResult getImageMemoryRequirements(const ImageDesc& pDesc, ExarMemoryRequirement* pRequirement) noexcept = 0;
+		virtual ExarResult createImage(Image* pImage, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) = 0;
+
+		virtual ExarResult createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) = 0;
 		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) = 0;
 	};
 }

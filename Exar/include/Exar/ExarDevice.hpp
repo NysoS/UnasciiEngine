@@ -4,6 +4,7 @@
 #include "Exar/exarpch.h"
 #include "Exar/Exar.hpp"
 #include "Exar/IExarDevice.hpp"
+#include "Exar/ImageDesc.hpp"
 
 namespace Exar
 {
@@ -21,11 +22,19 @@ namespace Exar
 		virtual IExarBuffer* createBuffer(const ExarBufferDesc& pDesc) override;
 		virtual ExarMemoryRequirement getBufferMemoryRequirements(const IExarBuffer* pBuffer) noexcept override;
 		
-		virtual MemoryHandle allocateResourceMemory(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept override;
+		virtual ExarResult allocateResourceMemory(void** pMemory, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept override;
 		virtual bool updateResourceData(MemoryHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept override;
 
-		virtual ISwapchain* createSwapchain(const SwapchainDesc& pDesc) override;
+		virtual ExarResult getImageMemoryRequirements(const ImageDesc& pDesc, ExarMemoryRequirement* pRequirement) noexcept override;
+		virtual ExarResult createImage(Image* pImage, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) override;
+
+		virtual ExarResult createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) override;
 		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) override;
+
+		// create image
+		// destroy image
+		// check memory resources valid
+		// add exar_result
 
 	private:
 		std::unique_ptr<ExarAllocator> mAllocator;

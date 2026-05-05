@@ -31,7 +31,7 @@ namespace Exar
 		ExarAllocator(const ExarAllocator&) = delete;
 		ExarAllocator& operator=(const ExarAllocator&) = delete;
 
-		MemoryHandle alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept;
+		void* alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept;
 		bool dealloc(size_t pSize, MemoryHandle& pRessource) noexcept;
 
 		inline size_t getMemorySizeRemaining() const noexcept {

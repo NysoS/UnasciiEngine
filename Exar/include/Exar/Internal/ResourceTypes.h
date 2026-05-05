@@ -3,7 +3,7 @@
 
 namespace Exar
 {
-	struct ImageHandle
+	struct Image
 	{
 		void* data;
 		size_t size;

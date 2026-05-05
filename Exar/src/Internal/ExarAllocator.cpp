@@ -17,7 +17,7 @@ Exar::ExarAllocator::~ExarAllocator()
 {
 }
 
-Exar::MemoryHandle Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
+void* Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
 {
 	// Telemetri allocator //
 	// Desc
@@ -56,7 +56,7 @@ Exar::MemoryHandle Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, co
 	LOG_ALLOC("Memory Size Remaining after allocation", mMemorySizeRemaining);
 
 	// cast to opac pointer (imcomplete struct) for bind on buffer
-	return static_cast<MemoryHandle>(lAddMem);
+	return lAddMem;
 }
 
 bool Exar::ExarAllocator::dealloc(size_t pSize, MemoryHandle& pRessource) noexcept
