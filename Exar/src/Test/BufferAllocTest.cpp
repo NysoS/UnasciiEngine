@@ -4,6 +4,7 @@
 #include "Exar/Exar.hpp"
 #include "Exar/ExarAllocatorDesc.hpp"
 #include "Exar/ExarBufferView.hpp"
+#include "Exar/ExarDevice.hpp"
 
 #include <algorithm>
 #include <random>
@@ -37,12 +38,14 @@ Exar::BufferAllocTest::BufferAllocTest()
 	lAllocDesc.allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
 	lAllocDesc.totalSize = lMemRequired.sizeInBytes;
 
-	MemoryHandle lAddAllocated = mDevice->allocateResourceMemory(lAllocDesc, lMemRequired);
+	void* lAddAllocated;
+	mDevice->allocateResourceMemory(&lAddAllocated, lAllocDesc, lMemRequired);
 	if (!lAddAllocated)
 	{
 		std::cerr << "Error to trying allocate" << std::endl;
 		return;
 	}
+	MemoryHandle lMem = static_cast<MemoryHandle>(lAddAllocated);
 
 	std::vector<u8> lData = initRandomBufferValue(1024 * 1024);
 
@@ -50,14 +53,15 @@ Exar::BufferAllocTest::BufferAllocTest()
 	lBufferInitData.size = 1024 * 1024;
 	lBufferInitData.data = lData.data();
 
-	bool lDataUpdated = mDevice->updateResourceData(lAddAllocated, lMemRequired, lBufferInitData);
+	bool lDataUpdated;
+	mDevice->updateResourceData(lMem, lMemRequired, lBufferInitData);
 	if (!lDataUpdated)
 	{
 		std::cerr << "Error when trying update resource data" << std::endl;
 		return;
 	}
 
-	bool lBufferBinded = mDevice->bindResource(lBuffer, lAddAllocated);
+	bool lBufferBinded = mDevice->bindResource(lBuffer, lMem);
 	if (!lDataUpdated)
 	{
 		std::cerr << "Error when trying binding resouce" << std::endl;
@@ -93,12 +97,14 @@ Exar::BufferAllocTest::BufferAllocTest()
 	lAllocDesc2.allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
 	lAllocDesc2.totalSize = lMemRequired2.sizeInBytes;
 
-	MemoryHandle lAddAllocated2 = mDevice->allocateResourceMemory(lAllocDesc2, lMemRequired2);
+	void* lAddAllocated2;
+	mDevice->allocateResourceMemory(&lAddAllocated2, lAllocDesc2, lMemRequired2);
 	if (!lAddAllocated2)
 	{
 		std::cerr << "Error to trying allocate" << std::endl;
 		return;
 	}
+	MemoryHandle lMem2 = static_cast<MemoryHandle>(lAddAllocated2);
 
 	std::vector<u8> lData2 = initRandomBufferValue(1024);
 
@@ -106,14 +112,15 @@ Exar::BufferAllocTest::BufferAllocTest()
 	lBufferInitData2.size = 1024;
 	lBufferInitData2.data = lData2.data();
 
-	bool lDataUpdated2 = mDevice->updateResourceData(lAddAllocated2, lMemRequired2, lBufferInitData2);
+	bool lDataUpdated2;
+	mDevice->updateResourceData(lMem2, lMemRequired2, lBufferInitData2);
 	if (!lDataUpdated2)
 	{
 		std::cerr << "Error when trying update resource data" << std::endl;
 		return;
 	}
 
-	bool lBufferBinded2 = mDevice->bindResource(lBuffer2, lAddAllocated2);
+	bool lBufferBinded2 = mDevice->bindResource(lBuffer2, lMem2);
 	if (!lDataUpdated2)
 	{
 		std::cerr << "Error when trying binding resouce" << std::endl;

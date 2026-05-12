@@ -6,6 +6,8 @@
 #include "Exar/Exar.hpp"
 #include "Exar/SwapchainDesc.hpp"
 
+class ExarDevice;
+
 namespace Exar
 {
 	class Swapchain : public ISwapchain
@@ -23,7 +25,9 @@ namespace Exar
 		virtual u32 getImageCount() const noexcept override;
 		virtual ExarResult getImages(Image* pImages) override;
 
-	private:		
+	private:
+		virtual void initImages() override;
+		
 		SwapchainDesc mDesc;
 		Image* mImages;
 		ExarDevice* mDevice;

@@ -6,6 +6,8 @@
 #include "Exar/Def.hpp"
 #include "Exar/Types.hpp"
 #include "Exar/ExarMemoryRequirements.hpp"
+#include "Exar/ImageDesc.hpp"
+#include "Exar/ImageView.hpp"
 
 #include "Exar/SwapchainDesc.hpp"
 
@@ -42,8 +44,12 @@ namespace Exar {
 			return true;
 		}
 
-		virtual ExarResult getImageMemoryRequirements(const ImageDesc& pDesc, ExarMemoryRequirement* pRequirement) noexcept = 0;
+		virtual ExarResult getImageMemoryRequirements(ExarMemoryRequirement* pRequirement, const ImageDesc& pDesc) noexcept = 0;
 		virtual ExarResult createImage(Image* pImage, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) = 0;
+		virtual ExarResult destroyImage(Image pImage, const ExarAllocatorDesc& pDesc) = 0;
+
+		virtual ExarResult createImageView(const ImageViewDesc& pDesc, ImageView** pImageView) = 0;
+		virtual ExarResult destroyImageView(ImageView* pImageView) = 0;
 
 		virtual ExarResult createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) = 0;
 		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) = 0;

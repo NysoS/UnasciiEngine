@@ -63,10 +63,25 @@ namespace Exar {
 		SAMPLED_BIT = 0x4L
 	};
 
+	enum class ImageAspectMask : uint32_t
+	{
+		COLOR_BIT = 0,
+		DEPTH_BIT,
+		STENCIL_BIT
+	};
+
 	enum class SharingMode : uint32_t
 	{
 		EXCLUSIVE = 0,
 		CONCURRENT
+	};
+
+	enum class ImageViewType : uint32_t
+	{
+		VIEW_1D = 0,
+		VIEW_2D,
+		VIEW_3D,
+		VIEW_CUBE
 	};
 };
 

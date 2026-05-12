@@ -22,7 +22,7 @@ void* Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemor
 	// Telemetri allocator //
 	// Desc
 	LOG_ALLOC("---------------", "");
-	size_t lAlignValue = pRequirement.align;
+	size_t lAlignValue = static_cast<size_t>(pRequirement.align);
 
 	LOG_ALLOC("AllocDescTotalSize", pDesc.totalSize);
 	LOG_ALLOC("AllocDescAlignMemory", (size_t)lAlignValue);

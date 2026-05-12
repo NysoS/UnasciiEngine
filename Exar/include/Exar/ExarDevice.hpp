@@ -4,7 +4,6 @@
 #include "Exar/exarpch.h"
 #include "Exar/Exar.hpp"
 #include "Exar/IExarDevice.hpp"
-#include "Exar/ImageDesc.hpp"
 
 namespace Exar
 {
@@ -25,8 +24,12 @@ namespace Exar
 		virtual ExarResult allocateResourceMemory(void** pMemory, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept override;
 		virtual bool updateResourceData(MemoryHandle& pMemHandle, const ExarMemoryRequirement& pRequirement, std::span<const u8> pData) noexcept override;
 
-		virtual ExarResult getImageMemoryRequirements(const ImageDesc& pDesc, ExarMemoryRequirement* pRequirement) noexcept override;
+		virtual ExarResult getImageMemoryRequirements(ExarMemoryRequirement* pRequirement, const ImageDesc& pDesc) noexcept override;
 		virtual ExarResult createImage(Image* pImage, const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) override;
+		virtual ExarResult destroyImage(Image pImage, const ExarAllocatorDesc& pDesc) override;
+
+		virtual ExarResult createImageView(const ImageViewDesc& pDesc, ImageView** pImageView) override;
+		virtual ExarResult destroyImageView(ImageView* pImageView) override;
 
 		virtual ExarResult createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) override;
 		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) override;
