@@ -13,6 +13,8 @@ namespace UnasciiEngine::RHI
 #include "Engine/Runtime/RHI/Test/IRHITest.hpp"
 
 	extern "C" __declspec(dllimport) void RHI_Verif_Allocation();
+	extern "C" __declspec(dllimport) void RHI_Swapchain_Present_Test();
+
 	class ExarTest : public UnasciiEngine::RHI::Test::IRHIBufferAllocationTest {
 	public:
 		ExarTest() = default;
@@ -22,6 +24,17 @@ namespace UnasciiEngine::RHI
 			RHI_Verif_Allocation();
 		}
 	};
+
+	class ExarSwapchainTest : public UnasciiEngine::RHI::Test::IRHISwapchainTest {
+	public: 
+		ExarSwapchainTest() = default;
+		virtual ~ExarSwapchainTest() = default;
+
+		virtual void execute() override {
+			RHI_Swapchain_Present_Test();
+		}
+	};
+
 #endif // DEBUG
 
 	class ExarDeviceBridge;
@@ -43,6 +56,11 @@ namespace UnasciiEngine::RHI
 		std::unique_ptr<Test::IRHIBufferAllocationTest> createBufferAllocationTest()
 		{
 			return std::make_unique<ExarTest>();
+		}
+
+		std::unique_ptr<Test::IRHISwapchainTest> createSwapchainPresentTest()
+		{
+			return std::make_unique<ExarSwapchainTest>();
 		}
 #endif // _DEBUG
 

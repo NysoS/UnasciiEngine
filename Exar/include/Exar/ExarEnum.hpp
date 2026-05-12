@@ -56,18 +56,19 @@ namespace Exar {
 		COLOR_SPACE_SRGB_LINEAR
 	};
 
+	enum class PresentationMode : uint32_t
+	{
+		IMMEDIATE = 0,
+		FIFO,
+		FIFO_RELAXED,
+		MAILBOX
+	};
+
 	enum class ImageUsageFlags : uint32_t
 	{
 		TRANSFER_DST = 0x1L,
 		COLOR_ATTACHMENT = 0x2L,
 		SAMPLED_BIT = 0x4L
-	};
-
-	enum class ImageAspectMask : uint32_t
-	{
-		COLOR_BIT = 0,
-		DEPTH_BIT,
-		STENCIL_BIT
 	};
 
 	enum class SharingMode : uint32_t
@@ -82,6 +83,13 @@ namespace Exar {
 		VIEW_2D,
 		VIEW_3D,
 		VIEW_CUBE
+	};
+
+	enum class ImageAspectMask : uint32_t
+	{
+		COLOR_BIT = 0,
+		DEPTH_BIT,
+		STENCIL_BIT
 	};
 };
 

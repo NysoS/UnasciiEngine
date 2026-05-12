@@ -15,6 +15,7 @@ namespace Exar
 
 		PixelFormat imageFormat;
 		ColorSpace imageColor;
+		PresentationMode presentMode;
 
 		Extent2D<u32> extent;
 

@@ -11,6 +11,13 @@ namespace UnasciiEngine::RHI::Test
 		virtual ~IRHIBufferAllocationTest() = default;
 		virtual void execute() = 0;
 	};
+
+	class UAE_API IRHISwapchainTest
+	{
+	public:
+		virtual ~IRHISwapchainTest() = default;
+		virtual void execute() = 0;
+	};
 }
 
 #endif // !IRHI_TEST_HPP

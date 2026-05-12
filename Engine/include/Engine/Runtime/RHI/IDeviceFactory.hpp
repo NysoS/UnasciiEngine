@@ -23,6 +23,7 @@ namespace UnasciiEngine::RHI
 	{
 #ifdef _DEBUG
 		std::unique_ptr<Test::IRHIBufferAllocationTest> createBufferAllocationTest();
+		std::unique_ptr<Test::IRHISwapchainTest> createSwapchainPresentTest();
 #endif // _DEBUG
 
 		std::unique_ptr<IDeviceFactory> createDeviceFactory();

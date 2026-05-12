@@ -96,8 +96,8 @@ Exar::ExarResult Exar::ExarDevice::getImageMemoryRequirements(ExarMemoryRequirem
 
 	if (pDesc.width == 0 || pDesc.height == 0) return ExarResult::EXAR_ERROR_INVALID_ARG;
 
-	size_t lSize = pDesc.width * pDesc.height;
 	size_t lAling = (size_t)pDesc.align;
+	size_t lSize = (size_t)pDesc.width * (size_t)pDesc.height * 4;; // taille réelle
 		 
 	size_t lRemainingMemory = mAllocator->getMemorySizeRemaining();
 	if (lSize > lRemainingMemory) return ExarResult::EXAR_ERROR_OUT_OF_MEMORY;
