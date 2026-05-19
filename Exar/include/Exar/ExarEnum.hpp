@@ -91,6 +91,34 @@ namespace Exar {
 		DEPTH_BIT,
 		STENCIL_BIT
 	};
+
+	enum class AttachmentLoadOp : uint32_t
+	{
+		LOAD_OP_LOAD = 0,
+		LOAD_OP_CLEAR = 1,
+		LOAD_OP_DONT_CARE = 2,
+		LOAD_OP_NONE = 1000400000
+	};
+
+	enum class AttachmentStoreOp : uint32_t
+	{
+		STORE_OP_STORE = 0,
+		STORE_OP_DONT_CARE = 1,
+		STORE_OP_NONE = 1000301000
+	};
+
+	enum class ImageLayout : uint32_t
+	{
+		UNDEFINED = 0,
+		PRESENT_SRC = 1,
+		COLOR_ATTACHMENT_OPTIMAL = 2
+	};
+
+	enum class PipelineBindPoint : uint32_t
+	{
+		GRAPHICS = 0,
+		COMPUTE
+	};
 };
 
 #endif // !EXAR_ENUM_HPP

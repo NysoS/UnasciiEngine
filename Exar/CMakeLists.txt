@@ -5,7 +5,7 @@ set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 file(GLOB_RECURSE SOURCES
     CONFIGURE_DEPENDS
-    ${SRC_DIR}/**.cpp
+    ${SRC_DIR}/*.cpp
 )
 
 file(GLOB_RECURSE HEADERS
