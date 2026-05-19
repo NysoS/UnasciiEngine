@@ -1,10 +1,12 @@
 #include "Exar/ExarDevice.hpp"
 #include "Exar/IExarBuffer.hpp"
 #include "Exar/ISwapchain.hpp"
+#include "Exar/FramebufferInfo.hpp"
 #include "Exar/Internal/ExarBuffer.hpp"
 #include "Exar/Internal/ExarAllocator.hpp"
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/Internal/ResourceTypes.h"
+#include "Exar/Internal/Framebuffer.hpp"
 
 #include <assert.h>
 
@@ -205,6 +207,37 @@ Exar::ExarResult Exar::ExarDevice::destroySwapchain(ISwapchain* pSwapchain)
 	}
 
 	delete pSwapchain;
+
+	return ExarResult::EXAR_SUCCESS;
+}
+
+Exar::ExarResult Exar::ExarDevice::createFramebuffer(const FramebufferInfo& pInfo, Framebuffer** pFramebuffer)
+{
+	if (pInfo.attachmentCount == 0 || pInfo.width == 0 || pInfo.height == 0) return ExarResult::EXAR_ERROR_INVALID_SIZE;
+	if (!pInfo.attachments) return ExarResult::EXAR_NULL_POINTER;
+
+	for (size_t i = 0; i < pInfo.attachmentCount; ++i)
+	{
+		if (!pInfo.attachments[i]) return ExarResult::EXAR_NULL_POINTER;
+	}
+
+	Framebuffer* lFramebuffer = new Framebuffer();
+	lFramebuffer->mRenderPass = pInfo.renderPass;
+	lFramebuffer->mAttachments= pInfo.attachments;
+	lFramebuffer->mWidth = pInfo.width;
+	lFramebuffer->mHeight = pInfo.height;
+	lFramebuffer->mLayer = pInfo.layer;
+
+	*pFramebuffer = lFramebuffer;
+
+	return ExarResult::EXAR_SUCCESS;
+}
+
+Exar::ExarResult Exar::ExarDevice::destroyFramebuffer(Framebuffer* pFramebuffer)
+{
+	if (!pFramebuffer) return ExarResult::EXAR_NULL_POINTER;
+
+	delete pFramebuffer;
 
 	return ExarResult::EXAR_SUCCESS;
 }

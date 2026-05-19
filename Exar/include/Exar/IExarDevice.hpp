@@ -17,6 +17,8 @@ namespace Exar {
 	class IExarRessource;
 	struct ExarAllocatorDesc;
 	class ISwapchain;
+	struct FramebufferInfo;
+	class Framebuffer;
 
 	template <typename Type>
 	concept ResourceTypeName = std::derived_from<Type, IExarRessource>;
@@ -53,6 +55,9 @@ namespace Exar {
 
 		virtual ExarResult createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) = 0;
 		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) = 0;
+	
+		virtual ExarResult createFramebuffer(const FramebufferInfo& pInfo, Framebuffer** pFramebuffer) = 0;
+		virtual ExarResult destroyFramebuffer(Framebuffer* pFramebuffer) = 0;
 	};
 }
 

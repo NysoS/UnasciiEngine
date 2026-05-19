@@ -34,6 +34,9 @@ namespace Exar
 		virtual ExarResult createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) override;
 		virtual ExarResult destroySwapchain(ISwapchain* pSwapchain) override;
 
+		virtual ExarResult createFramebuffer(const FramebufferInfo& pInfo, Framebuffer** pFramebuffer) override;
+		virtual ExarResult destroyFramebuffer(Framebuffer* pFramebuffer) override;
+
 		// create image
 		// destroy image
 		// check memory resources valid
