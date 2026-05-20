@@ -4,9 +4,7 @@
 #include "Engine/Engine.hpp"
 #include "Engine/Runtime/Platform/Window.hpp"
 
-#include <memory>
-
-class Window;
+#include "Engine/uaepch.h"
 
 namespace UnasciiEngine {
 	class UAE_API Application

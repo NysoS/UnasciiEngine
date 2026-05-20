@@ -1,4 +1,4 @@
-project(Engine)
+project(Exar)
 
 set (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -34,12 +34,6 @@ target_sources(
     ${HEADERS}
 )
 
-target_link_libraries(
-    ${PROJECT_NAME}
-    PRIVATE
-    Exar
-)
-
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC 
@@ -47,8 +41,8 @@ target_include_directories(
     $<INSTALL_INTERFACE:include>
 )
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE UNASCII_BUILD_DLL)
-target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/uaepch.h")
+target_compile_definitions(${PROJECT_NAME} PRIVATE EXAR_BUILD_DLL)
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/exarpch.h")
 
 install(
     DIRECTORY ${INC_DIR}/

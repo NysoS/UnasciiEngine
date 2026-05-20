@@ -2,11 +2,13 @@ cmake_minimum_required(VERSION 3.8)
 
 project(UnasciiEngine VERSION 0.1.0 LANGUAGES C CXX)
 
+add_subdirectory(Exar)
 add_subdirectory(Engine)
 add_subdirectory(Unascii)
 
 install(
     TARGETS
+        Exar
         Engine
         Unascii
     RUNTIME DESTINATION bin

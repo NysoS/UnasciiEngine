@@ -1,7 +1,9 @@
+#include "Engine/uaepch.h"
 #include "Engine/Core/Application.hpp"
 #include "Engine/Runtime/Platform/Window.hpp"
 
-#include <iostream>
+#include "Engine/Runtime/RHI/Manager.hpp"
+#include "Engine/Runtime/RHI/Test/IRHITest.hpp"
 
 namespace UnasciiEngine {
 	Application::Application(const WindowInfo& pWinInfo)
@@ -20,6 +22,10 @@ namespace UnasciiEngine {
 
 	bool Application::init()
 	{
+		//std::unique_ptr<RHI::Test::IRHIBufferAllocationTest> lBufferAllocTest = RHI::Factory::createBufferAllocationTest();
+		std::unique_ptr<RHI::Test::IRHISwapchainTest> lSwapchainPresentTest = RHI::Factory::createSwapchainPresentTest();
+		lSwapchainPresentTest->execute();
+
 		return mWindow->init();
 	}
 

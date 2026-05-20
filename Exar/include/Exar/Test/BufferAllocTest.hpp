@@ -1,0 +1,21 @@
+#ifndef BUFFER_ALLOC_TEST_HPP
+#define BUFFER_ALLOC_TEST_HPP
+
+#include "Exar/exarpch.h"
+#include "Exar/Exar.hpp"
+#include "Exar/IExarDevice.hpp"
+
+namespace Exar {
+	class EXA_API BufferAllocTest
+	{
+	public:
+		BufferAllocTest();
+		~BufferAllocTest();
+	private:
+		std::vector<u8> initRandomBufferValue(size_t pSize);
+
+		std::unique_ptr<IExarDevice> mDevice;
+	};
+}
+
+#endif // !BUFFER_ALLOC_TEST_HPP
