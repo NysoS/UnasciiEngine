@@ -1,14 +1,14 @@
 #ifndef EXAR_MEMORY_REQUIREMENTS_HPP
 #define EXAR_MEMORY_REQUIREMENTS_HPP
 
-#include "Exar/ExarEnum.hpp"
+#include "Exar/Enum.hpp"
 
 namespace Exar
 {
-	struct ExarMemoryRequirement
+	struct MemoryRequirement
 	{
 		size_t sizeInBytes;
-		ExarAlignMemory align;
+		AlignMemory align;
 	};
 }
 

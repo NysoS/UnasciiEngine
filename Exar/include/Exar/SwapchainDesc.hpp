@@ -2,7 +2,7 @@
 #define EXAR_SWAPCHAIN_DESC_HPP
 
 #include "Exar/Types.hpp"
-#include "Exar/ExarEnum.hpp"
+#include "Exar/Enum.hpp"
 #include "Exar/Extent.hpp"
 #include "Exar/Def.hpp"
 

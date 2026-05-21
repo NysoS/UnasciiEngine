@@ -3,17 +3,17 @@
 
 #include "Exar/exarpch.h"
 #include "Exar/Types.hpp"
-#include "Exar/ExarEnum.hpp"
+#include "Exar/Enum.hpp"
 
 namespace Exar
 {
-	struct ExarBufferDesc {
+	struct BufferDesc {
 		size_t size;
-		ExarUsage usage;
-		ExarBindFlag bindFlags;
+		Usage usage;
+		BindFlag bindFlags;
 	};
 
-	struct ExarBufferInitData {
+	struct BufferInitData {
 		const u8* data;
 		size_t size;
 

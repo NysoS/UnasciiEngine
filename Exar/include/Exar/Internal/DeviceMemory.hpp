@@ -6,14 +6,14 @@
 
 namespace Exar
 {
-	class ExarDeviceMemory final
+	class DeviceMemory final
 	{
 	public:
-		explicit ExarDeviceMemory(size_t pSize);
-		~ExarDeviceMemory();
+		explicit DeviceMemory(size_t pSize);
+		~DeviceMemory();
 
-		ExarDeviceMemory(const ExarDeviceMemory&) = delete;
-		ExarDeviceMemory& operator=(const ExarDeviceMemory&) = delete;
+		DeviceMemory(const DeviceMemory&) = delete;
+		DeviceMemory& operator=(const DeviceMemory&) = delete;
 
 		MemoryHandle getMemoryHandle();
 		size_t getMemorySize() const;

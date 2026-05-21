@@ -1,8 +1,8 @@
 set (SOURCES 
-    ExarBuffer.cpp
-    ExarBufferView.cpp
-    ExarDevice.cpp
-    ExarDeviceFactory.cpp
+    Buffer.cpp
+    BufferView.cpp
+    Device.cpp
+    DeviceFactory.cpp
 )
 
 add_subdirectories(

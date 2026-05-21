@@ -23,7 +23,7 @@ namespace Exar
 	private:
 		ImageViewDesc mDesc;
 		
-		friend class ExarDevice;
+		friend class Device;
 	};
 }
 

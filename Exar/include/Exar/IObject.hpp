@@ -6,11 +6,11 @@
 
 namespace Exar {
 
-	class IExarDevice;
+	class IDevice;
 
-	class EXA_API IExarObject
+	class EXA_API IObject
 	{
-		virtual inline IExarDevice* getDevice() const noexcept = 0;
+		virtual inline IDevice* getDevice() const noexcept = 0;
 	};
 }
 

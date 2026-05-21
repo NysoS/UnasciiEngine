@@ -2,8 +2,8 @@
 #include "Exar/ISwapchain.hpp"
 #include "Exar/SwapchainDesc.hpp"
 #include "Exar/Extent.hpp"
-#include "Exar/ExarEnum.hpp"
-#include "Exar/ExarDevice.hpp"
+#include "Exar/Enum.hpp"
+#include "Exar/Device.hpp"
 
 #include <thread>
 #include <chrono>
@@ -13,7 +13,7 @@
 #endif
 
 Exar::SwapchainPresentTest::SwapchainPresentTest()
-	: mDevice(std::make_unique<ExarDevice>())
+	: mDevice(std::make_unique<Device>())
 {
 	
 #ifdef WIN32
@@ -41,8 +41,8 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 	lSwapchainDesc.surface = reinterpret_cast<Surface>(hwnd);
 #endif // WIN32
 
-	ExarResult lRes = mDevice->createSwapchain(lSwapchainDesc, &mSwapchain);
-	if (lRes != ExarResult::EXAR_SUCCESS)
+	Result lRes = mDevice->createSwapchain(lSwapchainDesc, &mSwapchain);
+	if (lRes != Result::SUCCESS)
 	{
 		std::cerr << "Error when create swpachain " << (u32)lRes << std::endl;
 		return;
@@ -60,8 +60,8 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 		lTime++;
 	}
 
-	ExarResult lResult = mDevice->destroySwapchain(mSwapchain);
-	if (lResult == ExarResult::EXAR_SUCCESS)
+	Result lResult = mDevice->destroySwapchain(mSwapchain);
+	if (lResult == Result::SUCCESS)
 	{
 		mSwapchain = nullptr;
 	}

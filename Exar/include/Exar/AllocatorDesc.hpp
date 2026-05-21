@@ -2,15 +2,15 @@
 #define EXAR_ALLOCATOR_DESC_HPP
 
 #include "Exar/exarpch.h"
-#include "Exar/ExarEnum.hpp"
+#include "Exar/Enum.hpp"
 
 namespace Exar {
-	struct ExarAllocatorDesc
+	struct AllocatorDesc
 	{
 		size_t totalSize = 0;
-		ExarAlignMemory align = ExarAlignMemory::EXAR_ALIGN_32;
+		AlignMemory align = AlignMemory::ALIGN_32;
 		uint32_t maxAllocation = 0;
-		ExarAllocLocation allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
+		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
 	};
 }
 

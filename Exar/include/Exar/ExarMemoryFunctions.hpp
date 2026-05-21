@@ -1,9 +1,9 @@
 #ifndef EXAR_MEMORY_FUNCTIONS_HPP
 #define EXAR_MEMORY_FUNCTIONS_HPP
 
-#include "Engine/Runtime/RHI/Exar/ExarMemoryRequirements.hpp"
-#include "Engine/Runtime/RHI/Exar/IExarDevice.hpp"
-#include "Engine/Runtime/RHI/Exar/IExarBuffer.hpp"
+// #include "Engine/Runtime/RHI/Exar/ExarMemoryRequirements.hpp"
+// #include "Engine/Runtime/RHI/Exar/IExarDevice.hpp"
+// #include "Engine/Runtime/RHI/Exar/IExarBuffer.hpp"
 
 namespace UnasciiEngine::RHI::EXAR
 {

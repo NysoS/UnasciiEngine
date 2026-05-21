@@ -1,9 +1,9 @@
-#include "Exar/Internal/ExarAllocator.hpp"
-#include "Exar/Internal/ExarDeviceMemory.hpp"
-#include "Exar/IExarRessource.hpp"
+#include "Exar/Internal/Allocator.hpp"
+#include "Exar/Internal/DeviceMemory.hpp"
+#include "Exar/IRessource.hpp"
 
-Exar::ExarAllocator::ExarAllocator(size_t pMemorySize)
-	: mVram(std::make_unique<ExarDeviceMemory>(pMemorySize))
+Exar::Allocator::Allocator(size_t pMemorySize)
+	: mVram(std::make_unique<DeviceMemory>(pMemorySize))
 	, mOffset(0)
 	, mMemorySizeRemaining(0)
 {
@@ -13,11 +13,11 @@ Exar::ExarAllocator::ExarAllocator(size_t pMemorySize)
 	}
 }
 
-Exar::ExarAllocator::~ExarAllocator()
+Exar::Allocator::~Allocator()
 {
 }
 
-void* Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept
+void* Exar::Allocator::alloc(const AllocatorDesc& pDesc, const MemoryRequirement& pRequirement) noexcept
 {
 	// Telemetri allocator //
 	// Desc
@@ -59,7 +59,7 @@ void* Exar::ExarAllocator::alloc(const ExarAllocatorDesc& pDesc, const ExarMemor
 	return lAddMem;
 }
 
-bool Exar::ExarAllocator::dealloc(size_t pSize, MemoryHandle& pRessource) noexcept
+bool Exar::Allocator::dealloc(size_t pSize, MemoryHandle& pRessource) noexcept
 {
 	if (pSize <= 0) return false;
 

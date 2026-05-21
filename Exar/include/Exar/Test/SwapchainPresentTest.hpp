@@ -3,7 +3,7 @@
 
 #include "Exar/exarpch.h"
 #include "Exar/Exar.hpp"
-#include "Exar/IExarDevice.hpp"
+#include "Exar/IDevice.hpp"
 
 namespace Exar {
 	class EXA_API SwapchainPresentTest
@@ -12,7 +12,7 @@ namespace Exar {
 		SwapchainPresentTest();
 		~SwapchainPresentTest();
 	private:
-		std::unique_ptr<IExarDevice> mDevice;
+		std::unique_ptr<IDevice> mDevice;
 		class ISwapchain* mSwapchain;
 	};
 }

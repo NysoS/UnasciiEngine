@@ -4,38 +4,38 @@
 #include "Exar/exarpch.h"
 
 namespace Exar {
-	enum class ExarUsage : uint32_t
+	enum class Usage : uint32_t
 	{
-		EXAR_USAGE_DEFAULT = 0,
-		EXAR_USAGE_IMMUTABLE,
-		EXAR_USAGE_DYNAMIC
+		DEFAULT = 0,
+		IMMUTABLE,
+		DYNAMIC
 	};
 
-	enum class ExarBindFlag : uint32_t
+	enum class BindFlag : uint32_t
 	{
-		EXAR_BIND_VERTEX_BUFFER = 0x1L,
-		EXAR_BIND_INDEX_BUFFER = 0x2L,
-		EXAR_BIND_CONSTANT_BUFFER = 0x4L
+		BIND_VERTEX_BUFFER = 0x1L,
+		BIND_INDEX_BUFFER = 0x2L,
+		BIND_CONSTANT_BUFFER = 0x4L
 	};
 
-	enum class ExarAllocLocation : uint32_t
+	enum class AllocLocation : uint32_t
 	{
-		EXAR_ALLOC_HEAP = 0,
-		EXAR_ALLOC_SCRATCH = 1, // Ring buffer
-		EXAR_ALLOC_SIMD = 2
+		ALLOC_HEAP = 0,
+		ALLOC_SCRATCH = 1, // Ring buffer
+		ALLOC_SIMD = 2
 	};
 
-	enum class ExarAlignMemory : size_t
+	enum class AlignMemory : size_t
 	{
-		EXAR_ALIGN_16 = 16,
-		EXAR_ALIGN_32 = 32,
-		EXAR_ALIGN_64 = 64
+		ALIGN_16 = 16,
+		ALIGN_32 = 32,
+		ALIGN_64 = 64
 	};
 
-	enum class ExarAllocatorType : uint32_t
+	enum class AllocatorType : uint32_t
 	{
-		EXAR_ALLOCATOR_AREA = 0,
-		EXAR_ALLOCATOR_MANUALY
+		AREA = 0,
+		MANUALY
 	};
 
 	enum class PixelFormat : uint32_t

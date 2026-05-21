@@ -6,10 +6,10 @@
 #include "Exar/Exar.hpp"
 #include "Exar/SwapchainDesc.hpp"
 
-class ExarDevice;
-
 namespace Exar
 {
+	class Device;
+
 	class Swapchain : public ISwapchain
 	{
 	public:
@@ -24,18 +24,18 @@ namespace Exar
 		virtual void swap() noexcept override;
 
 		virtual u32 getImageCount() const noexcept override;
-		virtual ExarResult getImages(Image* pImages) override;
+		virtual Result getImages(Image* pImages) override;
 
 	private:
 		virtual void initImages() override;
 		
 		SwapchainDesc mDesc;
 		Image* mImages;
-		ExarDevice* mDevice;
+		Device* mDevice;
 
 		int index = 0;
 
-		friend class ExarDevice;
+		friend class Device;
 	};
 }
 

@@ -1,7 +1,7 @@
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/Def.hpp"
 #include "Exar/Types.hpp"
-#include "Exar/ExarDevice.hpp"
+#include "Exar/Device.hpp"
 
 #include <Windows.h>
 
@@ -50,7 +50,7 @@ void Exar::Swapchain::present()
 	BITMAPINFO bmi = {};
 	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmi.bmiHeader.biWidth = mDesc.extent.w;
-	bmi.bmiHeader.biHeight = -static_cast<int32_t>(mDesc.extent.h); // Négatif pour top-down
+	bmi.bmiHeader.biHeight = -static_cast<int32_t>(mDesc.extent.h); // Nï¿½gatif pour top-down
 	bmi.bmiHeader.biPlanes = 1;
 	bmi.bmiHeader.biBitCount = 32; // On assume du RGBA 8888
 	bmi.bmiHeader.biCompression = BI_RGB;
@@ -91,16 +91,16 @@ Exar::u32 Exar::Swapchain::getImageCount() const noexcept
 	return mDesc.minImageCount;
 }
 
-Exar::ExarResult Exar::Swapchain::getImages(Image* pImages)
+Exar::Result Exar::Swapchain::getImages(Image* pImages)
 {
 	for (size_t i = 0; i < mDesc.minImageCount; ++i)
 	{
-		if (mImages[i] == EXAR_NULL_HANDLE) return ExarResult::EXAR_NULL_POINTER;
+		if (mImages[i] == EXAR_NULL_HANDLE) return Result::NULL_POINTER;
 
 		pImages[i] = mImages[i];
 	}
 
-	return ExarResult::EXAR_SUCCESS;
+	return Result::SUCCESS;
 }
 
 void Exar::Swapchain::initImages()

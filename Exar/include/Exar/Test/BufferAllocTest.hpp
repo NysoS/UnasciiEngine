@@ -3,7 +3,7 @@
 
 #include "Exar/exarpch.h"
 #include "Exar/Exar.hpp"
-#include "Exar/IExarDevice.hpp"
+#include "Exar/IDevice.hpp"
 
 namespace Exar {
 	class EXA_API BufferAllocTest
@@ -14,7 +14,7 @@ namespace Exar {
 	private:
 		std::vector<u8> initRandomBufferValue(size_t pSize);
 
-		std::unique_ptr<IExarDevice> mDevice;
+		std::unique_ptr<IDevice> mDevice;
 	};
 }
 

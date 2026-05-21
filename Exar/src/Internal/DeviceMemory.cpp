@@ -1,8 +1,8 @@
-#include "Exar/Internal/ExarDeviceMemory.hpp"
+#include "Exar/Internal/DeviceMemory.hpp"
 
 #include <stdexcept>
 
-Exar::ExarDeviceMemory::ExarDeviceMemory(size_t pSize)
+Exar::DeviceMemory::DeviceMemory(size_t pSize)
 	: mHandle(nullptr)
 	, mSize(pSize)
 {
@@ -12,17 +12,17 @@ Exar::ExarDeviceMemory::ExarDeviceMemory(size_t pSize)
 	mHandle = static_cast<MemoryHandle>(lMemPtr);
 }
 
-Exar::ExarDeviceMemory::~ExarDeviceMemory()
+Exar::DeviceMemory::~DeviceMemory()
 {
 	VirtualFree(static_cast<void*>(mHandle), 0, MEM_RELEASE);
 }
 
-Exar::MemoryHandle Exar::ExarDeviceMemory::getMemoryHandle()
+Exar::MemoryHandle Exar::DeviceMemory::getMemoryHandle()
 {
 	return mHandle;
 }
 
-size_t Exar::ExarDeviceMemory::getMemorySize() const
+size_t Exar::DeviceMemory::getMemorySize() const
 {
 	return mSize;
 }

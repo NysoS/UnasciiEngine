@@ -3,7 +3,7 @@
 
 #include "Exar/Exar.hpp"
 #include "Exar/Types.hpp"
-#include "Exar/ExarEnum.hpp"
+#include "Exar/Enum.hpp"
 
 namespace Exar
 {

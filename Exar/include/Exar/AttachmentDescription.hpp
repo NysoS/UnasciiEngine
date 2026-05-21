@@ -2,7 +2,7 @@
 #define EXAR_ATTACHMENT_DESCRIPTION_HPP
 
 #include "Exar/Exar.hpp"
-#include "Exar/ExarEnum.hpp"
+#include "Exar/Enum.hpp"
 #include "Exar/Types.hpp"
 
 namespace Exar

@@ -1,6 +1,6 @@
 set(SOURCES
-    ExarAllocator.cpp
-    ExarDeviceMemory.cpp
+    Allocator.cpp
+    DeviceMemory.cpp
     Framebuffer.cpp
     Swapchain_del.cpp
 )

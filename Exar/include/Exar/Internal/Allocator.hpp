@@ -3,8 +3,8 @@
 
 #include "Exar/exarpch.h"
 #include "Exar/Types.hpp"
-#include "Exar/ExarAllocatorDesc.hpp"
-#include "Exar/ExarMemoryRequirements.hpp"
+#include "Exar/AllocatorDesc.hpp"
+#include "Exar/MemoryRequirements.hpp"
 #include "Exar/Def.hpp"
 
 #include <span>
@@ -19,19 +19,19 @@
 
 namespace Exar
 {
-	class ExarDeviceMemory;
-	class IExarRessource;
+	class DeviceMemory;
+	class IRessource;
 
-	class ExarAllocator 
+	class Allocator 
 	{
 	public:
-		explicit ExarAllocator(size_t pMemorySize);
-		~ExarAllocator();
+		explicit Allocator(size_t pMemorySize);
+		~Allocator();
 
-		ExarAllocator(const ExarAllocator&) = delete;
-		ExarAllocator& operator=(const ExarAllocator&) = delete;
+		Allocator(const Allocator&) = delete;
+		Allocator& operator=(const Allocator&) = delete;
 
-		void* alloc(const ExarAllocatorDesc& pDesc, const ExarMemoryRequirement& pRequirement) noexcept;
+		void* alloc(const AllocatorDesc& pDesc, const MemoryRequirement& pRequirement) noexcept;
 		bool dealloc(size_t pSize, MemoryHandle& pRessource) noexcept;
 
 		inline size_t getMemorySizeRemaining() const noexcept {
@@ -39,7 +39,7 @@ namespace Exar
 		}
 
 	private:
-		std::unique_ptr<ExarDeviceMemory> mVram; // Device has a owner ptr
+		std::unique_ptr<DeviceMemory> mVram; // Device has a owner ptr
 		size_t mOffset;
 		size_t mMemorySizeRemaining;
 	};

@@ -1,16 +1,16 @@
 #include "Exar/Test/BufferAllocTest.hpp"
-#include "Exar/ExarDevice.hpp"
-#include "Exar/Internal/ExarBuffer.hpp"
+#include "Exar/Device.hpp"
+#include "Exar/Internal/Buffer.hpp"
 #include "Exar/Exar.hpp"
-#include "Exar/ExarAllocatorDesc.hpp"
-#include "Exar/ExarBufferView.hpp"
-#include "Exar/ExarDevice.hpp"
+#include "Exar/AllocatorDesc.hpp"
+#include "Exar/BufferView.hpp"
+#include "Exar/Device.hpp"
 
 #include <algorithm>
 #include <random>
 
 Exar::BufferAllocTest::BufferAllocTest()
-	: mDevice(std::make_unique<ExarDevice>())
+	: mDevice(std::make_unique<Device>())
 {
 	bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
 	if (!lMemoryCreated)
@@ -19,23 +19,23 @@ Exar::BufferAllocTest::BufferAllocTest()
 		return;
 	}
 
-	ExarBufferDesc lBufferDesc;
+	BufferDesc lBufferDesc;
 	lBufferDesc.size = 1024 * 1024;
-	lBufferDesc.bindFlags = ExarBindFlag::EXAR_BIND_CONSTANT_BUFFER;
-	lBufferDesc.usage = ExarUsage::EXAR_USAGE_DEFAULT;
+	lBufferDesc.bindFlags = BindFlag::BIND_CONSTANT_BUFFER;
+	lBufferDesc.usage = Usage::DEFAULT;
 
-	IExarBuffer* lBuffer = mDevice->createBuffer(lBufferDesc);
+	IBuffer* lBuffer = mDevice->createBuffer(lBufferDesc);
 	if (!lBuffer)
 	{
 		std::cerr << "Can't create buffer" << std::endl;
 		return;
 	}
 
-	ExarMemoryRequirement lMemRequired = mDevice->getBufferMemoryRequirements(lBuffer);
+	MemoryRequirement lMemRequired = mDevice->getBufferMemoryRequirements(lBuffer);
 
-	ExarAllocatorDesc lAllocDesc;
-	lAllocDesc.align = ExarAlignMemory::EXAR_ALIGN_32;
-	lAllocDesc.allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
+	AllocatorDesc lAllocDesc;
+	lAllocDesc.align = AlignMemory::ALIGN_32;
+	lAllocDesc.allocLocation = AllocLocation::ALLOC_HEAP;
 	lAllocDesc.totalSize = lMemRequired.sizeInBytes;
 
 	void* lAddAllocated;
@@ -49,7 +49,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 	std::vector<u8> lData = initRandomBufferValue(1024 * 1024);
 
-	ExarBufferInitData lBufferInitData;
+	BufferInitData lBufferInitData;
 	lBufferInitData.size = 1024 * 1024;
 	lBufferInitData.data = lData.data();
 
@@ -70,7 +70,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 	std::cout << "-------- Buffer view --------" << std::endl;
 
-	ExarBufferView lBufferView = lBuffer->getView();
+	BufferView lBufferView = lBuffer->getView();
 	std::cout << "{" << lBufferView.get<u32>(0) << "}" << std::endl;
 	std::cout << "{" << lBufferView.get<u32>(1) << "}" << std::endl;
 	std::cout << "{" << lBufferView.get<u32>(2) << "}" << std::endl;
@@ -78,23 +78,23 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 
 
-	ExarBufferDesc lBufferDesc2;
+	BufferDesc lBufferDesc2;
 	lBufferDesc2.size = 1024;
-	lBufferDesc2.bindFlags = ExarBindFlag::EXAR_BIND_CONSTANT_BUFFER;
-	lBufferDesc2.usage = ExarUsage::EXAR_USAGE_DEFAULT;
+	lBufferDesc2.bindFlags = BindFlag::BIND_CONSTANT_BUFFER;
+	lBufferDesc2.usage = Usage::DEFAULT;
 
-	IExarBuffer* lBuffer2 = mDevice->createBuffer(lBufferDesc2);
+	IBuffer* lBuffer2 = mDevice->createBuffer(lBufferDesc2);
 	if (!lBuffer2)
 	{
 		std::cerr << "Can't create buffer" << std::endl;
 		return;
 	}
 
-	ExarMemoryRequirement lMemRequired2 = mDevice->getBufferMemoryRequirements(lBuffer2);
+	MemoryRequirement lMemRequired2 = mDevice->getBufferMemoryRequirements(lBuffer2);
 
-	ExarAllocatorDesc lAllocDesc2;
-	lAllocDesc2.align = ExarAlignMemory::EXAR_ALIGN_16;
-	lAllocDesc2.allocLocation = ExarAllocLocation::EXAR_ALLOC_HEAP;
+	AllocatorDesc lAllocDesc2;
+	lAllocDesc2.align = AlignMemory::ALIGN_16;
+	lAllocDesc2.allocLocation = AllocLocation::ALLOC_HEAP;
 	lAllocDesc2.totalSize = lMemRequired2.sizeInBytes;
 
 	void* lAddAllocated2;
@@ -108,7 +108,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 	std::vector<u8> lData2 = initRandomBufferValue(1024);
 
-	ExarBufferInitData lBufferInitData2;
+	BufferInitData lBufferInitData2;
 	lBufferInitData2.size = 1024;
 	lBufferInitData2.data = lData2.data();
 
@@ -129,7 +129,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 	std::cout << "-------- Buffer view --------" << std::endl;
 
-	ExarBufferView lBufferView2 = lBuffer2->getView();
+	BufferView lBufferView2 = lBuffer2->getView();
 	std::cout << "{" << lBufferView2.get<u32>(0) << "}" << std::endl;
 	std::cout << "{" << lBufferView2.get<u32>(1) << "}" << std::endl;
 	std::cout << "{" << lBufferView2.get<u32>(2) << "}" << std::endl;
@@ -149,7 +149,7 @@ std::vector<Exar::u8> Exar::BufferAllocTest::initRandomBufferValue(size_t pSize)
 {
 	std::vector<u8> testBuffer(pSize, 0);
 
-	// OPTIONNEL : Remplir avec des données aléatoires pour un vrai test
+	// OPTIONNEL : Remplir avec des donnï¿½es alï¿½atoires pour un vrai test
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(0, 255);
