@@ -2,7 +2,7 @@
 #define IEXAR_OBJECT_HPP
 
 #include "Exar/Exar.hpp"
-#include "Exar/Def.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar {
 

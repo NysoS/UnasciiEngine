@@ -1,8 +1,7 @@
 #ifndef EXAR_DEVICE_MEMORY_HPP
 #define EXAR_DEVICE_MEMORY_HPP
 
-#include "Exar/Types.hpp"
-#include "Exar/Def.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar
 {

@@ -1,8 +1,7 @@
 #ifndef EXAR_IMAGE_DESC_HPP
 #define EXAR_IMAGE_DESC_HPP
 
-#include "Exar/Types.hpp"
-#include "Exar/Enum.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar
 {

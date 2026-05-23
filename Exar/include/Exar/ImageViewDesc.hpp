@@ -2,9 +2,7 @@
 #define EXAR_IMAGE_VIEW_DESC_HPP
 
 #include "Exar/Exar.hpp"
-#include "Exar/Def.hpp"
-#include "Exar/Types.hpp"
-#include "Exar/Enum.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar 
 {

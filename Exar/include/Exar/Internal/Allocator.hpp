@@ -1,13 +1,9 @@
 #ifndef EXAR_ALLOCATOR_HPP
 #define EXAR_ALLOCATOR_HPP
 
-#include "Exar/exarpch.h"
-#include "Exar/Types.hpp"
+#include "Exar/MinimalCore.hpp"
 #include "Exar/AllocatorDesc.hpp"
 #include "Exar/MemoryRequirements.hpp"
-#include "Exar/Def.hpp"
-
-#include <span>
 
 #ifdef _DEBUG
 #include <iostream>

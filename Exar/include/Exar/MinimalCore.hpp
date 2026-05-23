@@ -1,9 +1,34 @@
-#ifndef EXAR_ENUM_HPP
-#define EXAR_ENUM_HPP
+#ifndef EXAR_DEF_HPP
+#define EXAR_DEF_HPP
 
 #include "Exar/exarpch.h"
+#include "Exar/Types.hpp"
+
+#define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
 
 namespace Exar {
+	DECLARE_EXAR_HANDLE(MemoryHandle);
+	DECLARE_EXAR_HANDLE(Surface);
+	DECLARE_EXAR_HANDLE(Image);
+
+#define EXAR_NULL_HANDLE nullptr
+
+	enum class Result
+	{
+		SUCCESS = 0,
+		NULL_POINTER,
+
+		ERROR_INVALID_ARG,
+
+		ERROR_RESOURCES_LOST,
+
+		ERROR_INVALID_SIZE,
+		ERROR_MEMORY_MAP_FAILED,
+		ERROR_OUT_OF_MEMORY,
+
+		ERROR_ALLOCATOR_NULL_POINTER,
+	};
+
 	enum class Usage : uint32_t
 	{
 		DEFAULT = 0,
@@ -119,6 +144,6 @@ namespace Exar {
 		GRAPHICS = 0,
 		COMPUTE
 	};
-};
+}
 
-#endif // !EXAR_ENUM_HPP
+#endif // EXAR_DEF_HPP

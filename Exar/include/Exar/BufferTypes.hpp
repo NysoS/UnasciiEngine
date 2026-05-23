@@ -1,9 +1,7 @@
 #ifndef EXAR_BUFFER_TYPES_HPP
 #define EXAR_BUFFER_TYPES_HPP
 
-#include "Exar/exarpch.h"
-#include "Exar/Types.hpp"
-#include "Exar/Enum.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar
 {

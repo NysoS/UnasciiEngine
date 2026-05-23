@@ -1,8 +1,7 @@
 #ifndef EXAR_ALLOCATOR_DESC_HPP
 #define EXAR_ALLOCATOR_DESC_HPP
 
-#include "Exar/exarpch.h"
-#include "Exar/Enum.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar {
 	struct AllocatorDesc

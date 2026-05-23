@@ -1,6 +1,5 @@
 #include "Exar/Internal/Swapchain.hpp"
-#include "Exar/Def.hpp"
-#include "Exar/Types.hpp"
+#include "Exar/MinimalCore.hpp"
 #include "Exar/Device.hpp"
 
 #include <Windows.h>

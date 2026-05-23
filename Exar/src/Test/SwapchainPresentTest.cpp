@@ -2,11 +2,8 @@
 #include "Exar/ISwapchain.hpp"
 #include "Exar/SwapchainDesc.hpp"
 #include "Exar/Extent.hpp"
-#include "Exar/Enum.hpp"
 #include "Exar/Device.hpp"
-
-#include <thread>
-#include <chrono>
+#include "Exar/MinimalCore.hpp"
 
 #ifdef WIN32
 #include <Windows.h>

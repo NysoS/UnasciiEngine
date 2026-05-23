@@ -1,10 +1,8 @@
 #ifndef IEXAR_DEVICE_HPP //Exarare
 #define IEXAR_DEVICE_HPP
 
-#include "Exar/exarpch.h"
 #include "Exar/Exar.hpp"
-#include "Exar/Def.hpp"
-#include "Exar/Types.hpp"
+#include "Exar/MinimalCore.hpp"
 #include "Exar/MemoryRequirements.hpp"
 #include "Exar/ImageDesc.hpp"
 #include "Exar/ImageView.hpp"

@@ -2,7 +2,7 @@
 #define EXAR_BUFFER_HPP
 
 #include "Exar/IBuffer.hpp"
-#include "Exar/Def.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar
 {
