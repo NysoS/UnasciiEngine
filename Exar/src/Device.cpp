@@ -1,12 +1,12 @@
 #include "Exar/Device.hpp"
 #include "Exar/IBuffer.hpp"
 #include "Exar/ISwapchain.hpp"
-#include "Exar/FramebufferInfo.hpp"
 #include "Exar/Internal/Buffer.hpp"
 #include "Exar/Internal/Allocator.hpp"
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/Framebuffer.hpp"
+#include "Exar/ImageView.hpp"
 
 #include <assert.h>
 

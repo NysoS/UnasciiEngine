@@ -2,7 +2,7 @@
 #include "Exar/Device.hpp"
 #include "Exar/Internal/Buffer.hpp"
 #include "Exar/Exar.hpp"
-#include "Exar/AllocatorDesc.hpp"
+#include "Exar/Descriptor.hpp"
 #include "Exar/BufferView.hpp"
 #include "Exar/Device.hpp"
 

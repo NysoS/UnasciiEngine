@@ -3,6 +3,7 @@
 
 #include "Exar/exarpch.h"
 #include "Exar/Exar.hpp"
+#include "Exar/Descriptor.hpp"
 #include "Exar/IDevice.hpp"
 
 namespace Exar

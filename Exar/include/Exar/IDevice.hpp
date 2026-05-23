@@ -3,9 +3,7 @@
 
 #include "Exar/Exar.hpp"
 #include "Exar/MinimalCore.hpp"
-#include "Exar/MemoryRequirements.hpp"
-#include "Exar/ImageDesc.hpp"
-#include "Exar/ImageView.hpp"
+#include "Exar/Descriptor.hpp"
 
 #include "Exar/SwapchainDesc.hpp"
 

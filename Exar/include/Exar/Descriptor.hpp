@@ -1,0 +1,105 @@
+#ifndef EXAR_DESCRIPTOR_HPP
+#define EXAR_DESCRIPTOR_HPP
+
+#include "Exar/Exar.hpp"
+#include "Exar/MinimalCore.hpp"
+
+namespace Exar {
+	struct AllocatorDesc
+	{
+		size_t totalSize = 0;
+		AlignMemory align = AlignMemory::ALIGN_32;
+		uint32_t maxAllocation = 0;
+		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
+	};
+
+	struct EXA_API AttachmentDescription
+	{
+		PixelFormat imageFormat;
+		u8 samples = 0x01;
+		AttachmentLoadOp loadOp = AttachmentLoadOp::LOAD_OP_NONE;
+		AttachmentStoreOp storeOp = AttachmentStoreOp::STORE_OP_NONE;
+		AttachmentLoadOp stencilLoadOp = AttachmentLoadOp::LOAD_OP_NONE;
+		AttachmentStoreOp stencilStoreOp = AttachmentStoreOp::STORE_OP_NONE;
+		ImageLayout initialLayout = ImageLayout::UNDEFINED;
+		ImageLayout finalLayout = ImageLayout::UNDEFINED;
+	};
+
+	struct ImageDesc
+	{
+		u32 width = 0;
+		u32 height = 0;
+		AlignMemory align = AlignMemory::ALIGN_32;
+		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
+	};
+
+	struct EXA_API ImageSubresource
+	{
+		ImageAspectMask aspectMask;
+		u32 baseMipLevel = 0;
+		u32 levelCount = 1;
+	};
+
+	struct EXA_API ImageViewDesc
+	{
+		Image image;
+		ImageViewType viewType = ImageViewType::VIEW_2D;
+		PixelFormat format;
+		ImageSubresource subresource;
+	};
+
+	struct MemoryRequirement
+	{
+		size_t sizeInBytes;
+		AlignMemory align;
+	};
+
+	struct EXA_API AttachmentReference
+	{
+		u32 attachment;
+		ImageLayout layout;
+	};
+
+	struct EXA_API SubpassDescription
+	{
+		PipelineBindPoint pipelineBindPoint;
+		u32 colorAttachmentCount;
+		AttachmentReference* colorAttachments;
+	};
+
+	struct EXA_API RenderPassInfo
+	{
+		const u32 attachmentCount;
+		const AttachmentDescription* attachments;
+		const u32 subpassCount;
+		const SubpassDescription* subpasses;
+	};
+
+	struct SwapchainDesc
+	{
+		Surface surface;
+		u32 minImageCount;
+
+		PixelFormat imageFormat;
+		ColorSpace imageColor;
+		PresentationMode presentMode;
+
+		struct Extent2D<u32> extent;
+
+		ImageUsageFlags imageUsage;
+		SharingMode imageSharingMode;
+		u8 useVSync = 0;
+		u8 clipped = 0;
+	};
+
+	struct EXA_API FramebufferInfo
+	{
+		void* renderPass;
+		class ImageView** attachments;
+		u32 attachmentCount;
+		u32 width, height;
+		u32 layer;
+	};
+}
+
+#endif // !EXAR_DESCRIPTOR_HPP

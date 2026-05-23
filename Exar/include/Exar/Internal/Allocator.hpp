@@ -2,8 +2,7 @@
 #define EXAR_ALLOCATOR_HPP
 
 #include "Exar/MinimalCore.hpp"
-#include "Exar/AllocatorDesc.hpp"
-#include "Exar/MemoryRequirements.hpp"
+#include "Exar/Descriptor.hpp"
 
 #ifdef _DEBUG
 #include <iostream>

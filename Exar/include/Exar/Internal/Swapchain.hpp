@@ -1,10 +1,9 @@
 #ifndef EXAR_SWAPCHAIN_HPP
 #define EXAR_SWAPCHAIN_HPP
 
-#include "Exar/exarpch.h"
+#include "Exar/Descriptor.hpp"
+#include "Exar/MinimalCore.hpp"
 #include "Exar/ISwapchain.hpp"
-#include "Exar/Exar.hpp"
-#include "Exar/SwapchainDesc.hpp"
 
 namespace Exar
 {

@@ -1,6 +1,6 @@
 #include "Exar/Test/SwapchainPresentTest.hpp"
 #include "Exar/ISwapchain.hpp"
-#include "Exar/SwapchainDesc.hpp"
+#include "Exar/Descriptor.hpp"
 #include "Exar/Extent.hpp"
 #include "Exar/Device.hpp"
 #include "Exar/MinimalCore.hpp"

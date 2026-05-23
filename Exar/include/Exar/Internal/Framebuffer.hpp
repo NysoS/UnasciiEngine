@@ -1,8 +1,7 @@
 #ifndef EXAR_FRAMEBUFFER_HPP
 #define EXAR_FRAMEBUFFER_HPP
 
-#include "Exar/exarpch.h"
-#include "Exar/Types.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar
 {

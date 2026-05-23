@@ -3,6 +3,7 @@
 
 #include "Exar/exarpch.h"
 #include "Exar/Types.hpp"
+#include "Exar/Extent.hpp"
 
 #define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
 
