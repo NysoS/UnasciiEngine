@@ -5,7 +5,7 @@
 #include "Exar/MinimalCore.hpp"
 
 namespace Exar {
-	struct AllocatorDesc
+	struct AllocatorCreateInfo
 	{
 		size_t totalSize = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
@@ -13,7 +13,7 @@ namespace Exar {
 		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
 	};
 
-	struct EXA_API AttachmentDescription
+	struct EXA_API AttachmentDesc
 	{
 		PixelFormat imageFormat;
 		u8 samples = 0x01;
@@ -25,7 +25,7 @@ namespace Exar {
 		ImageLayout finalLayout = ImageLayout::UNDEFINED;
 	};
 
-	struct ImageDesc
+	struct ImageCreateInfo
 	{
 		u32 width = 0;
 		u32 height = 0;
@@ -40,7 +40,7 @@ namespace Exar {
 		u32 levelCount = 1;
 	};
 
-	struct EXA_API ImageViewDesc
+	struct EXA_API ImageViewCreateInfo
 	{
 		Image image;
 		ImageViewType viewType = ImageViewType::VIEW_2D;
@@ -70,12 +70,12 @@ namespace Exar {
 	struct EXA_API RenderPassInfo
 	{
 		const u32 attachmentCount;
-		const AttachmentDescription* attachments;
+		const AttachmentDesc* attachments;
 		const u32 subpassCount;
 		const SubpassDescription* subpasses;
 	};
 
-	struct SwapchainDesc
+	struct SwapchainCreateInfo
 	{
 		Surface surface;
 		u32 minImageCount;
@@ -92,7 +92,7 @@ namespace Exar {
 		u8 clipped = 0;
 	};
 
-	struct EXA_API FramebufferInfo
+	struct EXA_API FramebufferCreateInfo
 	{
 		void* renderPass;
 		class ImageView** attachments;

@@ -33,13 +33,13 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 	MemoryRequirement lMemRequired = mDevice->getBufferMemoryRequirements(lBuffer);
 
-	AllocatorDesc lAllocDesc;
-	lAllocDesc.align = AlignMemory::ALIGN_32;
-	lAllocDesc.allocLocation = AllocLocation::ALLOC_HEAP;
-	lAllocDesc.totalSize = lMemRequired.sizeInBytes;
+	AllocatorCreateInfo lAllocCreateInfo;
+	lAllocCreateInfo.align = AlignMemory::ALIGN_32;
+	lAllocCreateInfo.allocLocation = AllocLocation::ALLOC_HEAP;
+	lAllocCreateInfo.totalSize = lMemRequired.sizeInBytes;
 
 	void* lAddAllocated;
-	mDevice->allocateResourceMemory(&lAddAllocated, lAllocDesc, lMemRequired);
+	mDevice->allocateResourceMemory(&lAddAllocated, lAllocCreateInfo, lMemRequired);
 	if (!lAddAllocated)
 	{
 		std::cerr << "Error to trying allocate" << std::endl;
@@ -92,13 +92,13 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 	MemoryRequirement lMemRequired2 = mDevice->getBufferMemoryRequirements(lBuffer2);
 
-	AllocatorDesc lAllocDesc2;
-	lAllocDesc2.align = AlignMemory::ALIGN_16;
-	lAllocDesc2.allocLocation = AllocLocation::ALLOC_HEAP;
-	lAllocDesc2.totalSize = lMemRequired2.sizeInBytes;
+	AllocatorCreateInfo lAllocCreateInfo2{};
+	lAllocCreateInfo2.align = AlignMemory::ALIGN_16;
+	lAllocCreateInfo2.allocLocation = AllocLocation::ALLOC_HEAP;
+	lAllocCreateInfo2.totalSize = lMemRequired2.sizeInBytes;
 
 	void* lAddAllocated2;
-	mDevice->allocateResourceMemory(&lAddAllocated2, lAllocDesc2, lMemRequired2);
+	mDevice->allocateResourceMemory(&lAddAllocated2, lAllocCreateInfo2, lMemRequired2);
 	if (!lAddAllocated2)
 	{
 		std::cerr << "Error to trying allocate" << std::endl;

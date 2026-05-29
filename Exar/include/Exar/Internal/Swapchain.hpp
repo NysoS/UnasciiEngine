@@ -28,7 +28,7 @@ namespace Exar
 	private:
 		virtual void initImages() override;
 		
-		SwapchainDesc mDesc;
+		SwapchainCreateInfo mInfo;
 		Image* mImages;
 		Device* mDevice;
 

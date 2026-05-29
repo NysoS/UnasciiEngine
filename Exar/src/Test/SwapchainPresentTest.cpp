@@ -24,21 +24,21 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 		return;
 	}
 
-	SwapchainDesc lSwapchainDesc{};
-	lSwapchainDesc.extent = Extent2D<u32>{ .w = 600, .h = 600 };
-	lSwapchainDesc.minImageCount = 2;
-	lSwapchainDesc.imageFormat = PixelFormat::B8G8R8A8_UNORM_SRGB;
-	lSwapchainDesc.imageColor = ColorSpace::COLOR_SPACE_SRGB_NONLINEAR;
-	lSwapchainDesc.imageUsage = ImageUsageFlags::COLOR_ATTACHMENT;
-	lSwapchainDesc.imageSharingMode = SharingMode::EXCLUSIVE;
-	lSwapchainDesc.presentMode = PresentationMode::FIFO;
+	SwapchainCreateInfo lSwapchainInfo{};
+	lSwapchainInfo.extent = Extent2D<u32>{ .w = 600, .h = 600 };
+	lSwapchainInfo.minImageCount = 2;
+	lSwapchainInfo.imageFormat = PixelFormat::B8G8R8A8_UNORM_SRGB;
+	lSwapchainInfo.imageColor = ColorSpace::COLOR_SPACE_SRGB_NONLINEAR;
+	lSwapchainInfo.imageUsage = ImageUsageFlags::COLOR_ATTACHMENT;
+	lSwapchainInfo.imageSharingMode = SharingMode::EXCLUSIVE;
+	lSwapchainInfo.presentMode = PresentationMode::FIFO;
 
 #ifdef WIN32
 	HWND hwnd = GetConsoleWindow();
-	lSwapchainDesc.surface = reinterpret_cast<Surface>(hwnd);
+	lSwapchainInfo.surface = reinterpret_cast<Surface>(hwnd);
 #endif // WIN32
 
-	Result lRes = mDevice->createSwapchain(lSwapchainDesc, &mSwapchain);
+	Result lRes = mDevice->createSwapchain(lSwapchainInfo, &mSwapchain);
 	if (lRes != Result::SUCCESS)
 	{
 		std::cerr << "Error when create swpachain " << (u32)lRes << std::endl;

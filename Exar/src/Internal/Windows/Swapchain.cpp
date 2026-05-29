@@ -9,7 +9,7 @@ uint32_t testBuffer[600 * 600] = {};
 uint32_t testBuffer2[600 * 600] = {};
 
 Exar::Swapchain::Swapchain()
-	: mDesc{}
+	: mInfo{}
 	, mImages(EXAR_NULL_HANDLE)
 {
 	const uint32_t CELL = 32; // taille d'une case du damier
@@ -36,20 +36,20 @@ Exar::Swapchain::~Swapchain()
 
 Exar::Surface Exar::Swapchain::getSurfaceImageHandle()
 {
-	return mDesc.surface;
+	return mInfo.surface;
 }
 
 void Exar::Swapchain::present()
 {
-	HWND lHandle = reinterpret_cast<HWND>(mDesc.surface);
+	HWND lHandle = reinterpret_cast<HWND>(mInfo.surface);
 	if (!lHandle) return;
 
 	HDC hdc = GetDC(lHandle);
 
 	BITMAPINFO bmi = {};
 	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	bmi.bmiHeader.biWidth = mDesc.extent.w;
-	bmi.bmiHeader.biHeight = -static_cast<int32_t>(mDesc.extent.h); // N�gatif pour top-down
+	bmi.bmiHeader.biWidth = mInfo.extent.w;
+	bmi.bmiHeader.biHeight = -static_cast<int32_t>(mInfo.extent.h); // N�gatif pour top-down
 	bmi.bmiHeader.biPlanes = 1;
 	bmi.bmiHeader.biBitCount = 32; // On assume du RGBA 8888
 	bmi.bmiHeader.biCompression = BI_RGB;
@@ -67,11 +67,11 @@ void Exar::Swapchain::present()
 	SetDIBitsToDevice(
 		hdc,
 		0, 0,
-		mDesc.extent.w, mDesc.extent.h,
+		mInfo.extent.w, mInfo.extent.h,
 		0,
 		0,
 		0, 
-		mDesc.extent.h,
+		mInfo.extent.h,
 		finalBuffer,
 		&bmi,
 		DIB_RGB_COLORS
@@ -87,12 +87,12 @@ void Exar::Swapchain::swap() noexcept
 
 Exar::u32 Exar::Swapchain::getImageCount() const noexcept
 {
-	return mDesc.minImageCount;
+	return mInfo.minImageCount;
 }
 
 Exar::Result Exar::Swapchain::getImages(Image* pImages)
 {
-	for (size_t i = 0; i < mDesc.minImageCount; ++i)
+	for (size_t i = 0; i < mInfo.minImageCount; ++i)
 	{
 		if (mImages[i] == EXAR_NULL_HANDLE) return Result::NULL_POINTER;
 
@@ -106,5 +106,5 @@ void Exar::Swapchain::initImages()
 {
 	if (mImages != nullptr) return;
 
-	mImages = new Image[mDesc.minImageCount]();
+	mImages = new Image[mInfo.minImageCount]();
 }

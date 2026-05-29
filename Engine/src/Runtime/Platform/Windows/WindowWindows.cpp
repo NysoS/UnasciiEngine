@@ -69,6 +69,12 @@ namespace UnasciiEngine {
 			return false;
 		}
 
+		CONSOLE_CURSOR_INFO lInfo{};
+		lInfo.dwSize = sizeof(lInfo);
+		lInfo.bVisible = false;
+
+		SetConsoleCursorInfo(lHandleConsole, &lInfo);
+
 		mOutHandle = (Handle)lHandleConsole;
 		return true;
 	}

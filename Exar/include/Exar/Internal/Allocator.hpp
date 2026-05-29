@@ -26,7 +26,7 @@ namespace Exar
 		Allocator(const Allocator&) = delete;
 		Allocator& operator=(const Allocator&) = delete;
 
-		void* alloc(const AllocatorDesc& pDesc, const MemoryRequirement& pRequirement) noexcept;
+		void* alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept;
 		bool dealloc(size_t pSize, MemoryHandle& pRessource) noexcept;
 
 		inline size_t getMemorySizeRemaining() const noexcept {

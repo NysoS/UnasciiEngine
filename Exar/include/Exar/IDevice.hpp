@@ -4,17 +4,15 @@
 #include "Exar/Exar.hpp"
 #include "Exar/MinimalCore.hpp"
 #include "Exar/Descriptor.hpp"
-
 #include "Exar/SwapchainDesc.hpp"
 
 namespace Exar {
 	struct 	BufferDesc;
 	class 	IBuffer;
 	class 	IRessource;
-	struct 	AllocatorDesc;
 	class 	ISwapchain;
-	struct 	FramebufferInfo;
 	class 	Framebuffer;
+	class	ImageView;
 
 	template <typename Type>
 	concept ResourceTypeName = std::derived_from<Type, IRessource>;
@@ -29,7 +27,7 @@ namespace Exar {
 
 		virtual MemoryRequirement getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept = 0;
 		
-		virtual Result allocateResourceMemory(void** pMemory, const AllocatorDesc& pDesc, const MemoryRequirement& pRequirement) noexcept = 0;
+		virtual Result allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept = 0;
 		
 		virtual bool updateResourceData(MemoryHandle& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
 
@@ -42,17 +40,17 @@ namespace Exar {
 			return true;
 		}
 
-		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const ImageDesc& pDesc) noexcept = 0;
-		virtual Result createImage(Image* pImage, const AllocatorDesc& pDesc, const MemoryRequirement& pRequirement) = 0;
-		virtual Result destroyImage(Image pImage, const AllocatorDesc& pDesc) = 0;
+		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const ImageCreateInfo& pDesc) noexcept = 0;
+		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) = 0;
+		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) = 0;
 
-		virtual Result createImageView(const ImageViewDesc& pDesc, ImageView** pImageView) = 0;
+		virtual Result createImageView(const ImageViewCreateInfo& pDesc, ImageView** pImageView) = 0;
 		virtual Result destroyImageView(ImageView* pImageView) = 0;
 
-		virtual Result createSwapchain(const SwapchainDesc& pDesc, ISwapchain** pSwapchain) = 0;
+		virtual Result createSwapchain(const SwapchainCreateInfo& pDesc, ISwapchain** pSwapchain) = 0;
 		virtual Result destroySwapchain(ISwapchain* pSwapchain) = 0;
 	
-		virtual Result createFramebuffer(const FramebufferInfo& pInfo, Framebuffer** pFramebuffer) = 0;
+		virtual Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer) = 0;
 		virtual Result destroyFramebuffer(Framebuffer* pFramebuffer) = 0;
 	};
 }

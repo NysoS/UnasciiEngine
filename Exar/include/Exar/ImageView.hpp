@@ -21,7 +21,7 @@ namespace Exar
 		const u8* getData() const;
 
 	private:
-		ImageViewDesc mDesc;
+		ImageViewCreateInfo mInfo;
 		
 		friend class Device;
 	};

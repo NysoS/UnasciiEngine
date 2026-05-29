@@ -17,7 +17,7 @@ Exar::Allocator::~Allocator()
 {
 }
 
-void* Exar::Allocator::alloc(const AllocatorDesc& pDesc, const MemoryRequirement& pRequirement) noexcept
+void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept
 {
 	// Telemetri allocator //
 	// Desc
