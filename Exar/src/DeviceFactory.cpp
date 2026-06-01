@@ -1,6 +1,6 @@
 #include "Exar/Exar.hpp"
-#include "Exar/ExarDeviceFactory.hpp"
-#include "Exar/ExarDevice.hpp"
+#include "Exar/DeviceFactory.hpp"
+#include "Exar/Device.hpp"
 
 #ifdef _DEBUG
 #include "Exar/Test/BufferAllocTest.hpp"
@@ -11,7 +11,7 @@
 namespace Exar {
 	extern "C" EXA_API void* RHI_Exar_CreateDevice(size_t pSize)
 	{
-		Exar::ExarDevice* lDevice = new Exar::ExarDevice();
+		Exar::Device* lDevice = new Exar::Device();
 		if (!lDevice->createMemory(pSize)) {
 			delete lDevice;
 			return nullptr;
@@ -24,7 +24,7 @@ namespace Exar {
 	{
 		if (!pHandle) return false;
 
-		Exar::ExarDevice* lDevice = static_cast<Exar::ExarDevice*>(pHandle);
+		Exar::Device* lDevice = static_cast<Exar::Device*>(pHandle);
 		if (!lDevice) return false;
 
 		delete lDevice;

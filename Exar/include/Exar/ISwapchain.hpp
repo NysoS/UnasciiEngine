@@ -1,10 +1,8 @@
 #ifndef EXAR_ISWAPCHAIN_HPP
 #define EXAR_ISWAPCHAIN_HPP
 
-#include "Exar/exarpch.h"
+#include "Exar/MinimalCore.hpp"
 #include "Exar/Exar.hpp"
-#include "Exar/Def.hpp"
-#include "Exar/Types.hpp"
 
 namespace Exar
 {
@@ -18,7 +16,7 @@ namespace Exar
 		virtual void swap() noexcept = 0;
 
 		virtual u32 getImageCount() const noexcept = 0;
-		virtual ExarResult getImages(Image* pImages) = 0;
+		virtual Result getImages(Image* pImages) = 0;
 
 	private:
 		virtual void initImages() = 0;

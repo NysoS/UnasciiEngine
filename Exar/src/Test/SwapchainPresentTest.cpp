@@ -1,19 +1,16 @@
 #include "Exar/Test/SwapchainPresentTest.hpp"
 #include "Exar/ISwapchain.hpp"
-#include "Exar/SwapchainDesc.hpp"
+#include "Exar/Descriptor.hpp"
 #include "Exar/Extent.hpp"
-#include "Exar/ExarEnum.hpp"
-#include "Exar/ExarDevice.hpp"
-
-#include <thread>
-#include <chrono>
+#include "Exar/Device.hpp"
+#include "Exar/MinimalCore.hpp"
 
 #ifdef WIN32
 #include <Windows.h>
 #endif
 
 Exar::SwapchainPresentTest::SwapchainPresentTest()
-	: mDevice(std::make_unique<ExarDevice>())
+	: mDevice(std::make_unique<Device>())
 {
 	
 #ifdef WIN32
@@ -27,22 +24,22 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 		return;
 	}
 
-	SwapchainDesc lSwapchainDesc{};
-	lSwapchainDesc.extent = Extent2D<u32>{ .w = 600, .h = 600 };
-	lSwapchainDesc.minImageCount = 2;
-	lSwapchainDesc.imageFormat = PixelFormat::B8G8R8A8_UNORM_SRGB;
-	lSwapchainDesc.imageColor = ColorSpace::COLOR_SPACE_SRGB_NONLINEAR;
-	lSwapchainDesc.imageUsage = ImageUsageFlags::COLOR_ATTACHMENT;
-	lSwapchainDesc.imageSharingMode = SharingMode::EXCLUSIVE;
-	lSwapchainDesc.presentMode = PresentationMode::FIFO;
+	SwapchainCreateInfo lSwapchainInfo{};
+	lSwapchainInfo.extent = Extent2D<u32>{ .w = 600, .h = 600 };
+	lSwapchainInfo.minImageCount = 2;
+	lSwapchainInfo.imageFormat = PixelFormat::B8G8R8A8_UNORM_SRGB;
+	lSwapchainInfo.imageColor = ColorSpace::COLOR_SPACE_SRGB_NONLINEAR;
+	lSwapchainInfo.imageUsage = ImageUsageFlags::COLOR_ATTACHMENT;
+	lSwapchainInfo.imageSharingMode = SharingMode::EXCLUSIVE;
+	lSwapchainInfo.presentMode = PresentationMode::FIFO;
 
 #ifdef WIN32
 	HWND hwnd = GetConsoleWindow();
-	lSwapchainDesc.surface = reinterpret_cast<Surface>(hwnd);
+	lSwapchainInfo.surface = reinterpret_cast<Surface>(hwnd);
 #endif // WIN32
 
-	ExarResult lRes = mDevice->createSwapchain(lSwapchainDesc, &mSwapchain);
-	if (lRes != ExarResult::EXAR_SUCCESS)
+	Result lRes = mDevice->createSwapchain(lSwapchainInfo, &mSwapchain);
+	if (lRes != Result::SUCCESS)
 	{
 		std::cerr << "Error when create swpachain " << (u32)lRes << std::endl;
 		return;
@@ -60,8 +57,8 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 		lTime++;
 	}
 
-	ExarResult lResult = mDevice->destroySwapchain(mSwapchain);
-	if (lResult == ExarResult::EXAR_SUCCESS)
+	Result lResult = mDevice->destroySwapchain(mSwapchain);
+	if (lResult == Result::SUCCESS)
 	{
 		mSwapchain = nullptr;
 	}

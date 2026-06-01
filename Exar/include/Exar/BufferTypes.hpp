@@ -1,19 +1,17 @@
 #ifndef EXAR_BUFFER_TYPES_HPP
 #define EXAR_BUFFER_TYPES_HPP
 
-#include "Exar/exarpch.h"
-#include "Exar/Types.hpp"
-#include "Exar/ExarEnum.hpp"
+#include "Exar/MinimalCore.hpp"
 
 namespace Exar
 {
-	struct ExarBufferDesc {
+	struct BufferDesc {
 		size_t size;
-		ExarUsage usage;
-		ExarBindFlag bindFlags;
+		Usage usage;
+		BindFlag bindFlags;
 	};
 
-	struct ExarBufferInitData {
+	struct BufferInitData {
 		const u8* data;
 		size_t size;
 

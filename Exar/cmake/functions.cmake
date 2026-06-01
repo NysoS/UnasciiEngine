@@ -1,0 +1,16 @@
+macro(register_sources TARGET)
+    foreach(file ${ARGN})
+        message(STATUS "SOURCE: ${CMAKE_CURRENT_SOURCE_DIR}/${file}")
+        list(APPEND ALL_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+    endforeach()
+    
+    target_sources(${TARGET} PRIVATE ${ALL_SOURCES})
+    unset(ALL_SOURCES)
+endmacro()
+
+function(add_subdirectories)
+    foreach(sub_dir ${ARGV})
+        message("DIR " ${sub_dir})
+        add_subdirectory(${sub_dir})
+    endforeach()
+endfunction()

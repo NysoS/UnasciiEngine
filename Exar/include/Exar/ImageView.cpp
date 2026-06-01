@@ -1,16 +1,6 @@
-#include "Exar/ImageView.hpp"
-#include "Exar/Internal/ResourceTypes.h"
+#include "E:/DEV/Projects/UnasciiEngine/build/Exar/CMakeFiles/Exar.dir/Debug/cmake_pch.hxx"
+#include "ImageView.hpp"
 
-Exar::Image Exar::ImageView::getImage() const
+Exar::ImageView::~ImageView()
 {
-    return mDesc.image;
-}
-
-const Exar::u8* Exar::ImageView::getData() const
-{
-    Image_* lImage = static_cast<Image_*>(mDesc.image);
-    
-    if (!lImage) return nullptr;
-
-    return static_cast<u8*>(lImage->data);
 }

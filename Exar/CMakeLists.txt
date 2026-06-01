@@ -14,18 +14,29 @@ file(GLOB_RECURSE HEADERS
     ${INC_DIR}/*.h
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
+cmake_policy(SET CMP0076 NEW) 
+include(cmake/functions.cmake)
+
+add_library(${PROJECT_NAME} SHARED)
+
+target_include_directories(
+    ${PROJECT_NAME}
+    PUBLIC 
+    $<BUILD_INTERFACE:${INC_DIR}>
+    $<INSTALL_INTERFACE:include>
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Exar/Internal
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE EXAR_BUILD_DLL)
+target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/exarpch.h")
+
+add_subdirectory(src)
 
 source_group(
     TREE ${INC_DIR}
     PREFIX "Headers Files"
     FILES ${HEADERS}
-)
-
-source_group(
-    TREE ${SRC_DIR}
-    PREFIX "Source Files"
-    FILES ${SOURCES}
 )
 
 target_sources(
@@ -34,19 +45,16 @@ target_sources(
     ${HEADERS}
 )
 
-target_include_directories(
-    ${PROJECT_NAME}
-    PUBLIC 
-    $<BUILD_INTERFACE:${INC_DIR}>
-    $<INSTALL_INTERFACE:include>
+source_group(
+    TREE ${SRC_DIR}
+    PREFIX "Source Files"
+    FILES ${SOURCES} 
 )
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE EXAR_BUILD_DLL)
-target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/exarpch.h")
 
 install(
     DIRECTORY ${INC_DIR}/
     DESTINATION include
+    PATTERN "Internal" EXCLUDE
 )
 
 if(CMAKE_VERSION VERSION_GREATER 3.8)

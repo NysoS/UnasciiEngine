@@ -2,7 +2,7 @@
 #define EXAR_IMAGE_VIEW_HPP
 
 #include "Exar/Exar.hpp"
-#include "Exar/ImageViewDesc.hpp"
+#include "Exar/Descriptor.hpp"
 
 namespace Exar
 {
@@ -10,7 +10,7 @@ namespace Exar
 	{
 	public:
 		ImageView() = default;
-		~ImageView() = default;
+		~ImageView();
 
 		Image getImage() const;
 		
@@ -21,9 +21,9 @@ namespace Exar
 		const u8* getData() const;
 
 	private:
-		ImageViewDesc mDesc;
+		ImageViewCreateInfo mInfo;
 		
-		friend class ExarDevice;
+		friend class Device;
 	};
 }
 

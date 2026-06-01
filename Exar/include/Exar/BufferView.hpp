@@ -6,20 +6,20 @@
 
 namespace Exar
 {
-	class ExarBuffer;
+	class Buffer;
 
-	class ExarBufferView {
+	class BufferView {
 	public:
 		using iterator = std::span<const u8>::iterator;
 		using value_type = std::span<const u8>::value_type;
 
-		ExarBufferView(const u8* pData, size_t pSize)
+		BufferView(const u8* pData, size_t pSize)
 			: mData(pData, pSize)
 			, mCursor(0)
 		{
 		}
 
-		ExarBufferView(const ExarBuffer& pBuffer);
+		BufferView(const Buffer& pBuffer);
 
 		inline iterator begin() const noexcept { return mData.begin(); }
 		inline iterator end() const noexcept { return mData.end(); }
