@@ -9,7 +9,7 @@ Exar::DeviceMemory::DeviceMemory(size_t pSize)
 	void* lMemPtr = SysAloc(NULL, pSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	if (!lMemPtr) throw std::exception("Impossible to alloc size on device");
 
-	mHandle = static_cast<MemoryHandle>(lMemPtr);
+	mHandle = static_cast<Memory>(lMemPtr);
 }
 
 Exar::DeviceMemory::~DeviceMemory()
@@ -17,7 +17,7 @@ Exar::DeviceMemory::~DeviceMemory()
 	VirtualFree(static_cast<void*>(mHandle), 0, MEM_RELEASE);
 }
 
-Exar::MemoryHandle Exar::DeviceMemory::getMemoryHandle()
+Exar::Memory Exar::DeviceMemory::getMemory()
 {
 	return mHandle;
 }

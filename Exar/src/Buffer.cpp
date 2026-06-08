@@ -17,7 +17,7 @@ Exar::BufferDesc Exar::Buffer::getDesc() const noexcept
 	return mDesc;
 }
 
-Exar::MemoryHandle Exar::Buffer::getCPUAddress() const noexcept
+Exar::Memory Exar::Buffer::getCPUAddress() const noexcept
 {
 	return mData;
 }

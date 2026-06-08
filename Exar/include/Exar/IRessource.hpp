@@ -7,8 +7,8 @@ namespace Exar {
 	class EXA_API IRessource : public IObject
 	{
 	public:
-		virtual MemoryHandle getCPUAddress() const noexcept = 0;
-		virtual void setCPUAddress(MemoryHandle pData) noexcept = 0;
+		virtual Memory getCPUAddress() const noexcept = 0;
+		virtual void setCPUAddress(Memory pData) noexcept = 0;
 	};
 }
 

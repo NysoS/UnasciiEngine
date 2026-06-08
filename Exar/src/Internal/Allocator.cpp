@@ -40,7 +40,7 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 	LOG_ALLOC("Data size with padding", lSizeWithPadding);
 	if (mMemorySizeRemaining < lSizeWithPadding) return nullptr;
 
-	u8* lVRam = reinterpret_cast<u8*>(mVram->getMemoryHandle());
+	u8* lVRam = reinterpret_cast<u8*>(mVram->getMemory());
 	if (!lVRam) return nullptr;
 	
 	LOG_ALLOC("LVram", (uintptr_t)lVRam);
@@ -59,14 +59,14 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 	return lAddMem;
 }
 
-bool Exar::Allocator::dealloc(size_t pSize, MemoryHandle& pRessource) noexcept
+bool Exar::Allocator::dealloc(size_t pSize, Memory& pRessource) noexcept
 {
 	if (pSize <= 0) return false;
 
 	u8* lRessourceAddr = reinterpret_cast<u8*>(pRessource);
 	if (!lRessourceAddr) return false;
 
-	u8* lVaram = reinterpret_cast<u8*>(mVram->getMemoryHandle());
+	u8* lVaram = reinterpret_cast<u8*>(mVram->getMemory());
 	if (!lVaram) return false;
 
 	//if (!VirtualFree(lRessourceAddr, pSize, MEM_DECOMMIT)) return false;

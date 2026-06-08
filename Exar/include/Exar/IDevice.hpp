@@ -29,10 +29,10 @@ namespace Exar {
 		
 		virtual Result allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept = 0;
 		
-		virtual bool updateResourceData(MemoryHandle& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
+		virtual bool updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
 
 		template <ResourceTypeName ResourceType>
-		bool bindResource(ResourceType* pBuffer, MemoryHandle pResourceMemory)
+		bool bindResource(ResourceType* pBuffer, Memory pResourceMemory)
 		{
 			if (!pBuffer || !pResourceMemory) return false;
 

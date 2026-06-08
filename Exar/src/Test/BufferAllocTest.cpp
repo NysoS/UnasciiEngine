@@ -45,7 +45,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 		std::cerr << "Error to trying allocate" << std::endl;
 		return;
 	}
-	MemoryHandle lMem = static_cast<MemoryHandle>(lAddAllocated);
+	Memory lMem = static_cast<Memory>(lAddAllocated);
 
 	std::vector<u8> lData = initRandomBufferValue(1024 * 1024);
 
@@ -104,7 +104,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 		std::cerr << "Error to trying allocate" << std::endl;
 		return;
 	}
-	MemoryHandle lMem2 = static_cast<MemoryHandle>(lAddAllocated2);
+	Memory lMem2 = static_cast<Memory>(lAddAllocated2);
 
 	std::vector<u8> lData2 = initRandomBufferValue(1024);
 

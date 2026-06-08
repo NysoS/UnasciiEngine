@@ -14,11 +14,11 @@ namespace Exar
 		DeviceMemory(const DeviceMemory&) = delete;
 		DeviceMemory& operator=(const DeviceMemory&) = delete;
 
-		MemoryHandle getMemoryHandle();
+		Memory getMemory();
 		size_t getMemorySize() const;
 
 	private:
-		MemoryHandle mHandle;
+		Memory mHandle;
 		size_t mSize;
 	};
 }

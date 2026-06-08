@@ -76,7 +76,7 @@ Exar::Result Exar::Device::allocateResourceMemory(void** pMemory, const Allocato
 	return Result::SUCCESS;
 }
 
-bool Exar::Device::updateResourceData(MemoryHandle& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
+bool Exar::Device::updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
 {
 	void* lPtr = static_cast<void*>(pMemHandle);
 	if (!lPtr || pData.empty()) return false;

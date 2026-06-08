@@ -8,7 +8,7 @@
 #define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
 
 namespace Exar {
-	DECLARE_EXAR_HANDLE(MemoryHandle);
+	DECLARE_EXAR_HANDLE(Memory);
 	DECLARE_EXAR_HANDLE(Surface);
 	DECLARE_EXAR_HANDLE(Image);
 
