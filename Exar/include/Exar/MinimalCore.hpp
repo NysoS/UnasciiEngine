@@ -165,6 +165,20 @@ namespace Exar {
 		GRAPHICS = 0,
 		COMPUTE
 	};
+
+	enum class QueueFamily : uint32_t 
+	{
+		GRAPHICS = 0,
+		COMPURE = 1,
+		TRANSFERT = 2
+	};
+
+	enum class CommandPoolFlags :uint32_t 
+	{
+		TRANSIENT_BIT = 0x1L,				// reset command pool
+		RESET_COMMAND_BUUFER_BIT = 0x2L,	// reset individual command buffer
+		PROTECTED_BIT = 0x4L				// content protected, DRM type
+	};
 }
 
 #endif // EXAR_DEF_HPP

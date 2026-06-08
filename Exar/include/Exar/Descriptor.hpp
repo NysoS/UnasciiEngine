@@ -27,7 +27,7 @@ namespace Exar {
 		const AreaMemoryCreateInfo* areaMemory;
 	};
 
-	struct AllocatorCreateInfo
+	struct EXA_API AllocatorCreateInfo
 	{
 		size_t totalSize = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
@@ -47,7 +47,7 @@ namespace Exar {
 		ImageLayout finalLayout = ImageLayout::UNDEFINED;
 	};
 
-	struct ImageCreateInfo
+	struct EXA_API ImageCreateInfo
 	{
 		u32 width = 0;
 		u32 height = 0;
@@ -97,7 +97,7 @@ namespace Exar {
 		const SubpassDescription* subpasses;
 	};
 
-	struct SwapchainCreateInfo
+	struct EXA_API SwapchainCreateInfo
 	{
 		Surface surface;
 		u32 minImageCount;
@@ -121,6 +121,12 @@ namespace Exar {
 		u32 attachmentCount;
 		u32 width, height;
 		u32 layer;
+	};
+
+	struct EXA_API CommandPoolCreateInfo
+	{
+		QueueFamily family;
+		CommandPoolFlags flags;
 	};
 }
 
