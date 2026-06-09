@@ -30,6 +30,27 @@ namespace Exar {
 		ERROR_ALLOCATOR_NULL_POINTER,
 	};
 
+	enum class AreaMemoryType : uint32_t
+	{
+		SWAPCHAIN = 0,
+		COMMAND_BUFFER,
+		TEXTURE
+	};
+
+	enum class MemoryType : uint32_t
+	{
+		AREA = 0,
+		BLOC
+	};
+
+	enum MemoryModeFlagBits : uint32_t
+	{
+		READ = 0x1,
+		WRITE = 0x2,
+		RESERVED = 0x4 // Create reserved bloc
+	};
+	typedef uint32_t MemoryModeFlags;
+
 	enum class Usage : uint32_t
 	{
 		DEFAULT = 0,
@@ -56,12 +77,6 @@ namespace Exar {
 		ALIGN_16 = 16,
 		ALIGN_32 = 32,
 		ALIGN_64 = 64
-	};
-
-	enum class AllocatorType : uint32_t
-	{
-		AREA = 0,
-		MANUALY
 	};
 
 	enum class PixelFormat : uint32_t
@@ -92,9 +107,9 @@ namespace Exar {
 
 	enum class ImageUsageFlags : uint32_t
 	{
-		TRANSFER_DST = 0x1L,
-		COLOR_ATTACHMENT = 0x2L,
-		SAMPLED_BIT = 0x4L
+		TRANSFER_DST = 0x1,
+		COLOR_ATTACHMENT = 0x2,
+		SAMPLED_BIT = 0x4
 	};
 
 	enum class SharingMode : uint32_t

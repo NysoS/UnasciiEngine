@@ -2,11 +2,13 @@
 #include "Exar/Internal/DeviceMemory.hpp"
 #include "Exar/IRessource.hpp"
 
-Exar::Allocator::Allocator(size_t pMemorySize)
-	: mVram(std::make_unique<DeviceMemory>(pMemorySize))
+Exar::Allocator::Allocator(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo)
+	: mVram(std::make_unique<DeviceMemory>(0))
 	, mOffset(0)
 	, mMemorySizeRemaining(0)
 {
+	// reserve pour chaque type de memory ajouter ds le deviceMemoryCreateInfo
+
 	if (mVram)
 	{
 		mMemorySizeRemaining = mVram->getMemorySize();
@@ -19,6 +21,16 @@ Exar::Allocator::~Allocator()
 
 void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept
 {
+	// recup le type d'area ou return si null
+
+	// recup la page a gerer
+
+	// calcul d'offset + padding
+
+	// alloue la bonne area
+
+	// mettre a jour les info size des pages et area
+
 	// Telemetri allocator //
 	// Desc
 	LOG_ALLOC("---------------", "");

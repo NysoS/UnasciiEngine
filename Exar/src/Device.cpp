@@ -19,14 +19,14 @@ Exar::Device::~Device()
 {
 }
 
-bool Exar::Device::createMemory(size_t pMemorySize)
+bool Exar::Device::createMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo)
 {
-	mAllocator = std::make_unique<Allocator>(pMemorySize);
+	/*mAllocator = std::make_unique<Allocator>(pMemorySize);
 	if (mAllocator)
 	{
 		return true;
 	}
-	return false;
+	return false;*/
 }
 
 Exar::IBuffer* Exar::Device::createBuffer(const BufferDesc& pDesc)

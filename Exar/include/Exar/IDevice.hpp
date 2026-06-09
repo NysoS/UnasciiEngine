@@ -13,6 +13,7 @@ namespace Exar {
 	class 	ISwapchain;
 	class 	Framebuffer;
 	class	ImageView;
+	struct	DeviceMemoryCreateInfo;
 
 	template <typename Type>
 	concept ResourceTypeName = std::derived_from<Type, IRessource>;
@@ -21,7 +22,7 @@ namespace Exar {
 	{
 	public:
 		virtual ~IDevice() {};
-		virtual bool createMemory(size_t pMemorySize) = 0;
+		virtual bool createMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) = 0;
 
 		virtual IBuffer* createBuffer(const BufferDesc& pDesc) = 0;
 

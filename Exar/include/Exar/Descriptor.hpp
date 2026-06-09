@@ -5,6 +5,28 @@
 #include "Exar/MinimalCore.hpp"
 
 namespace Exar {
+	struct PageMemoryCreateInfo
+	{
+		size_t size;
+		MemoryModeFlags mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE;
+	};
+
+	struct AreaMemoryCreateInfo
+	{
+		MemoryModeFlags mode;
+		AreaMemoryType areaType;
+		u32 pageCount = 1;
+		size_t size;
+		const PageMemoryCreateInfo* pageMemory = nullptr;
+	};
+
+	struct DeviceMemoryCreateInfo
+	{
+		MemoryType memoryType;
+		u32 areaCount;
+		const AreaMemoryCreateInfo* areaMemory;
+	};
+
 	struct AllocatorCreateInfo
 	{
 		size_t totalSize = 0;

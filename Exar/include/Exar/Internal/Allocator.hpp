@@ -20,7 +20,7 @@ namespace Exar
 	class Allocator 
 	{
 	public:
-		explicit Allocator(size_t pMemorySize);
+		explicit Allocator(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo);
 		~Allocator();
 
 		Allocator(const Allocator&) = delete;
