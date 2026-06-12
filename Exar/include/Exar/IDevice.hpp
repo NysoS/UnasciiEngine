@@ -22,7 +22,7 @@ namespace Exar {
 	{
 	public:
 		virtual ~IDevice() {};
-		virtual bool createMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) = 0;
+		virtual bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) = 0;
 
 		virtual IBuffer* createBuffer(const BufferDesc& pDesc) = 0;
 

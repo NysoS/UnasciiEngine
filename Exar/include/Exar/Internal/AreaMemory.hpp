@@ -3,14 +3,17 @@
 
 #include "Exar/MinimalCore.hpp"
 #include "Exar/Internal/PageMemory.hpp"
+#include "Exar/Descriptor.hpp"
 
 namespace Exar
 {
 	class AreaMemory
 	{
 	public:
-		explicit AreaMemory(size_t pSize);
+		explicit AreaMemory();
 		~AreaMemory();
+
+		Result createMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram);
 
 		Memory getMemory();
 		const PageMemory getPage(u32 pIndex) const;

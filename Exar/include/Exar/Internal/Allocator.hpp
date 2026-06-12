@@ -20,11 +20,13 @@ namespace Exar
 	class Allocator 
 	{
 	public:
-		explicit Allocator(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo);
+		explicit Allocator();
 		~Allocator();
 
 		Allocator(const Allocator&) = delete;
 		Allocator& operator=(const Allocator&) = delete;
+
+		Result createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo);
 
 		void* alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept;
 		bool dealloc(size_t pSize, Memory& pRessource) noexcept;
@@ -34,6 +36,7 @@ namespace Exar
 		}
 
 	private:
+
 		std::unique_ptr<DeviceMemory> mVram; // Device has a owner ptr
 		size_t mOffset;
 		size_t mMemorySizeRemaining;

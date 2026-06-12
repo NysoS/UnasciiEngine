@@ -10,7 +10,7 @@ namespace Exar
 	{
 	public:
 		ImageView() = default;
-		~ImageView();
+		~ImageView() = default;
 
 		Image getImage() const;
 		

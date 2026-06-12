@@ -2,7 +2,7 @@
 #include "Exar/Internal/DeviceMemory.hpp"
 #include "Exar/IRessource.hpp"
 
-Exar::Allocator::Allocator(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo)
+Exar::Allocator::Allocator()
 	: mVram(std::make_unique<DeviceMemory>(0))
 	, mOffset(0)
 	, mMemorySizeRemaining(0)
@@ -17,6 +17,31 @@ Exar::Allocator::Allocator(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo
 
 Exar::Allocator::~Allocator()
 {
+}
+
+Exar::Result Exar::Allocator::createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo)
+{
+	if (pDeviceMemoryCreateInfo.areaCount == 0) return Result::ERROR_INVALID_SIZE;
+	if (!pDeviceMemoryCreateInfo.areaMemory) return Result::ERROR_ALLOCATOR_NULL_POINTER;
+
+	LOG_ALLOC("createDeviceMemory","");
+
+	for (size_t i = 0; i < pDeviceMemoryCreateInfo.areaCount; ++i) {
+		const auto& lArea = pDeviceMemoryCreateInfo.areaMemory[i];
+
+		LOG_ALLOC("Area", (u32)lArea.areaType);
+
+		size_t lAreaSize = lArea.size;
+		if (lAreaSize == 0) continue;
+
+		void* lMemPtr = VirtualAlloc(NULL, lAreaSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+		if (!lMemPtr) return Result::ERROR_MEMORY_ALLOCATION; //throw std::exception("Impossible to alloc size on device");
+
+		Result lResult = mVram->createAreaMemory(lArea, (Memory)lMemPtr);
+		if (lResult != Result::SUCCESS) return lResult;
+	}
+
+	return Result::SUCCESS;
 }
 
 void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept

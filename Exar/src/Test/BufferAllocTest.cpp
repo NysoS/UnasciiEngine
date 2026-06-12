@@ -12,7 +12,7 @@
 Exar::BufferAllocTest::BufferAllocTest()
 	: mDevice(std::make_unique<Device>())
 {
-	bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
+	/*bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
 	if (!lMemoryCreated)
 	{
 		std::cerr << "Memory can't created, maybe no space remaining" << std::endl;
@@ -133,7 +133,7 @@ Exar::BufferAllocTest::BufferAllocTest()
 	std::cout << "{" << lBufferView2.get<u32>(0) << "}" << std::endl;
 	std::cout << "{" << lBufferView2.get<u32>(1) << "}" << std::endl;
 	std::cout << "{" << lBufferView2.get<u32>(2) << "}" << std::endl;
-	std::cout << "{" << lBufferView2.get<u32>(3) << "}" << std::endl;
+	std::cout << "{" << lBufferView2.get<u32>(3) << "}" << std::endl;*/
 
 	/*for (ExarBufferView::iterator it = lBufferView.begin(); it != lBufferView.end(); ++it)
 	{

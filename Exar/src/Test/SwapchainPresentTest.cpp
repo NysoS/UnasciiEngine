@@ -17,7 +17,28 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 	AllocConsole();
 #endif
 
-	bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
+	std::vector<AreaMemoryCreateInfo> lAreasMemeInfo;
+	AreaMemoryCreateInfo lAreaMemInfo{};
+	lAreaMemInfo.areaType = AreaMemoryType::SWAPCHAIN;
+	lAreaMemInfo.mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE;
+	lAreaMemInfo.size = 1024 * 1024 * 1024;
+	lAreaMemInfo.pageCount = 2;
+
+	std::vector<PageMemoryCreateInfo> lPagesMemory;
+	for (size_t i = 0; i < 2; ++i) {
+		PageMemoryCreateInfo lPageMemInfo{};
+		lPageMemInfo.size = 512 * 1024 * 1024;
+		lPagesMemory.push_back(lPageMemInfo);
+	}
+	lAreaMemInfo.pageMemory = lPagesMemory.data();
+	lAreasMemeInfo.push_back(lAreaMemInfo);
+	
+	DeviceMemoryCreateInfo lDeviceMemInfo{};
+	lDeviceMemInfo.memoryType = MemoryType::AREA;
+	lDeviceMemInfo.areaCount = 1;
+	lDeviceMemInfo.areaMemory = lAreasMemeInfo.data();
+
+	bool lMemoryCreated = mDevice->createDeviceMemory(lDeviceMemInfo);
 	if (!lMemoryCreated)
 	{
 		std::cerr << "Memory can't created, maybe no space remaining" << std::endl;

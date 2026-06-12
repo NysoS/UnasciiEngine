@@ -1,13 +1,36 @@
 #include "Exar/Internal/AreaMemory.hpp"
+#include "Exar/Descriptor.hpp"
 
-Exar::AreaMemory::AreaMemory(size_t pSize)
+#include <iostream>
+
+Exar::AreaMemory::AreaMemory()
 	: mHandle(nullptr)
-	, mSize(pSize)
+	, mSize(0)
+	, mPages({})
 {
 }
 
 Exar::AreaMemory::~AreaMemory()
 {
+}
+
+Exar::Result Exar::AreaMemory::createMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram)
+{
+	if (pAreaCreateInfo.pageCount == 0 || !pAreaCreateInfo.pageMemory) return Result::ERROR_INVALID_SIZE;
+
+	std::cout << "create Area" << std::endl;
+
+	mPages.resize(pAreaCreateInfo.pageCount);
+	for (size_t i = 0; i < pAreaCreateInfo.pageCount; ++i)
+	{
+		std::cout << "create Page : " << i << std::endl;
+
+		const auto& lInfo = pAreaCreateInfo.pageMemory[i];
+
+		mPages.emplace_back(lInfo.size, 0);
+	}
+
+	return Result::SUCCESS;
 }
 
 Exar::Memory Exar::AreaMemory::getMemory()

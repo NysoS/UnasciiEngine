@@ -11,8 +11,10 @@
 namespace Exar {
 	extern "C" EXA_API void* RHI_Exar_CreateDevice(size_t pSize)
 	{
+		DeviceMemoryCreateInfo lInfo{};
+
 		Exar::Device* lDevice = new Exar::Device();
-		if (!lDevice->createMemory(pSize)) {
+		if (!lDevice->createDeviceMemory(lInfo)) {
 			delete lDevice;
 			return nullptr;
 		}

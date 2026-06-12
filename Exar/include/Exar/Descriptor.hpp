@@ -17,7 +17,7 @@ namespace Exar {
 		AreaMemoryType areaType;
 		u32 pageCount = 1;
 		size_t size;
-		const PageMemoryCreateInfo* pageMemory = nullptr;
+		const PageMemoryCreateInfo* pageMemory;
 	};
 
 	struct DeviceMemoryCreateInfo

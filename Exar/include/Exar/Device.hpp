@@ -16,7 +16,7 @@ namespace Exar
 		Device();
 		virtual ~Device();
 
-		virtual bool createMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) override;
+		virtual bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) override;
 
 		virtual IBuffer* createBuffer(const BufferDesc& pDesc) override;
 		virtual MemoryRequirement getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept override;

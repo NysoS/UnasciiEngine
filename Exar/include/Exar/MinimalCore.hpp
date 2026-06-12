@@ -28,6 +28,7 @@ namespace Exar {
 		ERROR_OUT_OF_MEMORY,
 
 		ERROR_ALLOCATOR_NULL_POINTER,
+		ERROR_MEMORY_ALLOCATION
 	};
 
 	enum class AreaMemoryType : uint32_t
