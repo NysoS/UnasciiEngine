@@ -24,6 +24,7 @@ namespace Exar {
 		ERROR_RESOURCES_LOST,
 
 		ERROR_INVALID_SIZE,
+		ERROR_INVALID_ALIGN_MEMORY,
 		ERROR_MEMORY_MAP_FAILED,
 		ERROR_OUT_OF_MEMORY,
 
@@ -33,7 +34,8 @@ namespace Exar {
 
 	enum class AreaMemoryType : uint32_t
 	{
-		SWAPCHAIN = 0,
+		NONE = 0,
+		SWAPCHAIN,
 		COMMAND_BUFFER,
 		TEXTURE
 	};

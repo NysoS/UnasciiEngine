@@ -31,8 +31,8 @@ namespace Exar {
 	{
 		size_t totalSize = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
-		uint32_t maxAllocation = 0;
-		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
+		AreaMemoryType areaType = AreaMemoryType::NONE;
+		u32	pageIndex = -1;
 	};
 
 	struct EXA_API AttachmentDesc

@@ -41,7 +41,7 @@ namespace Exar {
 			return true;
 		}
 
-		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const ImageCreateInfo& pDesc) noexcept = 0;
+		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept = 0;
 		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) = 0;
 		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) = 0;
 

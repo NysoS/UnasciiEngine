@@ -2,11 +2,11 @@
 #define EXAR_DEVICE_MEMORY_HPP
 
 #include "Exar/MinimalCore.hpp"
-#include "Exar/Descriptor.hpp"
 
 namespace Exar
 {
 	class AreaMemory;
+	struct AreaMemoryCreateInfo;
 
 	class DeviceMemory final
 	{
@@ -15,18 +15,21 @@ namespace Exar
 		~DeviceMemory();
 
 		Result createAreaMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram);
+		Memory clearAreaMemory();
 
 		DeviceMemory(const DeviceMemory&) = delete;
 		DeviceMemory& operator=(const DeviceMemory&) = delete;
 
-		Memory getMemory();
-		size_t getMemorySize() const;
+		AreaMemory* getAreaMemory(const AreaMemoryType& pAreaType) const;
+
+		inline std::vector<const AreaMemory*> getFamilies() noexcept {
+			return {
+				mSwapchainArea.get()
+			};
+		}
 
 	private:
 		std::unique_ptr<AreaMemory> mSwapchainArea;
-
-		Memory mHandle;
-		size_t mSize;
 	};
 }
 

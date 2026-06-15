@@ -5,8 +5,6 @@
 #include <iostream>
 
 Exar::DeviceMemory::DeviceMemory(size_t pSize)
-	: mHandle(nullptr)
-	, mSize(pSize)
 {
 	/*void* lMemPtr = SysAloc(NULL, pSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	if (!lMemPtr) throw std::exception("Impossible to alloc size on device");
@@ -16,7 +14,7 @@ Exar::DeviceMemory::DeviceMemory(size_t pSize)
 
 Exar::DeviceMemory::~DeviceMemory()
 {
-	VirtualFree(static_cast<void*>(mHandle), 0, MEM_RELEASE);
+	/*VirtualFree(static_cast<void*>(mHandle), 0, MEM_RELEASE);*/
 }
 
 Exar::Result Exar::DeviceMemory::createAreaMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram)
@@ -35,12 +33,20 @@ Exar::Result Exar::DeviceMemory::createAreaMemory(const AreaMemoryCreateInfo& pA
 	}
 }
 
-Exar::Memory Exar::DeviceMemory::getMemory()
+Exar::Memory Exar::DeviceMemory::clearAreaMemory()
 {
-	return mHandle;
+	return Memory();
 }
 
-size_t Exar::DeviceMemory::getMemorySize() const
+Exar::AreaMemory* Exar::DeviceMemory::getAreaMemory(const AreaMemoryType& pAreaType) const
 {
-	return mSize;
+	switch (pAreaType)
+	{
+	case AreaMemoryType::SWAPCHAIN:
+		return mSwapchainArea.get();
+	default:
+		break;
+	}
+
+	return nullptr;
 }

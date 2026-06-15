@@ -41,6 +41,8 @@ Exar::IBuffer* Exar::Device::createBuffer(const BufferDesc& pDesc)
 
 Exar::MemoryRequirement Exar::Device::getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept
 {
+	// todo : refacto buffer
+
 	MemoryRequirement lMemRequirement{ 0, AlignMemory::ALIGN_16 };
 
 	if (!mAllocator || !pBuffer) return lMemRequirement;
@@ -48,11 +50,11 @@ Exar::MemoryRequirement Exar::Device::getBufferMemoryRequirements(const IBuffer*
 	size_t lSize = pBuffer->getDesc().size;
 	//size_t lAling = 16;
 
-	size_t lRemainingMem = mAllocator->getMemorySizeRemaining();
+	/*size_t lRemainingMem = mAllocator->getMemoryAreaSizeRemaining();
 	if (lSize > lRemainingMem) return lMemRequirement;
 
 	lMemRequirement.align = lMemRequirement.align;
-	lMemRequirement.sizeInBytes = lSize;
+	lMemRequirement.sizeInBytes = lSize;*/
 
 	return lMemRequirement;
 }
@@ -92,7 +94,7 @@ bool Exar::Device::updateResourceData(Memory& pMemHandle, const MemoryRequiremen
 	return true;
 }
 
-Exar::Result Exar::Device::getImageMemoryRequirements(MemoryRequirement* pRequirement, const ImageCreateInfo& pInfo) noexcept
+Exar::Result Exar::Device::getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAllocatorInfo, const ImageCreateInfo& pInfo) noexcept
 {
 	if (!pRequirement) return Result::ERROR_INVALID_ARG;
 	if (!mAllocator) return Result::ERROR_ALLOCATOR_NULL_POINTER;
@@ -100,9 +102,11 @@ Exar::Result Exar::Device::getImageMemoryRequirements(MemoryRequirement* pRequir
 	if (pInfo.width == 0 || pInfo.height == 0) return Result::ERROR_INVALID_ARG;
 
 	size_t lAling = (size_t)pInfo.align;
-	size_t lSize = (size_t)pInfo.width * (size_t)pInfo.height * 4;; // taille r�elle
+	if (lAling != (size_t)pAllocatorInfo.align) return Result::ERROR_INVALID_ALIGN_MEMORY;
+	
+	size_t lSize = (size_t)pInfo.width * (size_t)pInfo.height * 4; // real size
 		 
-	size_t lRemainingMemory = mAllocator->getMemorySizeRemaining();
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
 	if (lSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
 
 	pRequirement->sizeInBytes = lSize;
@@ -115,7 +119,7 @@ Exar::Result Exar::Device::createImage(Image* pImage, const AllocatorCreateInfo&
 {
 	if (!pImage) return Result::NULL_POINTER;
 
-	if (pInfo.totalSize == 0 || pRequirement.sizeInBytes == 0) return Result::ERROR_INVALID_SIZE;
+	if (pRequirement.sizeInBytes == 0) return Result::ERROR_INVALID_SIZE;
 
 	void* lImagePtr = nullptr;
 	Result lResult = allocateResourceMemory(&lImagePtr, pInfo, pRequirement);
@@ -132,7 +136,11 @@ Exar::Result Exar::Device::createImage(Image* pImage, const AllocatorCreateInfo&
 
 Exar::Result Exar::Device::destroyImage(Image pImage, const AllocatorCreateInfo& pInfo)
 {
+	// todo : clear
+
 	// revome in memory area selected
+	if (pImage) return Result::NULL_POINTER;
+
 	return Result::SUCCESS;
 }
 
@@ -173,17 +181,17 @@ Exar::Result Exar::Device::createSwapchain(const SwapchainCreateInfo& pInfo, ISw
 		lImageInfo.height = pInfo.extent.h;
 		lImageInfo.width = pInfo.extent.w;
 
+		AllocatorCreateInfo lImageAllocInfo;
+		lImageAllocInfo.align = AlignMemory::ALIGN_32;
+		lImageAllocInfo.areaType = AreaMemoryType::SWAPCHAIN;
+		lImageAllocInfo.pageIndex = i;
+
 		MemoryRequirement lMemImageRequired;
-		Result lImageMemReqResult = getImageMemoryRequirements(&lMemImageRequired, lImageInfo);
+		Result lImageMemReqResult = getImageMemoryRequirements(&lMemImageRequired, lImageAllocInfo, lImageInfo);
 		if (lImageMemReqResult != Result::SUCCESS) return lImageMemReqResult;
 
-		AllocatorCreateInfo lImageAlloc;
-		lImageAlloc.align = (AlignMemory)lMemImageRequired.align;
-		lImageAlloc.allocLocation = AllocLocation::ALLOC_HEAP;
-		lImageAlloc.totalSize = lMemImageRequired.sizeInBytes;
-
 		Image lImage = nullptr;
-		Result lImageResult = createImage(&lImage, lImageAlloc, lMemImageRequired);
+		Result lImageResult = createImage(&lImage, lImageAllocInfo, lMemImageRequired);
 		if (lImageResult != Result::SUCCESS) return lImageResult;
 
 		lSwapchain->mImages[i] = lImage;

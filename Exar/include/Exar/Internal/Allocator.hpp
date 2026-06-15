@@ -31,9 +31,7 @@ namespace Exar
 		void* alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept;
 		bool dealloc(size_t pSize, Memory& pRessource) noexcept;
 
-		inline size_t getMemorySizeRemaining() const noexcept {
-			return mMemorySizeRemaining;
-		}
+		size_t getMemoryAreaSizeRemaining(const AreaMemoryType mAreaType) const noexcept;
 
 	private:
 
