@@ -14,7 +14,7 @@ Exar::Allocator::Allocator()
 Exar::Allocator::~Allocator()
 {
 	if (!mVram) return;
-	for (const auto& family : mVram->getFamilies()) {
+	for (const auto& family : mVram->getAreaFamilies()) {
 		VirtualFree(static_cast<void*>(family->getMemory()), 0, MEM_RELEASE);
 	}
 }
@@ -80,7 +80,8 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 	if (lMemorySizeRemaining < lSizeWithPadding) return nullptr;
 
 	// update page data
-	if (!lArea->updateMemory(lSizeWithPadding, pDesc.pageIndex)) return nullptr;
+	Result lAllocPageResult = lArea->allocate(lSizeWithPadding, pDesc.pageIndex);
+	if (lAllocPageResult != Result::SUCCESS) return nullptr;
 
 	// alloc data to specific area
 	u8* lVRam = reinterpret_cast<u8*>(lArea->getMemory());
@@ -95,17 +96,28 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 	return lAddMem;
 }
 
-bool Exar::Allocator::dealloc(size_t pSize, Memory& pRessource) noexcept
+bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept
 {
 	// todo : need refacto
 
-	//if (pSize <= 0) return false;
+	if (pDesc.areaType == AreaMemoryType::NONE || pDesc.pageIndex == -1) return false;
 
-	//u8* lRessourceAddr = reinterpret_cast<u8*>(pRessource);
-	//if (!lRessourceAddr) return false;
+	u8* lRessourceAddr = reinterpret_cast<u8*>(pRessource);
+	if (!lRessourceAddr) return false;
 
-	//u8* lVaram = reinterpret_cast<u8*>(mVram->getMemory());
-	//if (!lVaram) return false;
+	AreaMemory* lArea = mVram->getAreaMemory(pDesc.areaType);
+	if (!lArea) return false;
+
+	const PageMemory* lPage = lArea->getPage(pDesc.pageIndex);
+	if (!lPage) return false;
+
+	u8* lMemoryAddr = reinterpret_cast<u8*>(lArea->getMemory());
+	if (!lMemoryAddr) return false;
+
+	if (!VirtualFree(lRessourceAddr + lPage->startOffset, pDesc.totalSize, MEM_DECOMMIT)) return false;
+
+	Result lDeallocPageResult = lArea->deallocate(pDesc.totalSize, pDesc.pageIndex);
+	if (lDeallocPageResult != Result::SUCCESS) return false;
 
 	////if (!VirtualFree(lRessourceAddr, pSize, MEM_DECOMMIT)) return false;
 
@@ -114,7 +126,7 @@ bool Exar::Allocator::dealloc(size_t pSize, Memory& pRessource) noexcept
 	//	mOffset = static_cast<size_t>(lRessourceAddr - lVaram);
 	//	mMemorySizeRemaining = mVram->getMemorySize() - mOffset;
 	//}
-	//pRessource = nullptr;
+	pRessource = nullptr;
 
 	return true;
 }

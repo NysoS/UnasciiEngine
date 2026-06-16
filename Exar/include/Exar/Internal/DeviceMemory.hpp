@@ -22,7 +22,7 @@ namespace Exar
 
 		AreaMemory* getAreaMemory(const AreaMemoryType& pAreaType) const;
 
-		inline std::vector<const AreaMemory*> getFamilies() noexcept {
+		inline std::vector<const AreaMemory*> getAreaFamilies() noexcept {
 			return {
 				mSwapchainArea.get()
 			};

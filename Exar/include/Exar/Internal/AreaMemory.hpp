@@ -22,11 +22,13 @@ namespace Exar
 			return mSize;
 		}
 
-		bool updateMemory(size_t pSize, u32 pPageIndex = 0);
+		Result allocate(size_t pSize, u32 pPageIndex = -1);
+		Result deallocate(size_t pSize, u32 pPageIndex = -1);
 
 	private:
 		Memory mHandle;
 		size_t mSize;
+		size_t mTotalSize;
 		std::vector<PageMemory*> mPages;
 	};
 }

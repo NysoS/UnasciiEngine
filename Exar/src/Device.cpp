@@ -141,6 +141,8 @@ Exar::Result Exar::Device::destroyImage(Image pImage, const AllocatorCreateInfo&
 	// revome in memory area selected
 	if (pImage) return Result::NULL_POINTER;
 
+	mAllocator->dealloc(static_cast<void*>(pImage), pInfo);
+
 	return Result::SUCCESS;
 }
 

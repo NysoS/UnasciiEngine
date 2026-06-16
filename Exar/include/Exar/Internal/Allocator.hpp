@@ -29,7 +29,7 @@ namespace Exar
 		Result createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo);
 
 		void* alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept;
-		bool dealloc(size_t pSize, Memory& pRessource) noexcept;
+		bool dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept;
 
 		size_t getMemoryAreaSizeRemaining(const AreaMemoryType mAreaType) const noexcept;
 

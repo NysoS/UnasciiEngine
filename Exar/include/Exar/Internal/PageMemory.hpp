@@ -5,7 +5,9 @@ namespace Exar
 {
 	struct PageMemory 
 	{
+		size_t totalSize;
 		size_t size;
+		size_t startOffset;
 		size_t offset;
 	};
 }
