@@ -5,21 +5,31 @@
 
 namespace Exar
 {
+	class AreaMemory;
+	struct AreaMemoryCreateInfo;
+
 	class DeviceMemory final
 	{
 	public:
 		explicit DeviceMemory(size_t pSize);
 		~DeviceMemory();
 
+		Result createAreaMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram);
+		Memory clearAreaMemory();
+
 		DeviceMemory(const DeviceMemory&) = delete;
 		DeviceMemory& operator=(const DeviceMemory&) = delete;
 
-		MemoryHandle getMemoryHandle();
-		size_t getMemorySize() const;
+		AreaMemory* getAreaMemory(const AreaMemoryType& pAreaType) const;
+
+		inline std::vector<const AreaMemory*> getAreaFamilies() noexcept {
+			return {
+				mSwapchainArea.get()
+			};
+		}
 
 	private:
-		MemoryHandle mHandle;
-		size_t mSize;
+		std::unique_ptr<AreaMemory> mSwapchainArea;
 	};
 }
 

@@ -8,7 +8,7 @@
 #define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
 
 namespace Exar {
-	DECLARE_EXAR_HANDLE(MemoryHandle);
+	DECLARE_EXAR_HANDLE(Memory);
 	DECLARE_EXAR_HANDLE(Surface);
 	DECLARE_EXAR_HANDLE(Image);
 
@@ -24,11 +24,37 @@ namespace Exar {
 		ERROR_RESOURCES_LOST,
 
 		ERROR_INVALID_SIZE,
+		ERROR_INVALID_ALIGN_MEMORY,
 		ERROR_MEMORY_MAP_FAILED,
 		ERROR_OUT_OF_MEMORY,
 
+		ERROR_INVALID_PAGE_INDEX,
+		ERROR_INVALID_PAGE,
 		ERROR_ALLOCATOR_NULL_POINTER,
+		ERROR_MEMORY_ALLOCATION
 	};
+
+	enum class AreaMemoryType : uint32_t
+	{
+		NONE = 0,
+		SWAPCHAIN,
+		COMMAND_BUFFER,
+		TEXTURE
+	};
+
+	enum class MemoryType : uint32_t
+	{
+		AREA = 0,
+		BLOC
+	};
+
+	enum MemoryModeFlagBits : uint32_t
+	{
+		READ = 0x1,
+		WRITE = 0x2,
+		RESERVED = 0x4 // Create reserved bloc
+	};
+	typedef uint32_t MemoryModeFlags;
 
 	enum class Usage : uint32_t
 	{
@@ -56,12 +82,6 @@ namespace Exar {
 		ALIGN_16 = 16,
 		ALIGN_32 = 32,
 		ALIGN_64 = 64
-	};
-
-	enum class AllocatorType : uint32_t
-	{
-		AREA = 0,
-		MANUALY
 	};
 
 	enum class PixelFormat : uint32_t
@@ -92,9 +112,9 @@ namespace Exar {
 
 	enum class ImageUsageFlags : uint32_t
 	{
-		TRANSFER_DST = 0x1L,
-		COLOR_ATTACHMENT = 0x2L,
-		SAMPLED_BIT = 0x4L
+		TRANSFER_DST = 0x1,
+		COLOR_ATTACHMENT = 0x2,
+		SAMPLED_BIT = 0x4
 	};
 
 	enum class SharingMode : uint32_t

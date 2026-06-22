@@ -24,16 +24,16 @@ namespace Exar
 		
 		[[nodiscard]] virtual BufferView getView() const override;
 
-		virtual MemoryHandle getCPUAddress() const noexcept override;
+		virtual Memory getCPUAddress() const noexcept override;
 
-		virtual void setCPUAddress(MemoryHandle pData) noexcept override {
+		virtual void setCPUAddress(Memory pData) noexcept override {
 			mData = pData;
 		}
 
 	private:
 		BufferDesc mDesc;
 		IDevice* mDevice; // raw ptn because not owner memory allocation
-		MemoryHandle mData;
+		Memory mData;
 
 		friend class Device;
 	};

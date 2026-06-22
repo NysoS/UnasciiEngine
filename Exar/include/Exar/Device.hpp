@@ -16,15 +16,15 @@ namespace Exar
 		Device();
 		virtual ~Device();
 
-		virtual bool createMemory(size_t pMemorySize) override;
+		virtual bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) override;
 
 		virtual IBuffer* createBuffer(const BufferDesc& pDesc) override;
 		virtual MemoryRequirement getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept override;
 		
 		virtual Result allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept override;
-		virtual bool updateResourceData(MemoryHandle& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept override;
+		virtual bool updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept override;
 
-		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const ImageCreateInfo& pDesc) noexcept override;
+		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept override;
 		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) override;
 		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) override;
 

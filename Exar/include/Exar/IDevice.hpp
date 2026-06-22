@@ -13,6 +13,7 @@ namespace Exar {
 	class 	ISwapchain;
 	class 	Framebuffer;
 	class	ImageView;
+	struct	DeviceMemoryCreateInfo;
 
 	template <typename Type>
 	concept ResourceTypeName = std::derived_from<Type, IRessource>;
@@ -21,7 +22,7 @@ namespace Exar {
 	{
 	public:
 		virtual ~IDevice() {};
-		virtual bool createMemory(size_t pMemorySize) = 0;
+		virtual bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) = 0;
 
 		virtual IBuffer* createBuffer(const BufferDesc& pDesc) = 0;
 
@@ -29,10 +30,10 @@ namespace Exar {
 		
 		virtual Result allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept = 0;
 		
-		virtual bool updateResourceData(MemoryHandle& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
+		virtual bool updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept = 0;
 
 		template <ResourceTypeName ResourceType>
-		bool bindResource(ResourceType* pBuffer, MemoryHandle pResourceMemory)
+		bool bindResource(ResourceType* pBuffer, Memory pResourceMemory)
 		{
 			if (!pBuffer || !pResourceMemory) return false;
 
@@ -40,7 +41,7 @@ namespace Exar {
 			return true;
 		}
 
-		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const ImageCreateInfo& pDesc) noexcept = 0;
+		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept = 0;
 		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) = 0;
 		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) = 0;
 
