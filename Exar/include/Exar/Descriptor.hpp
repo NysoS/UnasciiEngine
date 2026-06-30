@@ -33,6 +33,7 @@ namespace Exar {
 		AlignMemory align = AlignMemory::ALIGN_32;
 		AreaMemoryType areaType = AreaMemoryType::NONE;
 		u32	pageIndex = -1;
+		AllocationMode mode = AllocationMode::ALLOC_HEAP;
 	};
 
 	struct EXA_API AttachmentDesc
@@ -52,7 +53,7 @@ namespace Exar {
 		u32 width = 0;
 		u32 height = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
-		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
+		AllocationMode allocLocation = AllocationMode::ALLOC_HEAP;
 	};
 
 	struct EXA_API ImageSubresource
@@ -125,8 +126,16 @@ namespace Exar {
 
 	struct EXA_API CommandPoolCreateInfo
 	{
+		AreaMemoryType type;
 		QueueFamily family;
 		CommandPoolFlags flags;
+	};
+
+	struct EXA_API CommandBufferAllocateInfo
+	{
+		CommandPool* commandPool;
+		// todo make level command buffer
+		uint32_t commandBufferCount;
 	};
 }
 

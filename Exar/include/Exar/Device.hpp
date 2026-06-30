@@ -28,6 +28,9 @@ namespace Exar
 		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) override;
 		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) override;
 
+		virtual Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) override;
+		virtual Result destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) override;
+
 		virtual Result createImageView(const ImageViewCreateInfo& pDesc, ImageView** pImageView) override;
 		virtual Result destroyImageView(ImageView* pImageView) override;
 

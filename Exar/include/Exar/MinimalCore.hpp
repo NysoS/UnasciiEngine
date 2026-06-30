@@ -11,6 +11,7 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(Memory);
 	DECLARE_EXAR_HANDLE(Surface);
 	DECLARE_EXAR_HANDLE(Image);
+	DECLARE_EXAR_HANDLE(CommandPool);
 
 #define EXAR_NULL_HANDLE nullptr
 
@@ -24,6 +25,7 @@ namespace Exar {
 		ERROR_RESOURCES_LOST,
 
 		ERROR_INVALID_SIZE,
+		ERROR_INVALID_FAMILIES,
 		ERROR_INVALID_ALIGN_MEMORY,
 		ERROR_MEMORY_MAP_FAILED,
 		ERROR_OUT_OF_MEMORY,
@@ -70,11 +72,12 @@ namespace Exar {
 		BIND_CONSTANT_BUFFER = 0x4L
 	};
 
-	enum class AllocLocation : uint32_t
+	enum class AllocationMode : uint32_t
 	{
 		ALLOC_HEAP = 0,
 		ALLOC_SCRATCH = 1, // Ring buffer
-		ALLOC_SIMD = 2
+		ALLOC_DOUBLE_SCRATCH = 2,
+		ALLOC_SIMD = 3
 	};
 
 	enum class AlignMemory : size_t
@@ -169,15 +172,17 @@ namespace Exar {
 	enum class QueueFamily : uint32_t 
 	{
 		GRAPHICS = 0,
-		COMPURE = 1,
+		COMPUTE = 1,
 		TRANSFERT = 2
 	};
 
-	enum class CommandPoolFlags :uint32_t 
+	enum class CommandPoolFlags : uint32_t 
 	{
+		MANUAL = 0x0L,
 		TRANSIENT_BIT = 0x1L,				// reset command pool
-		RESET_COMMAND_BUUFER_BIT = 0x2L,	// reset individual command buffer
-		PROTECTED_BIT = 0x4L				// content protected, DRM type
+		RESET_COMMAND_BUUFER_BIT = 0x2L,	// reset individual command buffer (by pool)
+		RESET_COMMAND_BUFFER_PAGE = 0x4L,
+		PROTECTED_BIT = 0x6L				// content protected, DRM type
 	};
 }
 

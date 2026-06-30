@@ -146,6 +146,44 @@ Exar::Result Exar::Device::destroyImage(Image pImage, const AllocatorCreateInfo&
 	return Result::SUCCESS;
 }
 
+Exar::Result Exar::Device::createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (pInfo.type != pAllocatorInfo.areaType) return Result::ERROR_INVALID_FAMILIES;
+
+	if (!pCommandPool) return Result::NULL_POINTER;
+	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
+
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
+	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
+
+	MemoryRequirement lRequired;
+	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
+	lRequired.align = pAllocatorInfo.align;
+
+	void* lPoolPtr = nullptr;
+	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
+	if (lResult != Result::SUCCESS) return lResult;
+
+	CommandPool_* lCmdPool = new CommandPool_();
+	lCmdPool->data = lPoolPtr;
+	lCmdPool->resetMode = (u32)pInfo.flags;
+	lCmdPool->queueFamily = (u32)pInfo.family;
+
+	if (pAllocatorInfo.mode == AllocationMode::ALLOC_DOUBLE_SCRATCH) {
+		lCmdPool->offsets = { 0, (size_t)(pAllocatorInfo.totalSize * 0.5) };
+	}
+	else {
+		lCmdPool->offsets = { 0 };
+	}
+	
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device::destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	return Result::SUCCESS;
+}
+
 Exar::Result Exar::Device::createImageView(const ImageViewCreateInfo& pInfo, ImageView** pImageView)
 {
 	if (!pInfo.image) return Result::NULL_POINTER;
@@ -186,7 +224,7 @@ Exar::Result Exar::Device::createSwapchain(const SwapchainCreateInfo& pInfo, ISw
 		AllocatorCreateInfo lImageAllocInfo;
 		lImageAllocInfo.align = AlignMemory::ALIGN_32;
 		lImageAllocInfo.areaType = AreaMemoryType::SWAPCHAIN;
-		lImageAllocInfo.pageIndex = i;
+		lImageAllocInfo.pageIndex = (u32)i;
 
 		MemoryRequirement lMemImageRequired;
 		Result lImageMemReqResult = getImageMemoryRequirements(&lMemImageRequired, lImageAllocInfo, lImageInfo);
