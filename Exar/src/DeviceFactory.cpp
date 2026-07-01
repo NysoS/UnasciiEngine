@@ -5,6 +5,7 @@
 #ifdef _DEBUG
 #include "Exar/Test/BufferAllocTest.hpp"
 #include "Exar/Test/SwapchainPresentTest.hpp"
+#include "Exar/Test/CommandPoolAllocationTest.hpp"
 #endif // !_DEBUG
 
 
@@ -42,6 +43,11 @@ namespace Exar {
 	extern "C" EXA_API void RHI_Swapchain_Present_Test()
 	{
 		SwapchainPresentTest lTest;
+	}
+
+	extern "C" EXA_API void RHI_CommandPool_Allocation_Test()
+	{
+		CommandPoolAllocationTest lTest;
 	}
 	#endif
 }

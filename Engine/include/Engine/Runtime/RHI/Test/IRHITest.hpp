@@ -18,6 +18,13 @@ namespace UnasciiEngine::RHI::Test
 		virtual ~IRHISwapchainTest() = default;
 		virtual void execute() = 0;
 	};
+
+	class UAE_API IRHICommandPoolTest
+	{
+	public:
+		virtual ~IRHICommandPoolTest() = default;
+		virtual void execute() = 0;
+	};
 }
 
 #endif // !IRHI_TEST_HPP

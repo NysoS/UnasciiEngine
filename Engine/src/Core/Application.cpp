@@ -24,8 +24,11 @@ namespace UnasciiEngine {
 	{
 		mWindow->init();
 		// //std::unique_ptr<RHI::Test::IRHIBufferAllocationTest> lBufferAllocTest = RHI::Factory::createBufferAllocationTest();
-		 std::unique_ptr<RHI::Test::IRHISwapchainTest> lSwapchainPresentTest = RHI::Factory::createSwapchainPresentTest();
-		 lSwapchainPresentTest->execute();
+		 //std::unique_ptr<RHI::Test::IRHISwapchainTest> lSwapchainPresentTest = RHI::Factory::createSwapchainPresentTest();
+		 //lSwapchainPresentTest->execute();
+
+		std::unique_ptr<RHI::Test::IRHICommandPoolTest> lCommandPoolTest = RHI::Factory::createCommandPoolAllocationTest();
+		lCommandPoolTest->execute();
 		return true;
 	}
 

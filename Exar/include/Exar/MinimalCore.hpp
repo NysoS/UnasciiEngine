@@ -43,7 +43,7 @@ namespace Exar {
 	{
 		NONE = 0,
 		SWAPCHAIN,
-		COMMAND_BUFFER,
+		COMMAND_POOL,
 		TEXTURE
 	};
 

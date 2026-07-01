@@ -14,6 +14,7 @@ namespace UnasciiEngine::RHI
 
 	extern "C" __declspec(dllimport) void RHI_Verif_Allocation();
 	extern "C" __declspec(dllimport) void RHI_Swapchain_Present_Test();
+	extern "C" __declspec(dllimport) void RHI_CommandPool_Allocation_Test();
 
 	class ExarTest : public UnasciiEngine::RHI::Test::IRHIBufferAllocationTest {
 	public:
@@ -32,6 +33,16 @@ namespace UnasciiEngine::RHI
 
 		virtual void execute() override {
 			RHI_Swapchain_Present_Test();
+		}
+	};
+
+	class ExarCommandPoolTest : public UnasciiEngine::RHI::Test::IRHICommandPoolTest {
+	public:
+		ExarCommandPoolTest() = default;
+		virtual ~ExarCommandPoolTest() = default;
+
+		virtual void execute() override {
+			RHI_CommandPool_Allocation_Test();
 		}
 	};
 
@@ -61,6 +72,11 @@ namespace UnasciiEngine::RHI
 		std::unique_ptr<Test::IRHISwapchainTest> createSwapchainPresentTest()
 		{
 			return std::make_unique<ExarSwapchainTest>();
+		}
+
+		std::unique_ptr<Test::IRHICommandPoolTest> createCommandPoolAllocationTest()
+		{
+			return std::make_unique<ExarCommandPoolTest>();
 		}
 #endif // _DEBUG
 

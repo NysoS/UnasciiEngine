@@ -15,6 +15,7 @@ Exar::Allocator::~Allocator()
 {
 	if (!mVram) return;
 	for (const auto& family : mVram->getAreaFamilies()) {
+		if (!family) continue;
 		VirtualFree(static_cast<void*>(family->getMemory()), 0, MEM_RELEASE);
 	}
 }
