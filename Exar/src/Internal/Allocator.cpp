@@ -98,8 +98,6 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 
 bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept
 {
-	// todo : need refacto
-
 	if (pDesc.areaType == AreaMemoryType::NONE || pDesc.pageIndex == -1) return false;
 
 	u8* lRessourceAddr = reinterpret_cast<u8*>(pRessource);
@@ -119,13 +117,6 @@ bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc
 	Result lDeallocPageResult = lArea->deallocate(pDesc.totalSize, pDesc.pageIndex);
 	if (lDeallocPageResult != Result::SUCCESS) return false;
 
-	////if (!VirtualFree(lRessourceAddr, pSize, MEM_DECOMMIT)) return false;
-
-	//if (lRessourceAddr + pSize == lVaram + mOffset)
-	//{
-	//	mOffset = static_cast<size_t>(lRessourceAddr - lVaram);
-	//	mMemorySizeRemaining = mVram->getMemorySize() - mOffset;
-	//}
 	pRessource = nullptr;
 
 	return true;

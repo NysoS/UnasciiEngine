@@ -136,12 +136,19 @@ Exar::Result Exar::Device::createImage(Image* pImage, const AllocatorCreateInfo&
 
 Exar::Result Exar::Device::destroyImage(Image pImage, const AllocatorCreateInfo& pInfo)
 {
-	// todo : clear
+	if (!pImage) return Result::NULL_POINTER;
+	
+	Image_* lImg = static_cast<Image_*>(pImage);
+	if (!lImg) return Result::NULL_POINTER;
 
-	// revome in memory area selected
-	if (pImage) return Result::NULL_POINTER;
+	if (!lImg->data) return Result::ERROR_MEMORY_NULL_HANDLE;
 
-	mAllocator->dealloc(static_cast<void*>(pImage), pInfo);
+	if (!mAllocator->dealloc(lImg->data, pInfo)) {
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	delete lImg;
+	lImg = nullptr;
 
 	return Result::SUCCESS;
 }
@@ -176,11 +183,27 @@ Exar::Result Exar::Device::createCommandPool(CommandPool* pCommandPool, const Co
 		lCmdPool->offsets = { 0 };
 	}
 	
+	*pCommandPool = lCmdPool;
+
 	return Result::SUCCESS;
 }
 
 Exar::Result Exar::Device::destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
 {
+	if (!pCommandPool) return Result::NULL_POINTER;
+
+	CommandPool_* lCmdPool = static_cast<CommandPool_*>(pCommandPool);
+	if (!lCmdPool) return Result::NULL_POINTER;
+
+	if (!lCmdPool->data) return Result::ERROR_MEMORY_NULL_HANDLE;
+	
+	if (!mAllocator->dealloc(lCmdPool->data, pAllocatorInfo)) {
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	delete lCmdPool;
+	lCmdPool = nullptr;
+
 	return Result::SUCCESS;
 }
 
