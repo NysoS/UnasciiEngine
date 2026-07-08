@@ -13,10 +13,10 @@ namespace Exar
 
 	struct CommandPool_
 	{
-		void* data;
 		std::vector<size_t> offsets;
 		uint32_t resetMode;
 		uint32_t queueFamily;
+		uint32_t commandBufferCount;
 	};
 }
 

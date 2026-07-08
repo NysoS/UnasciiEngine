@@ -6,6 +6,7 @@
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/Framebuffer.hpp"
+#include "Exar/Internal/Memory.hpp"
 #include "Exar/ImageView.hpp"
 
 #include <assert.h>
@@ -171,18 +172,41 @@ Exar::Result Exar::Device::createCommandPool(CommandPool* pCommandPool, const Co
 	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
 	if (lResult != Result::SUCCESS) return lResult;
 
-	CommandPool_* lCmdPool = new CommandPool_();
-	lCmdPool->data = lPoolPtr;
+	CommandPool_* lCmdPool = reinterpret_cast<CommandPool_*>(lPoolPtr);
 	lCmdPool->resetMode = (u32)pInfo.flags;
 	lCmdPool->queueFamily = (u32)pInfo.family;
 
+	size_t lCmdPoolHeader = MemoryOperation::alignValue(sizeof(CommandPool_), AlignMemory::ALIGN_16);
+	size_t lCmdPoolHalfSize = MemoryOperation::alignDown(((size_t)pAllocatorInfo.totalSize - lCmdPoolHeader) / 2, AlignMemory::ALIGN_16);
+
+#ifdef _DEBUG
+	printf("[SECTION - COMMAND POOL]\n");
+	printf("Reset Mode : %d\n", (u32)pInfo.flags);
+	printf("Queue Family : %d\n", (u32)pInfo.family);
+	printf("Allocation Mode : %d\n", (u32)pAllocatorInfo.mode);
+	printf("TotalSize : %zu\n", pAllocatorInfo.totalSize);
+	printf("Addresse : %p\n", (u8*)lCmdPool);
+	printf("Offset aligned : %zu\n", lCmdPoolHeader);
+#endif
+
 	if (pAllocatorInfo.mode == AllocationMode::ALLOC_DOUBLE_SCRATCH) {
-		lCmdPool->offsets = { 0, (size_t)(pAllocatorInfo.totalSize * 0.5) };
+		lCmdPool->offsets = { lCmdPoolHeader, (lCmdPoolHeader + lCmdPoolHalfSize) };
+
+#ifdef _DEBUG
+		/*size_t lTotalAligned = MemoryOperation::alignDown((size_t)pAllocatorInfo.totalSize, AlignMemory::ALIGN_16);
+		assert(lCmdPool->offsets[1] - lCmdPool->offsets[0] == lTotalAligned - lCmdPool->offsets[1]);*/
+
+		printf("Offset Half Size aligned: %zu\n", lCmdPoolHalfSize);
+		printf("Offset 0 : %zu, Offset 1 : %zu\n", lCmdPoolHeader, (lCmdPoolHeader + lCmdPoolHalfSize));
+#endif
 	}
 	else {
-		lCmdPool->offsets = { 0 };
+		lCmdPool->offsets = { lCmdPoolHeader };
+#ifdef _DEBUG
+		printf("Offset 0 : %zu\n", lCmdPoolHeader);
+#endif
 	}
-	
+
 	*pCommandPool = lCmdPool;
 
 	return Result::SUCCESS;
@@ -190,19 +214,27 @@ Exar::Result Exar::Device::createCommandPool(CommandPool* pCommandPool, const Co
 
 Exar::Result Exar::Device::destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
 {
-	if (!pCommandPool) return Result::NULL_POINTER;
-
-	CommandPool_* lCmdPool = static_cast<CommandPool_*>(pCommandPool);
-	if (!lCmdPool) return Result::NULL_POINTER;
-
-	if (!lCmdPool->data) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
 	
-	if (!mAllocator->dealloc(lCmdPool->data, pAllocatorInfo)) {
+	if (!mAllocator->dealloc(pCommandPool, pAllocatorInfo)) {
+		assert(false && "Command Pool dealloc failed");
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
 
-	delete lCmdPool;
-	lCmdPool = nullptr;
+	pCommandPool = nullptr;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device::allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers)
+{
+	
+	// get pool memory addresse
+	// assing commandBuffer to memory addresse
+	// cast en CommandBuffer_
+
+	// make verification
+	// return CommandBuffer
 
 	return Result::SUCCESS;
 }

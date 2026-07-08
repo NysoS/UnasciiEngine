@@ -12,6 +12,7 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(Surface);
 	DECLARE_EXAR_HANDLE(Image);
 	DECLARE_EXAR_HANDLE(CommandPool);
+	DECLARE_EXAR_HANDLE(CommandBuffer);
 
 #define EXAR_NULL_HANDLE nullptr
 

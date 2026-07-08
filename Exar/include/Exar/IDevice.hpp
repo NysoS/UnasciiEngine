@@ -48,6 +48,8 @@ namespace Exar {
 		virtual Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) = 0;
 		virtual Result destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) = 0;
 
+		virtual Result allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers) = 0;
+
 		virtual Result createImageView(const ImageViewCreateInfo& pDesc, ImageView** pImageView) = 0;
 		virtual Result destroyImageView(ImageView* pImageView) = 0;
 
