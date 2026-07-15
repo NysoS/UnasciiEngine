@@ -3,7 +3,7 @@
 #include "Exar/Descriptor.hpp"
 
 Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
-	: mDevice(std::make_unique<Device>())
+	: mDevice(std::make_unique<Device_>())
 	, mCommandPool(nullptr)
 {
 	std::vector<AreaMemoryCreateInfo> lAreaCreateInfos;

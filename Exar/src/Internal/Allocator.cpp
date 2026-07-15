@@ -80,7 +80,7 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 	LOG_ALLOC("Data size with padding", lSizeWithPadding);
 	if (lMemorySizeRemaining < lSizeWithPadding) return nullptr;
 
-	// update page data
+	// update data page
 	Result lAllocPageResult = lArea->allocate(lSizeWithPadding, pDesc.pageIndex);
 	if (lAllocPageResult != Result::SUCCESS) return nullptr;
 

@@ -3,6 +3,7 @@ set (SOURCES
     BufferView.cpp
     Device.cpp
     DeviceFactory.cpp
+    API.cpp
 )
 
 add_subdirectories(

@@ -19,7 +19,7 @@ namespace Exar
 		u32 mWidth, mHeight;
 		u32 mLayer;
 
-		friend class Device;
+		friend class Device_;
 	};
 }
 

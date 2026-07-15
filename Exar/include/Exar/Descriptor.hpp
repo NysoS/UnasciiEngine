@@ -133,9 +133,14 @@ namespace Exar {
 
 	struct EXA_API CommandBufferAllocateInfo
 	{
-		CommandPool* commandPool;
+		CommandPool commandPool;
 		// todo make level command buffer
 		uint32_t commandBufferCount;
+	};
+
+	struct EXA_API CommandBufferBeginInfo
+	{
+		// TODO : add fields
 	};
 }
 

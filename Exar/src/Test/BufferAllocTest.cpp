@@ -10,7 +10,7 @@
 #include <random>
 
 Exar::BufferAllocTest::BufferAllocTest()
-	: mDevice(std::make_unique<Device>())
+	: mDevice(std::make_unique<Device_>())
 {
 	/*bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
 	if (!lMemoryCreated)

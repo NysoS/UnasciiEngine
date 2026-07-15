@@ -35,7 +35,7 @@ namespace Exar
 		IDevice* mDevice; // raw ptn because not owner memory allocation
 		Memory mData;
 
-		friend class Device;
+		friend class Device_;
 	};
 }
 

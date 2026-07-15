@@ -10,11 +10,11 @@ namespace Exar
 	class Allocator;
 	class IBuffer;
 
-	class EXA_API Device : public IDevice
+	class EXA_API Device_ : public IDevice
 	{
 	public:
-		Device();
-		virtual ~Device();
+		Device_();
+		virtual ~Device_();
 
 		virtual bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) override;
 

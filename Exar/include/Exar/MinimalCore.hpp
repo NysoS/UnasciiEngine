@@ -6,6 +6,7 @@
 #include "Exar/Extent.hpp"
 
 #define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
+#define DECLARE_EXAR_HANDLE_INTERFACE(name) typedef struct I##name *name;
 
 namespace Exar {
 	DECLARE_EXAR_HANDLE(Memory);
@@ -13,6 +14,8 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(Image);
 	DECLARE_EXAR_HANDLE(CommandPool);
 	DECLARE_EXAR_HANDLE(CommandBuffer);
+	DECLARE_EXAR_HANDLE(Cmd);
+	DECLARE_EXAR_HANDLE(Device);
 
 #define EXAR_NULL_HANDLE nullptr
 
@@ -28,6 +31,7 @@ namespace Exar {
 		ERROR_INVALID_SIZE,
 		ERROR_INVALID_FAMILIES,
 		ERROR_INVALID_ALIGN_MEMORY,
+		ERROR_MEMORY_MAPING,
 		ERROR_MEMORY_MAP_FAILED,
 		ERROR_OUT_OF_MEMORY,
 
@@ -187,6 +191,19 @@ namespace Exar {
 		RESET_COMMAND_BUUFER_BIT = 0x2L,	// reset individual command buffer (by pool)
 		RESET_COMMAND_BUFFER_PAGE = 0x4L,
 		PROTECTED_BIT = 0x6L				// content protected, DRM type
+	};
+
+	enum class CommandType : uint32_t
+	{
+		TEST = -1,
+		NONE = 0,
+	};
+
+	enum class CommandBufferState : uint32_t
+	{
+		NONE = 0,
+		RECORDING = 1,
+		EXECUTABLE = 2,
 	};
 }
 

@@ -10,7 +10,7 @@
 #endif
 
 Exar::SwapchainPresentTest::SwapchainPresentTest()
-	: mDevice(std::make_unique<Device>())
+	: mDevice(std::make_unique<Device_>())
 {
 	
 #ifdef WIN32

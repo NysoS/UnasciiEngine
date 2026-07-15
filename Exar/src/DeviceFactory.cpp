@@ -14,7 +14,7 @@ namespace Exar {
 	{
 		DeviceMemoryCreateInfo lInfo{};
 
-		Exar::Device* lDevice = new Exar::Device();
+		Exar::Device_* lDevice = new Exar::Device_();
 		if (!lDevice->createDeviceMemory(lInfo)) {
 			delete lDevice;
 			return nullptr;
@@ -27,7 +27,7 @@ namespace Exar {
 	{
 		if (!pHandle) return false;
 
-		Exar::Device* lDevice = static_cast<Exar::Device*>(pHandle);
+		Exar::Device_* lDevice = static_cast<Exar::Device_*>(pHandle);
 		if (!lDevice) return false;
 
 		delete lDevice;
