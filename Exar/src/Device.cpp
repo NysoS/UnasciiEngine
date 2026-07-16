@@ -242,7 +242,7 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 	{
 		CommandBuffer_* lCommandBuffer = reinterpret_cast<CommandBuffer_*>(lBase + pInfo.commandPool->offsets[i]);
 		
-		lCommandBuffer->state = CommandBufferState::NONE;
+		lCommandBuffer->state = CommandBufferState::INVALID;
 		lCommandBuffer->count = 0;
 		lCommandBuffer->capacity = lCapacity;
 		lCommandBuffer->cmdOffset = lCommandBufferAligned;

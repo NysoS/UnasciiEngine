@@ -23,6 +23,7 @@ namespace Exar
 	struct CommandBuffer_
 	{
 		CommandBufferState state;
+		CommandBufferUsageFlags flags;
 		uint32_t count;
 		size_t capacity;
 		size_t cmdOffset;

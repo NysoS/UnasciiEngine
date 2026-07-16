@@ -201,10 +201,18 @@ namespace Exar {
 
 	enum class CommandBufferState : uint32_t
 	{
-		NONE = 0,
+		INVALID = 0,
 		RECORDING = 1,
 		EXECUTABLE = 2,
+		PENDING = 3
 	};
+
+	enum CommandBufferUsageFlagBits : uint32_t
+	{
+		ONE_TIME_SUBMIT_BIT = 0x00000001,
+		RENDER_PASS_CONTINUE_BIT = 0x00000002
+	};
+	typedef uint32_t CommandBufferUsageFlags;
 }
 
 #endif // EXAR_DEF_HPP

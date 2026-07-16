@@ -141,6 +141,7 @@ namespace Exar {
 	struct EXA_API CommandBufferBeginInfo
 	{
 		// TODO : add fields
+		CommandBufferUsageFlags flags;
 	};
 }
 

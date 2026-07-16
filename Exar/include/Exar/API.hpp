@@ -5,8 +5,12 @@
 
 namespace Exar
 {
-	EXA_API Result createCommandPool(Device pDevice, const CommandPoolCreateInfo& pCreateInfo, const AllocatorCreateInfo& pAllocatorInfo, CommandPool* pCommandPool);
-	EXA_API Result beginCommandBuffer(CommandBuffer pCmdBuffer, CommandBufferBeginInfo pBeginInfo);
+	EXA_API Result createCommandPool(Device pDevice, const CommandPoolCreateInfo& pCreateInfo, const AllocatorCreateInfo& pAllocatorInfo, CommandPool* pCommandPool) noexcept;
+	EXA_API Result destroyCommandPool(Device pDevice, CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+	EXA_API Result allocateCommandBuffer(Device pDevice, const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers) noexcept;
+
+	EXA_API Result beginCommandBuffer(CommandBuffer pCmdBuffer, const CommandBufferBeginInfo& pBeginInfo) noexcept;
+	EXA_API Result endCommandBuffer(CommandBuffer pCmdBuffer) noexcept;
 }
 
 #endif // !EXAR_API_HPP
