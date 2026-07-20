@@ -27,13 +27,16 @@ namespace Exar
 		uint32_t count;
 		size_t capacity;
 		size_t cmdOffset;
+		size_t cmdBaseOffset;
 	};
 
 	struct alignas(16) Cmd_
 	{
 		CommandType type;
 		union {
+#ifdef _DEBUG
 			uint32_t test;
+#endif // !_DEBUG
 			// ... other cmd values
 		} value;
 	};

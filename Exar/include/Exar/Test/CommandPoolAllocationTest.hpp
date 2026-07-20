@@ -16,7 +16,8 @@ namespace Exar {
 		std::unique_ptr<IDevice> mDevice;
 		CommandPool mCommandPool;
 		AllocatorCreateInfo mCmdPoolAllocatorInfo;
+		std::vector<CommandBuffer> mCommandBuffers;
 	};
 }
 
-#endif // !COMMAND_POOL_ALLOCATION_TEST_HPP
+#endif // !EXAR_COMMAND_POOL_ALLOCATION_TEST_HPP

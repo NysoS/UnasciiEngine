@@ -246,6 +246,7 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 		lCommandBuffer->count = 0;
 		lCommandBuffer->capacity = lCapacity;
 		lCommandBuffer->cmdOffset = lCommandBufferAligned;
+		lCommandBuffer->cmdBaseOffset = lCommandBufferAligned;
 
 		pCommandBuffers[i] = lCommandBuffer;
 	}

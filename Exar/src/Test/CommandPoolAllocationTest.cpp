@@ -53,6 +53,28 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 		return;
 	}
 
+	mCommandBuffers.resize(2);
+
+	CommandBufferAllocateInfo lCommandBufferAllocateInfo{};
+	lCommandBufferAllocateInfo.commandPool = mCommandPool;
+	lCommandBufferAllocateInfo.commandBufferCount = (u32)mCommandBuffers.size();
+
+	if (Result lResultCmdBuffer = mDevice->allocateCommandBuffer(lCommandBufferAllocateInfo, mCommandBuffers.data()); lResultCmdBuffer != Result::SUCCESS) {
+		printf("CodeResult %d", lResultCmdBuffer);
+		throw std::runtime_error("Error when command buffer allocation");
+	}
+
+	for (size_t i = 0; i < mCommandBuffers.size(); ++i) {
+		CommandBufferBeginInfo lCmdBufferBeginInfo{};
+		lCmdBufferBeginInfo.flags = 0;
+
+		Result lResultCmdBeginBuffer = beginCommandBuffer(mCommandBuffers[i], lCmdBufferBeginInfo);
+		if (lResultCmdBeginBuffer != Result::SUCCESS) {
+			printf("CodeResult %d", lResultCmdBeginBuffer);
+			throw std::runtime_error("Error to beginCommandBuffer");
+		}
+	}
+
 	// todo : make update data resouces
 
 	// add buffer data ring O, page 1
