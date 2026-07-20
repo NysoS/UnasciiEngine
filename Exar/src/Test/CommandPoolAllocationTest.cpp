@@ -1,6 +1,7 @@
 #include "Exar/Test/CommandPoolAllocationTest.hpp"
 #include "Exar/Device.hpp"
 #include "Exar/Descriptor.hpp"
+#include "Exar/API.hpp"
 
 Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 	: mDevice(std::make_unique<Device_>())

@@ -2,6 +2,8 @@
 #include "Exar/Device.hpp"
 #include "Exar/Internal/ResourceTypes.h"
 
+#include <assert.h>
+
 namespace Exar
 {
 	Result createCommandPool(Device pDevice, const CommandPoolCreateInfo& pCreateInfo, const AllocatorCreateInfo& pAllocatorInfo, CommandPool* pCommandPool) noexcept
