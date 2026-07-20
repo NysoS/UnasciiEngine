@@ -40,4 +40,21 @@ namespace Exar
 
 		return Result::SUCCESS;
 	}
+
+#ifdef _DEBUG
+	void cmdTest(CommandBuffer pCmdBuffer, uint32_t pValue) noexcept {
+		assert(pCmdBuffer);
+		assert(pCmdBuffer->state == CommandBufferState::RECORDING);
+		assert(pCmdBuffer->count < pCmdBuffer->capacity);
+
+		u8* lBase = reinterpret_cast<u8*>(pCmdBuffer);
+
+		Cmd_* lCmd = reinterpret_cast<Cmd_*>(lBase + pCmdBuffer->cmdOffset);
+		lCmd->type = CommandType::TEST;
+		lCmd->value.test = 6;
+		
+		pCmdBuffer->count++;
+		pCmdBuffer->cmdOffset += sizeof(Cmd_);
+	}
+#endif // _DEBUG
 }

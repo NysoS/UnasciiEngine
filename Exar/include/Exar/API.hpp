@@ -11,6 +11,8 @@ namespace Exar
 
 	EXA_API Result beginCommandBuffer(CommandBuffer pCmdBuffer, const CommandBufferBeginInfo& pBeginInfo) noexcept;
 	EXA_API Result endCommandBuffer(CommandBuffer pCmdBuffer) noexcept;
+
+	EXA_API void cmdTest(CommandBuffer pCmdBuffer, uint32_t pValue) noexcept;
 }
 
 #endif // !EXAR_API_HPP
