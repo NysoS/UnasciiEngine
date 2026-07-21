@@ -27,6 +27,7 @@ namespace Exar {
 		ERROR_INVALID_ARG,
 
 		ERROR_RESOURCES_LOST,
+		ERROR_INVALID_FLAG,
 
 		ERROR_INVALID_SIZE,
 		ERROR_INVALID_FAMILIES,
@@ -195,16 +196,17 @@ namespace Exar {
 
 	enum class CommandType : uint32_t
 	{
-		TEST = -1,
-		NONE = 0,
+		TEST = 0,
+		NONE = 1,
 	};
 
 	enum class CommandBufferState : uint32_t
 	{
 		INVALID = 0,
-		RECORDING = 1,
-		EXECUTABLE = 2,
-		PENDING = 3
+		INITIAL = 1,
+		RECORDING = 2,
+		EXECUTABLE = 3,
+		PENDING = 4
 	};
 
 	enum CommandBufferUsageFlagBits : uint32_t
@@ -213,6 +215,12 @@ namespace Exar {
 		RENDER_PASS_CONTINUE_BIT = 0x00000002
 	};
 	typedef uint32_t CommandBufferUsageFlags;
+
+	// no usage here, is all in ram with virtual allocation
+	/*enum class CommandResetFlags : uint32_t
+	{
+		RELEASE_RESOURCES = 0x00000001,
+	};*/
 }
 
 #endif // EXAR_DEF_HPP

@@ -232,17 +232,17 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 {
 	if (!pInfo.commandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
 	if (pInfo.commandBufferCount > pInfo.commandPool->offsets.size()) return Result::ERROR_INVALID_SIZE;
-
-	u8* lBase = reinterpret_cast<u8*>(pInfo.commandPool);
 	
 	size_t lCommandBufferAligned = MemoryOperation::alignValue(sizeof(CommandBuffer_), AlignMemory::ALIGN_16);
 	size_t lCapacity = (pInfo.commandPool->halfSize - lCommandBufferAligned) / sizeof(Cmd_);
+	 
+	u8* lBase = reinterpret_cast<u8*>(pInfo.commandPool);
 
 	for (size_t i = 0; i < pInfo.commandBufferCount; ++i)
 	{
-		CommandBuffer_* lCommandBuffer = reinterpret_cast<CommandBuffer_*>(lBase + pInfo.commandPool->offsets[i]);
+		CommandBuffer_* lCommandBuffer = reinterpret_cast<CommandBuffer_*>(lBase + pInfo.commandPool->offsets.at(i));
 		
-		lCommandBuffer->state = CommandBufferState::INVALID;
+		lCommandBuffer->state = CommandBufferState::INITIAL;
 		lCommandBuffer->count = 0;
 		lCommandBuffer->capacity = lCapacity;
 		lCommandBuffer->cmdOffset = lCommandBufferAligned;

@@ -4,7 +4,8 @@
 #include "Exar/MinimalCore.hpp"
 #include "Exar/Exar.hpp"
 #include "Exar/Descriptor.hpp"
-#include "Exar/IDevice.hpp"
+
+class Device_;
 
 namespace Exar {
 	class EXA_API CommandPoolAllocationTest 
@@ -13,7 +14,7 @@ namespace Exar {
 		CommandPoolAllocationTest();
 		~CommandPoolAllocationTest();
 	private:
-		std::unique_ptr<IDevice> mDevice;
+		std::unique_ptr<Device_> mDevice;
 		CommandPool mCommandPool;
 		AllocatorCreateInfo mCmdPoolAllocatorInfo;
 		std::vector<CommandBuffer> mCommandBuffers;
