@@ -40,6 +40,27 @@ namespace Exar
 
 		pCmdBuffer->state = CommandBufferState::EXECUTABLE;
 
+#ifdef _DEBUG
+		printf("EndCommandBuffer, state -> executable\n");
+#endif // _DEBUG
+
+		return Result::SUCCESS;
+	}
+
+	EXA_API Result resetCommandBuffer(CommandBuffer pCmdBuffer) noexcept
+	{
+		if (!pCmdBuffer) return Result::ERROR_MEMORY_NULL_HANDLE;
+
+		pCmdBuffer->count = 0;
+		pCmdBuffer->cmdOffset = pCmdBuffer->cmdBaseOffset;
+		pCmdBuffer->state = CommandBufferState::INITIAL;
+
+#ifdef _DEBUG
+		printf("ResetCommandBuffer, cout -> %d\n", pCmdBuffer->count);
+		printf("ResetCommandBuffer, cmdOffset -> %zu\n", pCmdBuffer->cmdOffset);
+		printf("ResetCommandBuffer, state -> initial\n");
+#endif // _DEBUG
+
 		return Result::SUCCESS;
 	}
 
