@@ -28,8 +28,14 @@ namespace Exar
 	{
 		if (!pCmdBuffer) return Result::ERROR_MEMORY_NULL_HANDLE;
 
+		assert(pCmdBuffer->state == CommandBufferState::INITIAL);
+
 		pCmdBuffer->state = CommandBufferState::RECORDING;
 		pCmdBuffer->flags = pBeginInfo.flags;
+
+#ifdef _DEBUG
+		printf("BeginCommandBuffer, state -> recording\n");
+#endif // _DEBUG
 
 		return Result::SUCCESS;
 	}
@@ -74,10 +80,18 @@ namespace Exar
 
 		Cmd_* lCmd = reinterpret_cast<Cmd_*>(lBase + pCmdBuffer->cmdOffset);
 		lCmd->type = CommandType::TEST;
-		lCmd->value.test = 6;
+		lCmd->value.test = pValue;
 		
 		pCmdBuffer->count++;
 		pCmdBuffer->cmdOffset += sizeof(Cmd_);
+
+		printf("Save cmd [%s]\n", __FUNCDNAME__);
+		printf("Cmd type : %d\n", lCmd->type);
+		printf("Cmd value : %d\n", lCmd->value.test);
+
+		printf("\n CmdBuffer startCmdOffset : %zu\n", pCmdBuffer->cmdBaseOffset);
+		printf("\n CmdBuffer cmdOffset : %zu\n", pCmdBuffer->cmdOffset);
+		printf("\n CmdBuffer cmd count : %d, cmd capacity : %zu\n", pCmdBuffer->count, pCmdBuffer->capacity);
 	}
 #endif // _DEBUG
 }

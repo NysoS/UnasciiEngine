@@ -60,6 +60,7 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 	lCommandBufferAllocateInfo.commandPool = mCommandPool;
 	lCommandBufferAllocateInfo.commandBufferCount = (u32)mCommandBuffers.size();
 
+	printf("-------------- Init Command buffers --------------\n");
 	if (Result lResultCmdBuffer = mDevice->allocateCommandBuffer(lCommandBufferAllocateInfo, mCommandBuffers.data()); lResultCmdBuffer != Result::SUCCESS) {
 		printf("CodeResult %d", lResultCmdBuffer);
 		throw std::runtime_error("Error when command buffer allocation");
@@ -74,13 +75,54 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 			printf("CodeResult %d", lResultCmdBeginBuffer);
 			throw std::runtime_error("Error to beginCommandBuffer");
 		}
+
+		cmdTest(mCommandBuffers[i], 6);
+		cmdTest(mCommandBuffers[i], 8);
+
+		if (Result lResultEndCommandBuffer = endCommandBuffer(mCommandBuffers[i]); lResultEndCommandBuffer != Result::SUCCESS) {
+			printf("CodeResult %d", lResultEndCommandBuffer);
+			throw std::runtime_error("Error to endCommandBuffer");
+		}
 	}
 
-	// todo : make update data resouces
+	printf("-------------- Reset Command buffer 0 --------------\n");
+	Result lReset = resetCommandBuffer(mCommandBuffers[0]);
+	if (lReset != Result::SUCCESS) {
+		printf("CodeResult %d", lReset);
+		throw std::runtime_error("Error to resetCommandBuffer 0");
+	}
 
-	// add buffer data ring O, page 1
-	/*for (size_t i = 0; i < 10; ++i) {
-	}*/
+	printf("-------------- Re create Command buffer 0 --------------\n");
+	CommandBufferBeginInfo lCmdBufferBeginInfo{};
+	lCmdBufferBeginInfo.flags = 0;
+
+	Result lResultCmdBeginBuffer = beginCommandBuffer(mCommandBuffers[0], lCmdBufferBeginInfo);
+	if (lResultCmdBeginBuffer != Result::SUCCESS) {
+		printf("CodeResult %d", lResultCmdBeginBuffer);
+		throw std::runtime_error("Error to beginCommandBuffer");
+	}
+
+	cmdTest(mCommandBuffers[0], 1);
+	cmdTest(mCommandBuffers[0], 21);
+
+	if (Result lResultEndCommandBuffer = endCommandBuffer(mCommandBuffers[0]); lResultEndCommandBuffer != Result::SUCCESS) {
+		printf("CodeResult %d", lResultEndCommandBuffer);
+		throw std::runtime_error("Error to endCommandBuffer");
+	}
+
+	printf("-------------- Reset Command buffer 1 --------------\n");
+	lReset = resetCommandBuffer(mCommandBuffers[1]);
+	if (lReset != Result::SUCCESS) {
+		printf("CodeResult %d", lReset);
+		throw std::runtime_error("Error to resetCommandBuffer 1");
+	}
+
+	printf("-------------- Reset Command buffer 0 --------------\n");
+	lReset = resetCommandBuffer(mCommandBuffers[0]);
+	if (lReset != Result::SUCCESS) {
+		printf("CodeResult %d", lReset);
+		throw std::runtime_error("Error to resetCommandBuffer 0");
+	}
 }
 
 Exar::CommandPoolAllocationTest::~CommandPoolAllocationTest()
