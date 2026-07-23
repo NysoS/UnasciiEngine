@@ -70,6 +70,27 @@ namespace Exar
 		return Result::SUCCESS;
 	}
 
+	EXA_API Result resetCommandPool(CommandPool pCommandPool) noexcept
+	{
+		if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
+
+#ifdef _DEBUG
+		printf("ResetCommandPool\n");
+#endif // _DEBUG
+
+		u8* lCommandPoolBaseOffset = reinterpret_cast<u8*>(pCommandPool);
+
+		for (const size_t offset : pCommandPool->offsets) {
+			CommandBuffer_* lBuffer = reinterpret_cast<CommandBuffer_*>(lCommandPoolBaseOffset + offset);
+#ifdef _DEBUG
+			printf("ResetCommandBuffer from pool, offset -> %zu\n", offset);
+#endif // _DEBUG
+			resetCommandBuffer(lBuffer);
+		}
+
+		return Result::SUCCESS;
+	}
+
 #ifdef _DEBUG
 	void cmdTest(CommandBuffer pCmdBuffer, uint32_t pValue) noexcept {
 		assert(pCmdBuffer);
