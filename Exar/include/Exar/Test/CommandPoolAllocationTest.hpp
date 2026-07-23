@@ -15,8 +15,8 @@ namespace Exar {
 		~CommandPoolAllocationTest();
 	private:
 		std::unique_ptr<Device_> mDevice;
-		CommandPool mCommandPool;
-		AllocatorCreateInfo mCmdPoolAllocatorInfo;
+		std::vector<CommandPool> mCommandPools;
+		std::vector<AllocatorCreateInfo> mCmdPoolAllocatorInfos;
 		std::vector<CommandBuffer> mCommandBuffers;
 	};
 }
