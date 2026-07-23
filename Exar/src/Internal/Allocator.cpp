@@ -113,7 +113,7 @@ bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc
 	u8* lMemoryAddr = reinterpret_cast<u8*>(lArea->getMemory());
 	if (!lMemoryAddr) return false;
 
-	if (!VirtualFree(lRessourceAddr + lPage->startOffset, pDesc.totalSize, MEM_DECOMMIT)) return false;
+	if (!VirtualFree(lMemoryAddr + lPage->startOffset, pDesc.totalSize, MEM_DECOMMIT)) return false;
 
 	Result lDeallocPageResult = lArea->deallocate(pDesc.totalSize, pDesc.pageIndex);
 	if (lDeallocPageResult != Result::SUCCESS) return false;

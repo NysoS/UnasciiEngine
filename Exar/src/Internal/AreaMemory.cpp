@@ -74,9 +74,7 @@ Exar::Result Exar::AreaMemory::allocate(size_t pSize, u32 pPageIndex)
 	PageMemory* lPage = mPages.at(pPageIndex);
 	if (!lPage) return Result::ERROR_INVALID_PAGE;
 
-	if ((mSize - pSize) < 0 
-		|| (lPage->size - pSize) < 0
-		|| (lPage->offset + pSize) > lPage->size)
+	if (pSize > mSize || pSize > lPage->size)
 		return Result::ERROR_OUT_OF_MEMORY;
 	
 	mSize -= pSize;
