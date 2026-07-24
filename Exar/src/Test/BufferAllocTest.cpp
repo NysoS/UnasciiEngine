@@ -4,13 +4,11 @@
 #include "Exar/Exar.hpp"
 #include "Exar/Descriptor.hpp"
 #include "Exar/BufferView.hpp"
-#include "Exar/Device.hpp"
 
 #include <algorithm>
 #include <random>
 
 Exar::BufferAllocTest::BufferAllocTest()
-	: mDevice(std::make_unique<Device_>())
 {
 	/*bool lMemoryCreated = mDevice->createMemory(1024 * 1024 * 1024);
 	if (!lMemoryCreated)
@@ -143,20 +141,21 @@ Exar::BufferAllocTest::BufferAllocTest()
 
 Exar::BufferAllocTest::~BufferAllocTest()
 {
+	
 }
 
-std::vector<Exar::u8> Exar::BufferAllocTest::initRandomBufferValue(size_t pSize)
-{
-	std::vector<u8> testBuffer(pSize, 0);
-
-	// OPTIONNEL : Remplir avec des donn�es al�atoires pour un vrai test
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(0, 255);
-
-	std::generate(testBuffer.begin(), testBuffer.end(), [&]() {
-		return static_cast<u8>(dis(gen));
-	});
-
-	return testBuffer;
-}
+//std::vector<Exar::u8> Exar::BufferAllocTest::initRandomBufferValue(size_t pSize)
+//{
+//	std::vector<u8> testBuffer(pSize, 0);
+//
+//	// OPTIONNEL : Remplir avec des donn�es al�atoires pour un vrai test
+//	std::random_device rd;
+//	std::mt19937 gen(rd());
+//	std::uniform_int_distribution<> dis(0, 255);
+//
+//	std::generate(testBuffer.begin(), testBuffer.end(), [&]() {
+//		return static_cast<u8>(dis(gen));
+//	});
+//
+//	return testBuffer;
+//}

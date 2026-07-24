@@ -32,7 +32,7 @@ namespace Exar
 
 	private:
 		BufferDesc mDesc;
-		IDevice* mDevice; // raw ptn because not owner memory allocation
+		Device* mDevice; // raw ptn because not owner memory allocation
 		Memory mData;
 
 		friend class Device_;
