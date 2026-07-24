@@ -33,11 +33,11 @@ bool Exar::Device_::createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemo
 
 Exar::IBuffer* Exar::Device_::createBuffer(const BufferDesc& pDesc)
 {
-	Buffer* lBuffer = new Buffer();
+	/*Buffer* lBuffer = new Buffer();
 	lBuffer->mDesc = pDesc;
-	lBuffer->mDevice = this;
+	lBuffer->mDevice = this;*/
 
-	return lBuffer;
+	return nullptr;
 }
 
 Exar::MemoryRequirement Exar::Device_::getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept
