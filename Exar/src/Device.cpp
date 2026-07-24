@@ -193,16 +193,16 @@ Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const C
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
 	
-	if (!mAllocator->dealloc(pCommandPool, pAllocatorInfo)) {
+	if (!mAllocator->dealloc(*pCommandPool, pAllocatorInfo)) {
 		assert(false && "Command Pool dealloc failed");
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
 
-	pCommandPool = nullptr;
+	*pCommandPool = nullptr;
 
 	return Result::SUCCESS;
 }

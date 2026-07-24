@@ -15,7 +15,7 @@ namespace Exar
 	Result destroyCommandPool(Device pDevice, CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 	{
 		if (!pDevice) return Result::ERROR_MEMORY_NULL_HANDLE;
-		return pDevice->destroyCommandPool(pCommandPool, pAllocatorInfo);
+		return pDevice->destroyCommandPool(&pCommandPool, pAllocatorInfo);
 	}
 
 	Result allocateCommandBuffer(Device pDevice, const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers) noexcept
