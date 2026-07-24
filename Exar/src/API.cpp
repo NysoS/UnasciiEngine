@@ -33,9 +33,7 @@ namespace Exar
 		pCmdBuffer->state = CommandBufferState::RECORDING;
 		pCmdBuffer->flags = pBeginInfo.flags;
 
-#ifdef _DEBUG
-		printf("BeginCommandBuffer, state -> recording\n");
-#endif // _DEBUG
+		EXAR_MEMORY_LOG(stdout, "BeginCommandBuffer, state -> recording\n");
 
 		return Result::SUCCESS;
 	}
@@ -46,9 +44,7 @@ namespace Exar
 
 		pCmdBuffer->state = CommandBufferState::EXECUTABLE;
 
-#ifdef _DEBUG
-		printf("EndCommandBuffer, state -> executable\n");
-#endif // _DEBUG
+		EXAR_MEMORY_LOG(stdout, "EndCommandBuffer, state -> executable\n");
 
 		return Result::SUCCESS;
 	}
@@ -61,11 +57,11 @@ namespace Exar
 		pCmdBuffer->cmdOffset = pCmdBuffer->cmdBaseOffset;
 		pCmdBuffer->state = CommandBufferState::INITIAL;
 
-#ifdef _DEBUG
-		printf("ResetCommandBuffer, cout -> %d\n", pCmdBuffer->count);
-		printf("ResetCommandBuffer, cmdOffset -> %zu\n", pCmdBuffer->cmdOffset);
-		printf("ResetCommandBuffer, state -> initial\n");
-#endif // _DEBUG
+		EXAR_MEMORY_LOG(stdout, "---- [Reset Command Buffer] ----\n");
+		EXAR_MEMORY_LOG(stdout, "CommandBuffer count %zu\n", pCmdBuffer->count);
+		EXAR_MEMORY_LOG(stdout, "CommandBuffer cmdOffset %zu\n", pCmdBuffer->cmdOffset);
+		EXAR_MEMORY_LOG(stdout, "CommandBuffer state -> initial\n");
+		EXAR_MEMORY_LOG(stdout, "--------------------------------\n");
 
 		return Result::SUCCESS;
 	}
@@ -74,20 +70,16 @@ namespace Exar
 	{
 		if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
 
-#ifdef _DEBUG
-		printf("ResetCommandPool\n");
-#endif // _DEBUG
-
+		EXAR_MEMORY_LOG(stdout, "---- [Reset Command Pool] ----\n");
+		
 		u8* lCommandPoolBaseOffset = reinterpret_cast<u8*>(pCommandPool);
 
-		for (const size_t offset : pCommandPool->offsets) {
-			CommandBuffer_* lBuffer = reinterpret_cast<CommandBuffer_*>(lCommandPoolBaseOffset + offset);
-#ifdef _DEBUG
-			printf("ResetCommandBuffer from pool, offset -> %zu\n", offset);
-#endif // _DEBUG
+		for (const size_t lOffset : pCommandPool->offsets) {
+			CommandBuffer_* lBuffer = reinterpret_cast<CommandBuffer_*>(lCommandPoolBaseOffset + lOffset);
+			EXAR_MEMORY_LOG(stdout, "CommandPool offset : %zu\n", lOffset);
 			resetCommandBuffer(lBuffer);
 		}
-
+		EXAR_MEMORY_LOG(stdout, "------------------------------\n");
 		return Result::SUCCESS;
 	}
 
@@ -106,13 +98,14 @@ namespace Exar
 		pCmdBuffer->count++;
 		pCmdBuffer->cmdOffset += sizeof(Cmd_);
 
-		printf("Save cmd [%s]\n", __FUNCDNAME__);
-		printf("Cmd type : %d\n", lCmd->type);
-		printf("Cmd value : %d\n", lCmd->value.test);
-
-		printf("\n CmdBuffer startCmdOffset : %zu\n", pCmdBuffer->cmdBaseOffset);
-		printf("\n CmdBuffer cmdOffset : %zu\n", pCmdBuffer->cmdOffset);
-		printf("\n CmdBuffer cmd count : %d, cmd capacity : %zu\n", pCmdBuffer->count, pCmdBuffer->capacity);
+		EXAR_MEMORY_LOG(stdout, "---- [Save Cmd Test] ----\n");
+		EXAR_MEMORY_LOG(stdout, "Command buffer startCmdOffset : %zu\n", pCmdBuffer->cmdBaseOffset);
+		EXAR_MEMORY_LOG(stdout, "Command buffer cmdOffset : %zu\n", pCmdBuffer->cmdOffset);
+		EXAR_MEMORY_LOG(stdout, "Command buffer cmd count : %d\n", pCmdBuffer->count);
+		EXAR_MEMORY_LOG(stdout, "Command buffer cmd capacity : %d\n", pCmdBuffer->capacity);
+		EXAR_MEMORY_LOG(stdout, "Cmd type : %d\n", lCmd->type);
+		EXAR_MEMORY_LOG(stdout, "Cmd value : %d\n", lCmd->value.test);
+		EXAR_MEMORY_LOG(stdout, "-------------------------\n");
 	}
 #endif // _DEBUG
 }

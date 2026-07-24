@@ -5,8 +5,15 @@
 #include "Exar/Types.hpp"
 #include "Exar/Extent.hpp"
 
+#ifdef _DEBUG
+#define EXAR_MEMORY_LOG(level, msg, ...) \
+	fprintf(level, msg __VA_OPT__(,) __VA_ARGS__)
+#else
+#define EXAR_MEMORY_LOG(level, msg, ...) ((void)0)
+#endif // _DEBUG
+
+
 #define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
-#define DECLARE_EXAR_HANDLE_INTERFACE(name) typedef struct I##name *name;
 
 namespace Exar {
 	DECLARE_EXAR_HANDLE(Memory);

@@ -181,32 +181,11 @@ Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const C
 	lCmdPool->halfSize = lCmdPoolHalfSize;
 	lCmdPool->fullSize = (size_t)pAllocatorInfo.totalSize;
 
-#ifdef _DEBUG
-	printf("[SECTION - COMMAND POOL]\n");
-	printf("Reset Mode : %d\n", (u32)pInfo.flags);
-	printf("Queue Family : %d\n", (u32)pInfo.family);
-	printf("Allocation Mode : %d\n", (u32)pAllocatorInfo.mode);
-	printf("TotalSize : %zu\n", pAllocatorInfo.totalSize);
-	printf("Addresse : %p\n", (u8*)lCmdPool);
-	printf("Offset aligned : %zu\n", lCmdPoolHeader);
-#endif
-
 	if (pAllocatorInfo.mode == AllocationMode::ALLOC_DOUBLE_SCRATCH) {
 		lCmdPool->offsets = { lCmdPoolHeader, (lCmdPoolHeader + lCmdPoolHalfSize) };
-
-#ifdef _DEBUG
-		/*size_t lTotalAligned = MemoryOperation::alignDown((size_t)pAllocatorInfo.totalSize, AlignMemory::ALIGN_16);
-		assert(lCmdPool->offsets[1] - lCmdPool->offsets[0] == lTotalAligned - lCmdPool->offsets[1]);*/
-
-		printf("Offset Half Size aligned: %zu\n", lCmdPoolHalfSize);
-		printf("Offset 0 : %zu, Offset 1 : %zu\n", lCmdPoolHeader, (lCmdPoolHeader + lCmdPoolHalfSize));
-#endif
 	}
 	else {
 		lCmdPool->offsets = { lCmdPoolHeader };
-#ifdef _DEBUG
-		printf("Offset 0 : %zu\n", lCmdPoolHeader);
-#endif
 	}
 
 	*pCommandPool = lCmdPool;

@@ -33,12 +33,14 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 	bool lMemoryCreated = mDevice->createDeviceMemory(lDeviceMemoryInfo);
 	if (!lMemoryCreated)
 	{
-		std::cerr << "Memory can't created, maybe no space remaining" << std::endl;
+		EXAR_MEMORY_LOG(stderr, "Memory can't created, maybe no space remaining\n");
 		return;
 	}
 
 	mCommandPools.resize(2);
 	mCmdPoolAllocatorInfos.resize(2);
+
+	EXAR_MEMORY_LOG(stdout, "---- [Command Pool Creation] ----\n");
 	for (size_t i = 0; i < 2; ++i) {
 		CommandPoolCreateInfo lCmdPoolInfo{};
 		lCmdPoolInfo.family = QueueFamily::GRAPHICS;
@@ -53,25 +55,35 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 		lCmdPoolAllocatorInfo.totalSize = 100 * 1024;
 		mCmdPoolAllocatorInfos[i] = lCmdPoolAllocatorInfo;
 
+		EXAR_MEMORY_LOG(stdout, "[Command Pool %d]\n", i);
+		EXAR_MEMORY_LOG(stdout, "Command Pool family type %u\n", (u32)lCmdPoolInfo.family);
+		EXAR_MEMORY_LOG(stdout, "Command Pool reset flags %u\n", (u32)lCmdPoolInfo.flags);
+		EXAR_MEMORY_LOG(stdout, "Area type %u\n", (u32)lCmdPoolInfo.type);
+
 		Result lResult = mDevice->createCommandPool(&mCommandPools[i], lCmdPoolInfo, lCmdPoolAllocatorInfo);
 		if (lResult != Result::SUCCESS)
 		{
-			std::cerr << "Error when create command pool " << (u32)lResult << std::endl;
+			EXAR_MEMORY_LOG(stderr, "Error when create command pool %u`\n", (u32)lResult);
 			return;
 		}
 	}
+	EXAR_MEMORY_LOG(stdout, "---------------------------------\n");
 
 	mCommandBuffers.resize(mCommandPools.size());
 
+	EXAR_MEMORY_LOG(stdout, "---- [Command Buffer Creation] ----\n");
 	for (size_t i = 0; i < mCommandPools.size(); ++i) {
 		CommandBufferAllocateInfo lCommandBufferAllocateInfo{};
 		lCommandBufferAllocateInfo.commandPool = mCommandPools[i];
 		lCommandBufferAllocateInfo.commandBufferCount = 1;
 
-		printf("-------------- Init Command buffers --------------\n");
+		EXAR_MEMORY_LOG(stdout, "[Command Buffer %u]\n", i);
+		EXAR_MEMORY_LOG(stdout, "Command Pool address : %zu\n", (uintptr_t)mCommandPools[i]);
+		EXAR_MEMORY_LOG(stdout, "Command Buffer allocation count : %u\n", lCommandBufferAllocateInfo.commandBufferCount);
+
 		if (Result lResultCmdBuffer = mDevice->allocateCommandBuffer(lCommandBufferAllocateInfo, &mCommandBuffers[i]); lResultCmdBuffer != Result::SUCCESS) {
-			printf("CodeResult %d", lResultCmdBuffer);
-			throw std::runtime_error("Error when command buffer allocation");
+			EXAR_MEMORY_LOG(stderr, "Command buffer allocation failed %u\n", (u32)lResultCmdBuffer);
+			throw std::runtime_error("Error when command buffer allocation\n");
 		}
 
 		/*for (size_t i = 0; i < mCommandBuffers.size(); ++i) {*/
@@ -80,18 +92,19 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 
 		Result lResultCmdBeginBuffer = beginCommandBuffer(mCommandBuffers[i], lCmdBufferBeginInfo);
 		if (lResultCmdBeginBuffer != Result::SUCCESS) {
-			printf("CodeResult %d", lResultCmdBeginBuffer);
-			throw std::runtime_error("Error to beginCommandBuffer");
+			EXAR_MEMORY_LOG(stderr, "Begin command buffer failed %u\n", (u32)lResultCmdBeginBuffer);
+			throw std::runtime_error("Error to beginCommandBuffer\n");
 		}
 
 		cmdTest(mCommandBuffers[i], 6);
 		cmdTest(mCommandBuffers[i], 8);
 
 		if (Result lResultEndCommandBuffer = endCommandBuffer(mCommandBuffers[i]); lResultEndCommandBuffer != Result::SUCCESS) {
-			printf("CodeResult %d", lResultEndCommandBuffer);
-			throw std::runtime_error("Error to endCommandBuffer");
+			EXAR_MEMORY_LOG(stderr, "End command buffer failed %u\n", (u32)lResultEndCommandBuffer);
+			throw std::runtime_error("Error to endCommandBuffer\n");
 		}
 	}
+	EXAR_MEMORY_LOG(stdout, "-----------------------------------\n");
 
 	// only 1 command pool with x Command buffer
 	/*printf("-------------- Reset Command buffer 0 --------------\n");
@@ -100,30 +113,32 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 		printf("CodeResult %d", lReset);
 		throw std::runtime_error("Error to resetCommandBuffer 0");
 	}*/
-	printf("-------------- Reset Command Pool 0 --------------\n");
+	EXAR_MEMORY_LOG(stdout, "---- [Reset Command Pool 0] ----\n");
 	Result lReset = resetCommandPool(mCommandPools[0]);
 	if (lReset != Result::SUCCESS) {
-		printf("CodeResult %d", lReset);
-		throw std::runtime_error("Error to resetCommandPool 0");
+		EXAR_MEMORY_LOG(stderr, "Reset Command Pool 0 failed %u\n", (u32)lReset);
+		throw std::runtime_error("Error to resetCommandPool 0\n");
 	}
+	EXAR_MEMORY_LOG(stdout, "--------------------------------\n");
 
-	printf("-------------- Re create Command buffer 0 --------------\n");
+	EXAR_MEMORY_LOG(stdout, "---- [create Command Pool 0] ----\n");
 	CommandBufferBeginInfo lCmdBufferBeginInfo{};
 	lCmdBufferBeginInfo.flags = 0;
 
 	Result lResultCmdBeginBuffer = beginCommandBuffer(mCommandBuffers[0], lCmdBufferBeginInfo);
 	if (lResultCmdBeginBuffer != Result::SUCCESS) {
-		printf("CodeResult %d", lResultCmdBeginBuffer);
-		throw std::runtime_error("Error to beginCommandBuffer");
+		EXAR_MEMORY_LOG(stderr, "Begin command buffer failed %u\n", (u32)lResultCmdBeginBuffer);
+		throw std::runtime_error("Error to beginCommandBuffer\n");
 	}
 
 	cmdTest(mCommandBuffers[0], 1);
 	cmdTest(mCommandBuffers[0], 21);
 
 	if (Result lResultEndCommandBuffer = endCommandBuffer(mCommandBuffers[0]); lResultEndCommandBuffer != Result::SUCCESS) {
-		printf("CodeResult %d", lResultEndCommandBuffer);
-		throw std::runtime_error("Error to endCommandBuffer");
+		EXAR_MEMORY_LOG(stderr, "End command buffer failed %u\n", (u32)lResultEndCommandBuffer);
+		throw std::runtime_error("Error to endCommandBuffer\n");
 	}
+	EXAR_MEMORY_LOG(stdout, "---------------------------------\n");
 
 	/*printf("-------------- Reset Command buffer 1 --------------\n");
 	lReset = resetCommandBuffer(mCommandBuffers[1]);
@@ -131,12 +146,13 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 		printf("CodeResult %d", lReset);
 		throw std::runtime_error("Error to resetCommandBuffer 1");
 	}*/
-	printf("-------------- Reset Command Pool 1 --------------\n");
+	EXAR_MEMORY_LOG(stdout, "---- [Reset Command Pool 1] ----\n");
 	lReset = resetCommandPool(mCommandPools[1]);
 	if (lReset != Result::SUCCESS) {
-		printf("CodeResult %d", lReset);
-		throw std::runtime_error("Error to resetCommandPool 1");
+		EXAR_MEMORY_LOG(stderr, "Reset Command Pool 1 failed %u\n", (u32)lReset);
+		throw std::runtime_error("Error to resetCommandPool 1\n");
 	}
+	EXAR_MEMORY_LOG(stdout, "--------------------------------\n");
 
 	/*printf("-------------- Reset Command buffer 0 --------------\n");
 	lReset = resetCommandBuffer(mCommandBuffers[0]);
@@ -144,12 +160,13 @@ Exar::CommandPoolAllocationTest::CommandPoolAllocationTest()
 		printf("CodeResult %d", lReset);
 		throw std::runtime_error("Error to resetCommandBuffer 0");
 	}*/
-	printf("-------------- Reset Command Pool 0 --------------\n");
+	EXAR_MEMORY_LOG(stdout, "---- [Reset Command Pool 0] ----\n");
 	lReset = resetCommandPool(mCommandPools[0]);
 	if (lReset != Result::SUCCESS) {
-		printf("CodeResult %d", lReset);
-		throw std::runtime_error("Error to resetCommandPool 0");
+		EXAR_MEMORY_LOG(stderr, "Reset Command Pool 0 failed %u\n", (u32)lReset);
+		throw std::runtime_error("Error to resetCommandPool 0\n");
 	}
+	EXAR_MEMORY_LOG(stdout, "--------------------------------\n");
 }
 
 Exar::CommandPoolAllocationTest::~CommandPoolAllocationTest()
@@ -157,10 +174,10 @@ Exar::CommandPoolAllocationTest::~CommandPoolAllocationTest()
 	if (!mDevice) return;
 
 	for (size_t i = 0; i < mCommandPools.size(); ++i) {
-		Result lResult = mDevice->destroyCommandPool(mCommandPools[i], mCmdPoolAllocatorInfos[i]);
+		Result lResult = mDevice->destroyCommandPool(&mCommandPools[i], mCmdPoolAllocatorInfos[i]);
 		if (lResult != Result::SUCCESS) 
 		{
-			std::cerr << "Error when destroy command pool " << (u32)lResult << std::endl;
+			EXAR_MEMORY_LOG(stderr, "Destroy command poo %u failed %u\n", i, (u32)lResult);
 		}
 	}
 

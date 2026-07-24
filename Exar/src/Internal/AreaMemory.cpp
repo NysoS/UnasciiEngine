@@ -25,19 +25,26 @@ Exar::Result Exar::AreaMemory::createMemory(const AreaMemoryCreateInfo& pAreaCre
 {
 	if (pAreaCreateInfo.pageCount == 0 || !pAreaCreateInfo.pageMemory) return Result::ERROR_INVALID_SIZE;
 
-	std::cout << "create Area" << std::endl;
+	EXAR_MEMORY_LOG(stdout, "[MEM - Creation Area]\n");
 
 	mPages.resize(pAreaCreateInfo.pageCount);
 	PageMemory lLastPageMemory{ 0,0,0,0 };
 	for (size_t i = 0; i < pAreaCreateInfo.pageCount; ++i)
 	{
-		std::cout << "create Page : " << i << std::endl;
 		const auto& lInfo = pAreaCreateInfo.pageMemory[i];
 
 		size_t lOffset = lLastPageMemory.size + lLastPageMemory.offset;
 		PageMemory* lPage = new PageMemory{ lInfo.size, lInfo.size, lOffset, lOffset };
 		mPages[i] = lPage;
 		lLastPageMemory = *lPage;
+
+		EXAR_MEMORY_LOG(stdout, "[MEM - Creation Page]\n");
+		EXAR_MEMORY_LOG(stdout, "------- [Page] -------\n");
+		EXAR_MEMORY_LOG(stdout, "Page totalSize : %zu\n", lInfo.size);
+		EXAR_MEMORY_LOG(stdout, "Page size : %zu\n", lInfo.size);
+		EXAR_MEMORY_LOG(stdout, "Page startOffset : %zu\n", lOffset);
+		EXAR_MEMORY_LOG(stdout, "Page offset : %zu\n", lOffset);
+		EXAR_MEMORY_LOG(stdout, "------------------------\n");
 	}
 
 	if (!lVram) return Result::ERROR_MEMORY_MAP_FAILED;
@@ -81,11 +88,11 @@ Exar::Result Exar::AreaMemory::allocate(size_t pSize, u32 pPageIndex)
 	lPage->size -= pSize;
 	lPage->offset += pSize;
 
-	std::cout << "-- Page allocate ressources --" << std::endl;
-	std::cout << "Page : [ " << pPageIndex << " ] " << std::endl;
-	std::cout << "New offset" << " [ " << lPage->offset << " ] " << std::endl;
-	std::cout << "Memory Size Remaining after allocation" << " [ " << lPage->size << " ]" << std::endl;
-	std::cout << "------------------------------" << std::endl;
+	EXAR_MEMORY_LOG(stdout, "------- [Allocation Page Ressource] -------\n");
+	EXAR_MEMORY_LOG(stdout, "------- [Page %d] -------\n", pPageIndex);
+	EXAR_MEMORY_LOG(stdout, "Page offset : %zu\n", lPage->offset);
+	EXAR_MEMORY_LOG(stdout, "Page Size : %zu\n", lPage->size);
+	EXAR_MEMORY_LOG(stdout, "----------------------------------------------\n");
 
 	return Result::SUCCESS;
 }
@@ -109,11 +116,11 @@ Exar::Result Exar::AreaMemory::deallocate(size_t pSize, u32 pPageIndex)
 	lPage->size += pSize;
 	lPage->offset -= pSize;
 
-	std::cout << "-- Page deallocate ressources --" << std::endl;
-	std::cout << "Page : [ " << pPageIndex << " ] " << std::endl;
-	std::cout << "New offset" << " [ " << lPage->offset << " ] " << std::endl;
-	std::cout << "Memory Size Remaining after allocation" << " [ " << lPage->size << " ]" << std::endl;
-	std::cout << "--------------------------------" << std::endl;
+	EXAR_MEMORY_LOG(stdout, "------- [Deallocate Page Ressource] -------\n");
+	EXAR_MEMORY_LOG(stdout, "------- [Page %d] -------\n", pPageIndex);
+	EXAR_MEMORY_LOG(stdout, "Page offset : %zu\n", lPage->offset);
+	EXAR_MEMORY_LOG(stdout, "Page Size : %zu\n", lPage->size);
+	EXAR_MEMORY_LOG(stdout, "----------------------------------------------\n");
 
 	return Result::SUCCESS;
 }
