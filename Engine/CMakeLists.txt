@@ -3,42 +3,10 @@ project(Engine)
 set (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-file(GLOB_RECURSE SOURCES
-    CONFIGURE_DEPENDS
-    ${SRC_DIR}/*.cpp
-)
-
-file(GLOB_RECURSE HEADERS
-    CONFIGURE_DEPENDS
-    ${INC_DIR}/*.hpp
-    ${INC_DIR}/*.h
-)
+cmake_policy(SET CMP0076 NEW) 
+include(../cmake/functions.cmake)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-
-source_group(
-    TREE ${INC_DIR}
-    PREFIX "Headers Files"
-    FILES ${HEADERS}
-)
-
-source_group(
-    TREE ${SRC_DIR}
-    PREFIX "Source Files"
-    FILES ${SOURCES}
-)
-
-target_sources(
-    ${PROJECT_NAME}
-    PRIVATE
-    ${HEADERS}
-)
-
-target_link_libraries(
-    ${PROJECT_NAME}
-    PRIVATE
-    Exar
-)
 
 target_include_directories(
     ${PROJECT_NAME}
@@ -49,6 +17,19 @@ target_include_directories(
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE UNASCII_BUILD_DLL)
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${INC_DIR}/${PROJECT_NAME}/uaepch.h")
+
+add_subdirectory(include)
+add_subdirectory(src)
+
+get_target_property(ALL_PROJECT_SOURCES ${PROJECT_NAME} SOURCES)
+
+if(ALL_PROJECT_SOURCES)
+    source_group(
+        TREE "${CMAKE_CURRENT_SOURCE_DIR}"
+        PREFIX ""
+        FILES ${ALL_PROJECT_SOURCES}
+    )
+endif()
 
 install(
     DIRECTORY ${INC_DIR}/

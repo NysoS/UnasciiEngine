@@ -4,6 +4,7 @@ set (SOURCES
     Device.cpp
     DeviceFactory.cpp
     API.cpp
+    ImageView.cpp
 )
 
 add_subdirectories(
