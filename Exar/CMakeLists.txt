@@ -33,24 +33,6 @@ if(ALL_PROJECT_SOURCES)
     )
 endif()
 
-# source_group(
-#     TREE ${INC_DIR}
-#     PREFIX "Headers Files"
-#     FILES ${HEADERS}
-# )
-
-# target_sources(
-#     ${PROJECT_NAME}
-#     PRIVATE
-#     ${HEADERS}
-# )
-
-# source_group(
-#     TREE ${SRC_DIR}
-#     PREFIX "Source Files"
-#     FILES ${SOURCES} 
-# )
-
 install(
     DIRECTORY ${INC_DIR}/
     DESTINATION include
@@ -63,3 +45,7 @@ else()
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 endif()
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
+)

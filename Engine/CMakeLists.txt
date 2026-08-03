@@ -8,6 +8,12 @@ include(../cmake/functions.cmake)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
+target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE
+    Exar
+)
+
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC 
@@ -42,3 +48,7 @@ else()
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 endif()
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
+)
