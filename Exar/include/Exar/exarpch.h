@@ -19,5 +19,8 @@
 
 #include <thread>
 #include <chrono>
+#include <mutex>
+#include <condition_variable>
+
 
 #endif // EXARPCH_H
