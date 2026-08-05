@@ -23,6 +23,7 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(CommandBuffer);
 	DECLARE_EXAR_HANDLE(Cmd);
 	DECLARE_EXAR_HANDLE(Device);
+	DECLARE_EXAR_HANDLE(Fence);
 
 #define EXAR_NULL_HANDLE nullptr
 
