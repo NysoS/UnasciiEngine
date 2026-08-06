@@ -143,6 +143,11 @@ namespace Exar {
 		// TODO : add fields
 		CommandBufferUsageFlags flags;
 	};
+
+	struct EXA_API FenceCreateInfo
+	{
+		FenceCreateFlags flags = FenceCreateFlags::UNSIGNALED_BIT;
+	};
 }
 
 #endif // !EXAR_DESCRIPTOR_HPP

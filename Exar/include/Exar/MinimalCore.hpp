@@ -58,7 +58,8 @@ namespace Exar {
 		NONE = 0,
 		SWAPCHAIN,
 		COMMAND_POOL,
-		TEXTURE
+		TEXTURE,
+		FENCE
 	};
 
 	enum class MemoryType : uint32_t
@@ -223,6 +224,12 @@ namespace Exar {
 		RENDER_PASS_CONTINUE_BIT = 0x00000002
 	};
 	typedef uint32_t CommandBufferUsageFlags;
+
+	enum FenceCreateFlags : uint32_t
+	{
+		UNSIGNALED_BIT = 0,	// default no ready signal
+		SIGNALED_BIT = 1	// ready signal assigned
+	};
 
 	// no usage here, is all in ram with virtual allocation
 	/*enum class CommandResetFlags : uint32_t
