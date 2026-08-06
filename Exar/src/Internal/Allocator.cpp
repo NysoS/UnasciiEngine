@@ -55,7 +55,6 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 {
 	// Check area type and page index avaiblable
 	if (pDesc.areaType == AreaMemoryType::NONE) return nullptr;
-	if (pDesc.pageIndex == -1) return nullptr;
 
 	// Get specific area
 	auto* lArea = mVram->getAreaMemory(pDesc.areaType);
@@ -109,7 +108,7 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 
 bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept
 {
-	if (pDesc.areaType == AreaMemoryType::NONE || pDesc.pageIndex == -1) return false;
+	if (pDesc.areaType == AreaMemoryType::NONE) return false;
 
 	u8* lRessourceAddr = reinterpret_cast<u8*>(pRessource);
 	if (!lRessourceAddr) return false;

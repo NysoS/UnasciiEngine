@@ -32,7 +32,7 @@ namespace Exar {
 		size_t totalSize = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
 		AreaMemoryType areaType = AreaMemoryType::NONE;
-		u32	pageIndex = -1;
+		u32	pageIndex = 0;
 		AllocationMode mode = AllocationMode::ALLOC_HEAP;
 	};
 

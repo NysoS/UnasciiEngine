@@ -22,8 +22,8 @@ namespace Exar
 			return mSize;
 		}
 
-		Result allocate(size_t pSize, u32 pPageIndex = -1);
-		Result deallocate(size_t pSize, u32 pPageIndex = -1);
+		Result allocate(size_t pSize, u32 pPageIndex = 0);
+		Result deallocate(size_t pSize, u32 pPageIndex = 0);
 
 	private:
 		Memory mHandle;

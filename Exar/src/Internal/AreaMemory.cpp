@@ -73,7 +73,6 @@ const Exar::PageMemory* Exar::AreaMemory::getPage(u32 pIndex) const
 
 Exar::Result Exar::AreaMemory::allocate(size_t pSize, u32 pPageIndex)
 {
-	if (pPageIndex == -1) return Result::ERROR_INVALID_ARG;
 	if (pSize <= 0) return Result::ERROR_INVALID_SIZE;
 
 	if (pPageIndex >= mPages.size()) return Result::ERROR_INVALID_PAGE_INDEX;
@@ -99,7 +98,6 @@ Exar::Result Exar::AreaMemory::allocate(size_t pSize, u32 pPageIndex)
 
 Exar::Result Exar::AreaMemory::deallocate(size_t pSize, u32 pPageIndex)
 {
-	if (pPageIndex == -1) return Result::ERROR_INVALID_ARG;
 	if (pSize <= 0) return Result::ERROR_INVALID_SIZE;
 
 	if (pPageIndex >= mPages.size()) return Result::ERROR_INVALID_PAGE_INDEX;
