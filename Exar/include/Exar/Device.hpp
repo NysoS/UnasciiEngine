@@ -42,6 +42,9 @@ namespace Exar
 		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer);
 		Result destroyFramebuffer(Framebuffer* pFramebuffer);
 
+		Result createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo);
+
 		// create image
 		// destroy image
 		// check memory resources valid

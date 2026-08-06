@@ -8,6 +8,7 @@
 #include "Exar/Internal/Framebuffer.hpp"
 #include "Exar/Internal/Memory.hpp"
 #include "Exar/ImageView.hpp"
+#include "Exar/Fence.hpp"
 
 #include <assert.h>
 
@@ -336,6 +337,47 @@ Exar::Result Exar::Device_::destroyFramebuffer(Framebuffer* pFramebuffer)
 	if (!pFramebuffer) return Result::NULL_POINTER;
 
 	delete pFramebuffer;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	// REFACTO SAME CODE //
+	if (!pFence) return Result::NULL_POINTER;
+	if (pAllocatorInfo.areaType != AreaMemoryType::FENCE) return Result::ERROR_INVALID_FAMILIES;
+	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
+
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
+	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
+
+	MemoryRequirement lRequired;
+	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
+	lRequired.align = pAllocatorInfo.align;
+
+	void* lPoolPtr = nullptr;
+	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
+	if (lResult != Result::SUCCESS) return lResult;
+	//////////////////////
+
+	Fence_* lFence = reinterpret_cast<Fence_*>(lPoolPtr);
+	lFence->setCurrentState(pInfo.flags == FenceCreateFlags::SIGNALED_BIT ? FenceState::Ready : FenceState::Waiting);
+
+	*pFence = lFence;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (!pFence) return Result::ERROR_MEMORY_NULL_HANDLE;
+
+	if (!mAllocator->dealloc(*pFence, pAllocatorInfo)) {
+		assert(false && "Command Pool dealloc failed");
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	*pFence = nullptr;
 
 	return Result::SUCCESS;
 }
