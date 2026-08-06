@@ -22,5 +22,4 @@
 #include <mutex>
 #include <condition_variable>
 
-
 #endif // EXARPCH_H

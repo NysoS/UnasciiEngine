@@ -5,6 +5,7 @@ set (SOURCES
     DeviceFactory.cpp
     API.cpp
     ImageView.cpp
+    Fence.cpp
 )
 
 add_subdirectories(

@@ -1,8 +1,8 @@
 #ifndef EXAR_FENCE_HPP
 #define EXAR_FENCE_HPP
 
-#include "Exar/Exar.hpp"
 #include "Exar/exarpch.h"
+#include "Exar/Exar.hpp"
 
 namespace Exar
 {
@@ -23,6 +23,7 @@ namespace Exar
 		Fence_& operator=(const Fence_&) = delete;
 
 		FenceState getCurrentState() const;
+		void setCurrentState(FenceState pState);
 		void notifyOne();
 		void notifyAll();
 
