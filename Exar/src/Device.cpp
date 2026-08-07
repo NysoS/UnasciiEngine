@@ -381,3 +381,19 @@ Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInf
 
 	return Result::SUCCESS;
 }
+
+// pWaitAll only more fence
+Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout)
+{
+	if (!pFence) return Result::NULL_POINTER;
+
+	FenceState lCurrentState = pFence->getCurrentState();
+	
+	if (pTimeout == u64max) {
+		pFence->wait();
+	}
+
+	if (lCurrentState != FenceState::Waiting && pWaitAll == ExarBool::B_TRUE) return Result::FENCE_PROCESSING;
+
+	return Result::SUCCESS;
+}

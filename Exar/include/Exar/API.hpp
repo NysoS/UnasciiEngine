@@ -14,6 +14,8 @@ namespace Exar
 	EXA_API Result resetCommandBuffer(CommandBuffer pCmdBuffer) noexcept;
 	EXA_API Result resetCommandPool(CommandPool pCommandPool) noexcept;
 
+	EXA_API Result waitForFences(Device pDevice, u32 pFenceCount, Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept;
+
 #ifdef _DEBUG
 	EXA_API void cmdTest(CommandBuffer pCmdBuffer, uint32_t pValue) noexcept;
 #endif

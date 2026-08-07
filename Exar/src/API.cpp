@@ -83,6 +83,11 @@ namespace Exar
 		return Result::SUCCESS;
 	}
 
+	EXA_API Result waitForFences(Device pDevice, u32 pFenceCount, Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept
+	{
+		return pDevice->waitForFence(pFence, pWaitAll, pTimeout);
+	}
+
 #ifdef _DEBUG
 	void cmdTest(CommandBuffer pCmdBuffer, uint32_t pValue) noexcept {
 		assert(pCmdBuffer);
