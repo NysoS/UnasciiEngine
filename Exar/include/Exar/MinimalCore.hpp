@@ -50,7 +50,15 @@ namespace Exar {
 		ERROR_MEMORY_ALLOCATION,
 		ERROR_MEMORY_NULL_HANDLE,
 
-		ERROR_MEMORY_CLEANUP
+		ERROR_MEMORY_CLEANUP,
+
+		FENCE_PROCESSING
+	};
+
+	enum class ExarBool : uint32_t
+	{
+		B_FALSE = 0,
+		B_TRUE
 	};
 
 	enum class AreaMemoryType : uint32_t
