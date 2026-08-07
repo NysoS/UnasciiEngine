@@ -8,7 +8,7 @@ namespace Exar
 {
 	enum class FenceState
 	{
-		Ready,
+		Signaled,
 		Waiting
 	};
 
@@ -22,15 +22,17 @@ namespace Exar
 		Fence_(Fence_&) = delete;
 		Fence_& operator=(const Fence_&) = delete;
 
-		FenceState getCurrentState() const;
-		void setCurrentState(FenceState pState);
-		void notifyOne();
-		void notifyAll();
+		FenceState getCurrentState() const noexcept;
+		void setCurrentState(FenceState pState) noexcept;
+		void notifyOne() noexcept;
+		void notifyAll() noexcept;
+
+		void wait() noexcept;
 
 	private:
 		mutable std::mutex mMutex;
 		std::condition_variable mCv;
-		FenceState mState = FenceState::Ready;
+		FenceState mState = FenceState::Signaled;
 	};
 }
 

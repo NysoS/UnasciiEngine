@@ -361,7 +361,7 @@ Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pI
 	//////////////////////
 
 	Fence_* lFence = reinterpret_cast<Fence_*>(lPoolPtr);
-	lFence->setCurrentState(pInfo.flags == FenceCreateFlags::SIGNALED_BIT ? FenceState::Ready : FenceState::Waiting);
+	lFence->setCurrentState(pInfo.flags == FenceCreateFlags::SIGNALED_BIT ? FenceState::Signaled : FenceState::Waiting);
 
 	*pFence = lFence;
 
