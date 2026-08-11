@@ -13,6 +13,7 @@ namespace Exar
 	EXA_API Result endCommandBuffer(CommandBuffer pCmdBuffer) noexcept;
 	EXA_API Result resetCommandBuffer(CommandBuffer pCmdBuffer) noexcept;
 	EXA_API Result resetCommandPool(CommandPool pCommandPool) noexcept;
+	EXA_API Result queueSubmit(QueueFamily pFamily, u32 pCount, const SubmitInfo& pInfo, Fence pFence) noexcept;
 
 	EXA_API Result waitForFences(Device pDevice, u32 pFenceCount, Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept;
 

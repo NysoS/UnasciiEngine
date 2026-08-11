@@ -84,6 +84,24 @@ namespace Exar
 		return Result::SUCCESS;
 	}
 
+	EXA_API Result queueSubmit(QueueFamily pFamily, u32 pCount, const SubmitInfo& pInfo, Fence pFence) noexcept
+	{
+		if (!pFence) return Result::ERROR_INVALID_FENCE;
+		if (pCount > pInfo.commandBufferCount) Result::ERROR_INVALID_ARG;
+
+		for (size_t i = 0; i < pCount; ++i) {
+			CommandBuffer lBuffer = pInfo.pCommandBuffers[i];
+			if (!lBuffer) return Result::NULL_POINTER;
+			if (lBuffer->pQueueFamily != pFamily) return Result::ERROR_INVALID_FAMILIES;
+			if (lBuffer->state != CommandBufferState::INITIAL) Result::ERROR_COMMAND_BUFFER_ALREADY_SUBMIT;
+
+			lBuffer->state = CommandBufferState::PENDING;
+			pFence->notifyOne();
+		}
+
+		return Result::SUCCESS;
+	}
+
 	EXA_API Result waitForFences(Device pDevice, u32 pFenceCount, Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept
 	{
 		return pDevice->waitForFence(pFence, pWaitAll, pTimeout);
