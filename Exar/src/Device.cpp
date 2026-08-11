@@ -175,7 +175,7 @@ Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const C
 
 	CommandPool_* lCmdPool = reinterpret_cast<CommandPool_*>(lPoolPtr);
 	lCmdPool->resetMode = (u32)pInfo.flags;
-	lCmdPool->queueFamily = (u32)pInfo.family;
+	lCmdPool->queueFamily = pInfo.family;
 
 	size_t lCmdPoolHeader = MemoryOperation::alignValue(sizeof(CommandPool_), AlignMemory::ALIGN_16);
 	size_t lCmdPoolHalfSize = MemoryOperation::alignDown(((size_t)pAllocatorInfo.totalSize - lCmdPoolHeader) / 2, AlignMemory::ALIGN_16);
@@ -227,6 +227,7 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 		lCommandBuffer->capacity = lCapacity;
 		lCommandBuffer->cmdOffset = lCommandBufferAligned;
 		lCommandBuffer->cmdBaseOffset = lCommandBufferAligned;
+		lCommandBuffer->pQueueFamily = pInfo.commandPool->queueFamily;
 
 		pCommandBuffers[i] = lCommandBuffer;
 	}

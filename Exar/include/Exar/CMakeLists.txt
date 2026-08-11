@@ -19,6 +19,7 @@ set (HEADERS
     MinimalCore.hpp
     SwapchainDesc.hpp
     Types.hpp
+    Fence.hpp
 )
 
 add_subdirectories(

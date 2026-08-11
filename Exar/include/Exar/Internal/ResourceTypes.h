@@ -15,7 +15,7 @@ namespace Exar
 	{
 		std::vector<size_t> offsets;
 		uint32_t resetMode;
-		uint32_t queueFamily;
+		QueueFamily queueFamily;
 		size_t halfSize;
 		size_t fullSize;
 	};
@@ -24,6 +24,7 @@ namespace Exar
 	{
 		CommandBufferState state;
 		CommandBufferUsageFlags flags;
+		QueueFamily pQueueFamily;
 		uint32_t count;
 		size_t capacity;
 		size_t cmdOffset;
