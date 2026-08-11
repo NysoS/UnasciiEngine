@@ -45,6 +45,7 @@ namespace Exar
 		Result createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo);
 		Result waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout);
+		Result resetFences(Fence* pFences, u32 pCount);
 
 		// create image
 		// destroy image

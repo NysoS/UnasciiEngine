@@ -1,6 +1,7 @@
 #include "Exar/API.hpp"
 #include "Exar/Device.hpp"
 #include "Exar/Internal/ResourceTypes.h"
+#include "Exar/Fence.hpp"
 
 #include <assert.h>
 

@@ -397,3 +397,17 @@ Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pT
 
 	return Result::SUCCESS;
 }
+
+Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
+{
+	if (!pFences) return Result::NULL_POINTER;
+
+	for (size_t i = 0; i < pCount; ++i)
+	{
+		Fence lFence = pFences[i];
+		if (!lFence) return Result::ERROR_INVALID_FENCE;
+		lFence->reset();
+	}
+
+	return Result::SUCCESS;
+}
