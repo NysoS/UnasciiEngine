@@ -138,6 +138,12 @@ namespace Exar {
 		uint32_t commandBufferCount;
 	};
 
+	struct EXA_API SubmitInfo
+	{
+		u32 commandBufferCount;
+		CommandBuffer* pCommandBuffers;
+	};
+
 	struct EXA_API CommandBufferBeginInfo
 	{
 		// TODO : add fields
