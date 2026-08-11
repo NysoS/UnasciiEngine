@@ -157,7 +157,7 @@ Exar::Result Exar::Device_::destroyImage(Image pImage, const AllocatorCreateInfo
 
 Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
 {
-	if (pInfo.type != pAllocatorInfo.areaType) return Result::ERROR_INVALID_FAMILIES;
+	if (pInfo.type != pAllocatorInfo.areaType) return Result::ERROR_INVALID_MEMORY_AREA;
 
 	if (!pCommandPool) return Result::NULL_POINTER;
 	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
@@ -346,7 +346,7 @@ Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pI
 {
 	// REFACTO SAME CODE //
 	if (!pFence) return Result::NULL_POINTER;
-	if (pAllocatorInfo.areaType != AreaMemoryType::FENCE) return Result::ERROR_INVALID_FAMILIES;
+	if (pAllocatorInfo.areaType != AreaMemoryType::FENCE) return Result::ERROR_INVALID_MEMORY_AREA;
 	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
 
 	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
