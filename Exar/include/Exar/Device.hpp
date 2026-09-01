@@ -53,6 +53,8 @@ namespace Exar
 		// add exar_result
 
 	private:
+		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo);
+
 		std::unique_ptr<Allocator> mAllocator;
 	};
 }

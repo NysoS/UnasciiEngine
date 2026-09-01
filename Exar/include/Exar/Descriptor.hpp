@@ -154,6 +154,15 @@ namespace Exar {
 	{
 		FenceCreateFlags flags = FenceCreateFlags::UNSIGNALED_BIT;
 	};
+
+	struct FindRessourceInfo
+	{
+		SearchPageFlag searchPageFlag;
+		AreaMemoryType areaMemoryType;
+		QueueFamily family;
+		uint32_t pageCount;
+		uint32_t pageStartIndex;
+	};
 }
 
 #endif // !EXAR_DESCRIPTOR_HPP

@@ -248,6 +248,13 @@ namespace Exar {
 	{
 		RELEASE_RESOURCES = 0x00000001,
 	};*/
+
+	enum class SearchPageFlag : uint32_t
+	{
+		SINGLE_RESSOURCE_PAGE = 0, // one ressource in one page
+		MULTIPLE_RESSOURCES_PAGE, // multiple ressources in one page
+		SINGLE_RESSOURCE_MULTIPLE_PAGES, // one ressource in multiple pages
+	};
 }
 
 #endif // EXAR_DEF_HPP

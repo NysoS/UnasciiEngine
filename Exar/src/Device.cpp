@@ -412,3 +412,16 @@ Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
 
 	return Result::SUCCESS;
 }
+
+Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo)
+{
+	void* lRessource = mAllocator->findRessource(pSearchInfo);
+	if (!lRessource) return Result::ERROR_ALLOCATOR_NULL_POINTER;
+
+	CommandPool lCommandPool = reinterpret_cast<CommandPool>(lRessource);
+	EXAR_MEMORY_LOG(stdout, "CommandPool family : %u", lCommandPool->queueFamily);
+
+	*pCommandPool = lCommandPool;
+
+	return Result::SUCCESS;
+}

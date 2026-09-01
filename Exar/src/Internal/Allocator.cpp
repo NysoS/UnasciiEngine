@@ -147,3 +147,16 @@ size_t Exar::Allocator::getMemoryAreaSizeRemaining(const AreaMemoryType mAreaTyp
 
 	return lArea->getSize();
 }
+
+void* Exar::Allocator::findRessource(const FindRessourceInfo& pFindInfo) const noexcept
+{
+	if (!mVram) return nullptr;
+
+	Exar::AreaMemory* lArea = mVram->getAreaMemory(pFindInfo.areaMemoryType);
+	if (!lArea) return nullptr;
+
+	const Exar::PageMemory* lPage = lArea->getPage(pFindInfo.pageStartIndex);
+	if (!lPage) return nullptr;
+
+	return lArea->getMemory(lPage->startOffset);
+}
