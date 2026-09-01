@@ -22,5 +22,6 @@
 #include <chrono>
 #include <mutex>
 #include <condition_variable>
+#include <stop_token>
 
 #endif // EXARPCH_H

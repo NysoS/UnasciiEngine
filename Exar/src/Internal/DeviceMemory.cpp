@@ -27,6 +27,10 @@ Exar::Result Exar::DeviceMemory::createAreaMemory(const AreaMemoryCreateInfo& pA
 		std::cout << "Type COMMAND POOL" << std::endl;
 		mCommandPoolArea = std::make_unique<AreaMemory>();
 		return mCommandPoolArea->createMemory(pAreaCreateInfo, lVram);
+	case AreaMemoryType::FENCE:
+		std::cout << "Type FENCE" << std::endl;
+		mFenceArea = std::make_unique<AreaMemory>();
+		return mFenceArea->createMemory(pAreaCreateInfo, lVram);
 	default:
 		break;
 	}
@@ -45,6 +49,8 @@ Exar::AreaMemory* Exar::DeviceMemory::getAreaMemory(const AreaMemoryType& pAreaT
 		return mSwapchainArea.get();
 	case AreaMemoryType::COMMAND_POOL:
 		return mCommandPoolArea.get();
+	case AreaMemoryType::FENCE:
+		return mFenceArea.get();
 	default:
 		break;
 	}
