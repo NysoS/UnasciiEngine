@@ -54,12 +54,13 @@ Exar::Result Exar::AreaMemory::createMemory(const AreaMemoryCreateInfo& pAreaCre
 	return Result::SUCCESS;
 }
 
-Exar::Memory Exar::AreaMemory::getMemory()
+Exar::Memory Exar::AreaMemory::getMemory(u32 pOffset)
 {
-	return mHandle;
+	u8* lRessource = reinterpret_cast<u8*>(mHandle);
+	return reinterpret_cast<Exar::Memory>(lRessource + pOffset);
 }
 
-Exar::Memory Exar::AreaMemory::getMemory() const
+Exar::Memory Exar::AreaMemory::getMemory(u32 pOffset) const
 {
 	return mHandle;
 }

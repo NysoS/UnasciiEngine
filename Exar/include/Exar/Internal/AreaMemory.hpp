@@ -15,8 +15,8 @@ namespace Exar
 
 		Result createMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram);
 
-		Memory getMemory();
-		Memory getMemory() const;
+		Memory getMemory(u32 pOffset = 0);
+		Memory getMemory(u32 pOffset = 0) const;
 		const PageMemory* getPage(u32 pIndex) const;
 		inline const size_t getSize() const noexcept {
 			return mSize;

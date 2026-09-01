@@ -16,6 +16,7 @@ namespace Exar
 {
 	class DeviceMemory;
 	class IRessource;
+	class AreaMemory;
 
 	class Allocator 
 	{
