@@ -47,5 +47,7 @@ endif()
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
+    $<$<CXX_COMPILER_ID:MSVC>:
+    /Zc:preprocessor
+    /Zc:__cplusplus>
 )
