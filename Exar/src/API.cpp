@@ -29,8 +29,6 @@ namespace Exar
 	{
 		if (!pCmdBuffer) return Result::ERROR_MEMORY_NULL_HANDLE;
 
-		assert(pCmdBuffer->state == CommandBufferState::INITIAL);
-
 		pCmdBuffer->state = CommandBufferState::RECORDING;
 		pCmdBuffer->flags = pBeginInfo.flags;
 
