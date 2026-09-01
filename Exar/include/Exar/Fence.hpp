@@ -28,6 +28,7 @@ namespace Exar
 		void notifyAll() noexcept;
 
 		void wait() noexcept;
+		void signal();
 		void reset();
 	private:
 		mutable std::mutex mMutex;

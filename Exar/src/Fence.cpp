@@ -38,6 +38,12 @@ void Exar::Fence_::wait() noexcept
 	});
 }
 
+void Exar::Fence_::signal()
+{
+	std::scoped_lock<std::mutex> lLock(mMutex);
+	mState = FenceState::Signaled;
+}
+
 void Exar::Fence_::reset()
 {
 	std::scoped_lock<std::mutex> lLock(mMutex);
