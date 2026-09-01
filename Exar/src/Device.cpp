@@ -394,7 +394,7 @@ Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pT
 		pFence->wait();
 	}
 
-	if (lCurrentState != FenceState::Waiting && pWaitAll == ExarBool::B_TRUE) return Result::FENCE_PROCESSING;
+	if (lCurrentState == FenceState::Waiting && pWaitAll == ExarBool::B_TRUE) return Result::FENCE_PROCESSING;
 
 	return Result::SUCCESS;
 }
