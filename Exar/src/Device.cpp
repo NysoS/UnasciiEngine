@@ -415,13 +415,46 @@ Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
 
 Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo)
 {
+	if (pSearchInfo.ressourceType != RessourceType::COMMAND_POOL) return Result::ERROR_RESSOURCE_TYPE;
+
+	if (!pCommandPool) return Result::NULL_POINTER;
+
 	void* lRessource = mAllocator->findRessource(pSearchInfo);
 	if (!lRessource) return Result::ERROR_ALLOCATOR_NULL_POINTER;
 
 	CommandPool lCommandPool = reinterpret_cast<CommandPool>(lRessource);
+	if (!lCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (lCommandPool->queueFamily != pSearchInfo.family) return Result::ERROR_FAMILY_NOT_SAME;
+
 	EXAR_MEMORY_LOG(stdout, "CommandPool family : %u", lCommandPool->queueFamily);
 
 	*pCommandPool = lCommandPool;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::getCommandBufferCount(size_t* pCount, CommandPool pCommandPool)
+{
+	if (!pCommandPool) return Result::NULL_POINTER;
+
+	*pCount = pCommandPool->offsets.size();
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::findCommandBuffer(CommandBuffer* pCommandBuffer, CommandPool pCommandPool, const FindRessourceInfo& pSearchInfo)
+{
+	if (pSearchInfo.ressourceType != RessourceType::COMMAND_BUFFER);
+	if (!pCommandBuffer || !pCommandPool) return Result::NULL_POINTER;
+
+	u8* lCommandPoolBaseOffset = reinterpret_cast<u8*>(pCommandPool);
+
+	for (size_t i = 0; i < pCommandPool->offsets.size(); ++i) {
+		CommandBuffer lCommandBuffer = reinterpret_cast<CommandBuffer>(lCommandPoolBaseOffset + pCommandPool->offsets.at(i));
+		if (!lCommandBuffer) return Result::ERROR_MEMORY_NULL_HANDLE;
+
+		pCommandBuffer[i] = lCommandBuffer;
+	}
 
 	return Result::SUCCESS;
 }

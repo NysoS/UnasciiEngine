@@ -52,8 +52,10 @@ namespace Exar
 		// check memory resources valid
 		// add exar_result
 
-	private:
 		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo);
+		Result getCommandBufferCount(size_t* pCount, CommandPool pCommandPool);
+		Result findCommandBuffer(CommandBuffer* pCommandBuffer, CommandPool pCommandPool, const FindRessourceInfo& pSearchInfo);
+	private:
 
 		std::unique_ptr<Allocator> mAllocator;
 	};
