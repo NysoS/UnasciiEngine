@@ -157,6 +157,7 @@ namespace Exar {
 
 	struct FindRessourceInfo
 	{
+		RessourceType ressourceType;
 		SearchPageFlag searchPageFlag;
 		AreaMemoryType areaMemoryType;
 		QueueFamily family;

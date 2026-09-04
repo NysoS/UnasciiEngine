@@ -36,6 +36,7 @@ namespace Exar {
 
 		ERROR_COMMAND_BUFFER_ALREADY_SUBMIT,
 		ERROR_RESOURCES_LOST,
+		ERROR_FAMILY_NOT_SAME,
 		ERROR_INVALID_FLAG,
 
 		ERROR_INVALID_SIZE,
@@ -55,6 +56,7 @@ namespace Exar {
 		ERROR_MEMORY_NULL_HANDLE,
 
 		ERROR_MEMORY_CLEANUP,
+		ERROR_RESSOURCE_TYPE,
 
 		FENCE_PROCESSING
 	};
@@ -248,6 +250,17 @@ namespace Exar {
 	{
 		RELEASE_RESOURCES = 0x00000001,
 	};*/
+
+	enum class RessourceType : uint32_t
+	{
+		COMMAND_POOL = 1,
+		COMMAND_BUFFER,
+		SWAPCHAIN,
+		FENCE,
+		CMD,
+		BUFFER,
+		IMAGE
+	};
 
 	enum class SearchPageFlag : uint32_t
 	{
