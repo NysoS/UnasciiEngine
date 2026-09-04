@@ -1,9 +1,9 @@
 #include "Exar/Internal/InternalApi.hpp"
-#include "Exar/"
+#include "Exar/Device.hpp"
 
 Exar::Result Exar::Internal::findCommandPool(Device pDevice, const FindRessourceInfo& pFinfo, CommandPool* pCommandPool)
 {
 	if (!pDevice) return Result::ERROR_MEMORY_NULL_HANDLE;
 
-	return Result::SUCCESS;
+	return pDevice->findCommandPool(pCommandPool, pFinfo);
 }
