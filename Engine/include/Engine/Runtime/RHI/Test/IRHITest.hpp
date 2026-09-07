@@ -25,6 +25,13 @@ namespace UnasciiEngine::RHI::Test
 		virtual ~IRHICommandPoolTest() = default;
 		virtual void execute() = 0;
 	};
+
+	class UAE_API IRHICommandBufferWithWorkerThread
+	{
+	public:
+		virtual ~IRHICommandBufferWithWorkerThread() = default;
+		virtual void execute() = 0;
+	};
 }
 
 #endif // !IRHI_TEST_HPP
