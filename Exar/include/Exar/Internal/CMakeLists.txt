@@ -8,6 +8,7 @@ set (HEADERS
     PageMemory.hpp
     ResourceTypes.h
     Swapchain.hpp
+    InternalApi.hpp
 )
 
 register_sources(Exar ${HEADERS})
