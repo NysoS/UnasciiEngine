@@ -34,7 +34,7 @@ Exar::Result Exar::Internal::findCommandBuffer(CommandBuffer* pCommandBuffer, Co
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Internal::findCommand(Cmd* pCmd, CommandBuffer pCommandBuffer, const FindRessourceInfo& pSearchInfo)
+Exar::Result Exar::Internal::findCommands(Cmd* pCmd, CommandBuffer pCommandBuffer, const FindRessourceInfo& pSearchInfo)
 {
 	if (!pCmd || !pCommandBuffer) return Result::NULL_POINTER;
 	if (pSearchInfo.ressourceType != RessourceType::CMD) return Result::ERROR_RESSOURCE_TYPE;

@@ -268,7 +268,7 @@ void Exar::CommandBufferWithWorkerThread::WorkerSystemProcess(std::stop_token pS
 			FindRessourceInfo lCmdInfo{};
 			lCmdInfo.ressourceType = RessourceType::CMD;
 
-			Internal::findCommand(lCmds.data(), lCommandBuffer, lCmdInfo);
+			Internal::findCommands(lCmds.data(), lCommandBuffer, lCmdInfo);
 
 			for (size_t lIndex = 0; lIndex < lCmds.size(); ++lIndex) {
 				EXAR_MEMORY_LOG(stdout, "---- [Worker Thread Cmd Read] : %i ----\n", lIndex);
