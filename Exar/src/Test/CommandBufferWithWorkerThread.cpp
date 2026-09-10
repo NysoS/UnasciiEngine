@@ -149,23 +149,28 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 
 
 		EXAR_MEMORY_LOG(stdout, "---- [Command Buffer Cmd] ----\n");
-		for (size_t i = 0; i < mCommandPools.size(); ++i) {
-			CommandBufferBeginInfo lCmdBufferBeginInfo{};
-			lCmdBufferBeginInfo.flags = 0;
+		// reset command buffer
+		Result lResetResult = resetCommandBuffer(mCommandBuffers[mCurrentFrame]);
+		if (lResetResult != Result::SUCCESS) {
+			EXAR_MEMORY_LOG(stderr, "Reset command buffer failed %u\n", (u32)lResetResult);
+			throw std::runtime_error("Error to resetCommandBuffer\n");
+		}
 
-			Result lResultCmdBeginBuffer = beginCommandBuffer(mCommandBuffers[i], lCmdBufferBeginInfo);
-			if (lResultCmdBeginBuffer != Result::SUCCESS) {
-				EXAR_MEMORY_LOG(stderr, "Begin command buffer failed %u\n", (u32)lResultCmdBeginBuffer);
-				throw std::runtime_error("Error to beginCommandBuffer\n");
-			}
+		CommandBufferBeginInfo lCmdBufferBeginInfo{};
+		lCmdBufferBeginInfo.flags = 0;
 
-			cmdTest(mCommandBuffers[i], 6);
-			cmdTest(mCommandBuffers[i], 8);
+		Result lResultCmdBeginBuffer = beginCommandBuffer(mCommandBuffers[mCurrentFrame], lCmdBufferBeginInfo);
+		if (lResultCmdBeginBuffer != Result::SUCCESS) {
+			EXAR_MEMORY_LOG(stderr, "Begin command buffer failed %u\n", (u32)lResultCmdBeginBuffer);
+			throw std::runtime_error("Error to beginCommandBuffer\n");
+		}
 
-			if (Result lResultEndCommandBuffer = endCommandBuffer(mCommandBuffers[i]); lResultEndCommandBuffer != Result::SUCCESS) {
-				EXAR_MEMORY_LOG(stderr, "End command buffer failed %u\n", (u32)lResultEndCommandBuffer);
-				throw std::runtime_error("Error to endCommandBuffer\n");
-			}
+		cmdTest(mCommandBuffers[mCurrentFrame], 6 + mCurrentFrame);
+		cmdTest(mCommandBuffers[mCurrentFrame], 8 + mCurrentFrame);
+
+		if (Result lResultEndCommandBuffer = endCommandBuffer(mCommandBuffers[mCurrentFrame]); lResultEndCommandBuffer != Result::SUCCESS) {
+			EXAR_MEMORY_LOG(stderr, "End command buffer failed %u\n", (u32)lResultEndCommandBuffer);
+			throw std::runtime_error("Error to endCommandBuffer\n");
 		}
 		EXAR_MEMORY_LOG(stdout, "------------------------------\n");
 
