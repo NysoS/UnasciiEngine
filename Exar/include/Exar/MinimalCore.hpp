@@ -268,6 +268,13 @@ namespace Exar {
 		MULTIPLE_RESSOURCES_PAGE, // multiple ressources in one page
 		SINGLE_RESSOURCE_MULTIPLE_PAGES, // one ressource in multiple pages
 	};
+
+	union ClearColorValue
+	{
+		float float32[4];
+		int32_t int32[4];
+		uint32_t uint32[4];
+	};
 }
 
 #endif // EXAR_DEF_HPP

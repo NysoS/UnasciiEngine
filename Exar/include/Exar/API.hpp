@@ -17,8 +17,10 @@ namespace Exar
 
 	EXA_API Result waitForFences(Device pDevice, u32 pFenceCount, Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept;
 
+	// add ImageLayout and ImageSubresourceRange later
+	EXA_API Result cmdClearColorImage(CommandBuffer pCmdBuffer, Image pImage, const ClearColorValue& pColor);
 #ifdef _DEBUG
-	EXA_API void cmdTest(CommandBuffer pCmdBuffer, uint32_t pValue) noexcept;
+	EXA_API void cmdTest(CommandBuffer pCmdBuffer, u32 pValue) noexcept;
 #endif
 }
 
