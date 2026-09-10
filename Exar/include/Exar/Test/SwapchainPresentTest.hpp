@@ -1,9 +1,8 @@
 #ifndef EXAR_SWAPCHAIN_PRESENT_TEST_HPP
 #define EXAR_SWAPCHAIN_PRESENT_TEST_HPP
 
-#include "Exar/exarpch.h"
+#include "Exar/MinimalCore.hpp"
 #include "Exar/Exar.hpp"
-#include "Exar/IDevice.hpp"
 
 namespace Exar {
 	class EXA_API SwapchainPresentTest
@@ -12,7 +11,7 @@ namespace Exar {
 		SwapchainPresentTest();
 		~SwapchainPresentTest();
 	private:
-		std::unique_ptr<IDevice> mDevice;
+		Device mDevice;
 		class ISwapchain* mSwapchain;
 	};
 }

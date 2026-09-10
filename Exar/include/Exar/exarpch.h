@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <limits>
 
 #include <sstream>
 #include <string>
@@ -19,5 +20,8 @@
 
 #include <thread>
 #include <chrono>
+#include <mutex>
+#include <condition_variable>
+#include <stop_token>
 
 #endif // EXARPCH_H

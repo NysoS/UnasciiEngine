@@ -5,12 +5,25 @@
 #include "Exar/Types.hpp"
 #include "Exar/Extent.hpp"
 
+#ifdef _DEBUG
+#define EXAR_MEMORY_LOG(level, msg, ...) \
+	fprintf(level, msg __VA_OPT__(,) __VA_ARGS__)
+#else
+#define EXAR_MEMORY_LOG(level, msg, ...) ((void)0)
+#endif // _DEBUG
+
+
 #define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
 
 namespace Exar {
 	DECLARE_EXAR_HANDLE(Memory);
 	DECLARE_EXAR_HANDLE(Surface);
 	DECLARE_EXAR_HANDLE(Image);
+	DECLARE_EXAR_HANDLE(CommandPool);
+	DECLARE_EXAR_HANDLE(CommandBuffer);
+	DECLARE_EXAR_HANDLE(Cmd);
+	DECLARE_EXAR_HANDLE(Device);
+	DECLARE_EXAR_HANDLE(Fence);
 
 #define EXAR_NULL_HANDLE nullptr
 
@@ -21,25 +34,46 @@ namespace Exar {
 
 		ERROR_INVALID_ARG,
 
+		ERROR_COMMAND_BUFFER_ALREADY_SUBMIT,
 		ERROR_RESOURCES_LOST,
+		ERROR_FAMILY_NOT_SAME,
+		ERROR_INVALID_FLAG,
 
 		ERROR_INVALID_SIZE,
+		ERROR_INVALID_FAMILIES,
+		ERROR_INVALID_MEMORY_AREA,
 		ERROR_INVALID_ALIGN_MEMORY,
+		ERROR_INVALID_FENCE,
+
+		ERROR_MEMORY_MAPING,
 		ERROR_MEMORY_MAP_FAILED,
 		ERROR_OUT_OF_MEMORY,
 
 		ERROR_INVALID_PAGE_INDEX,
 		ERROR_INVALID_PAGE,
 		ERROR_ALLOCATOR_NULL_POINTER,
-		ERROR_MEMORY_ALLOCATION
+		ERROR_MEMORY_ALLOCATION,
+		ERROR_MEMORY_NULL_HANDLE,
+
+		ERROR_MEMORY_CLEANUP,
+		ERROR_RESSOURCE_TYPE,
+
+		FENCE_PROCESSING
+	};
+
+	enum class ExarBool : uint32_t
+	{
+		B_FALSE = 0,
+		B_TRUE
 	};
 
 	enum class AreaMemoryType : uint32_t
 	{
 		NONE = 0,
 		SWAPCHAIN,
-		COMMAND_BUFFER,
-		TEXTURE
+		COMMAND_POOL,
+		TEXTURE,
+		FENCE
 	};
 
 	enum class MemoryType : uint32_t
@@ -70,11 +104,12 @@ namespace Exar {
 		BIND_CONSTANT_BUFFER = 0x4L
 	};
 
-	enum class AllocLocation : uint32_t
+	enum class AllocationMode : uint32_t
 	{
 		ALLOC_HEAP = 0,
 		ALLOC_SCRATCH = 1, // Ring buffer
-		ALLOC_SIMD = 2
+		ALLOC_DOUBLE_SCRATCH = 2,
+		ALLOC_SIMD = 3
 	};
 
 	enum class AlignMemory : size_t
@@ -164,6 +199,81 @@ namespace Exar {
 	{
 		GRAPHICS = 0,
 		COMPUTE
+	};
+
+	enum class QueueFamily : uint32_t 
+	{
+		GRAPHICS = 0,
+		COMPUTE = 1,
+		TRANSFERT = 2
+	};
+
+	enum class CommandPoolFlags : uint32_t 
+	{
+		MANUAL = 0x0L,
+		TRANSIENT_BIT = 0x1L,				// reset command pool
+		RESET_COMMAND_BUUFER_BIT = 0x2L,	// reset individual command buffer (by pool)
+		RESET_COMMAND_BUFFER_PAGE = 0x4L,
+		PROTECTED_BIT = 0x6L				// content protected, DRM type
+	};
+
+	enum class CommandType : uint32_t
+	{
+		TEST = 0,
+		NONE = 1,
+	};
+
+	enum class CommandBufferState : uint32_t
+	{
+		INVALID = 0,
+		INITIAL = 1,
+		RECORDING = 2,
+		EXECUTABLE = 3,
+		PENDING = 4
+	};
+
+	enum CommandBufferUsageFlagBits : uint32_t
+	{
+		ONE_TIME_SUBMIT_BIT = 0x00000001,
+		RENDER_PASS_CONTINUE_BIT = 0x00000002
+	};
+	typedef uint32_t CommandBufferUsageFlags;
+
+	enum FenceCreateFlags : uint32_t
+	{
+		UNSIGNALED_BIT = 0,	// default no ready signal
+		SIGNALED_BIT = 1	// ready signal assigned
+	};
+
+	// no usage here, is all in ram with virtual allocation
+	/*enum class CommandResetFlags : uint32_t
+	{
+		RELEASE_RESOURCES = 0x00000001,
+	};*/
+
+	enum class RessourceType : uint32_t
+	{
+		COMMAND_POOL = 1,
+		COMMAND_BUFFER,
+		SWAPCHAIN,
+		FENCE,
+		CMD,
+		BUFFER,
+		IMAGE
+	};
+
+	enum class SearchPageFlag : uint32_t
+	{
+		SINGLE_RESSOURCE_PAGE = 0, // one ressource in one page
+		MULTIPLE_RESSOURCES_PAGE, // multiple ressources in one page
+		SINGLE_RESSOURCE_MULTIPLE_PAGES, // one ressource in multiple pages
+	};
+
+	union ClearColorValue
+	{
+		float float32[4];
+		int32_t int32[4];
+		uint32_t uint32[4];
 	};
 }
 

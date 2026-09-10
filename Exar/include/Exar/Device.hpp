@@ -10,39 +10,51 @@ namespace Exar
 	class Allocator;
 	class IBuffer;
 
-	class EXA_API Device : public IDevice
+	class EXA_API Device_
 	{
 	public:
-		Device();
-		virtual ~Device();
+		Device_();
+		~Device_();
 
-		virtual bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo) override;
+		bool createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo);
 
-		virtual IBuffer* createBuffer(const BufferDesc& pDesc) override;
-		virtual MemoryRequirement getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept override;
+		IBuffer* createBuffer(const BufferDesc& pDesc);
+		MemoryRequirement getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept;
 		
-		virtual Result allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept override;
-		virtual bool updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept override;
+		Result allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept;
+		bool updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept;
 
-		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept override;
-		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) override;
-		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) override;
+		Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept;
+		Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement);
+		Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc);
 
-		virtual Result createImageView(const ImageViewCreateInfo& pDesc, ImageView** pImageView) override;
-		virtual Result destroyImageView(ImageView* pImageView) override;
+		Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo);
 
-		virtual Result createSwapchain(const SwapchainCreateInfo& pDesc, ISwapchain** pSwapchain) override;
-		virtual Result destroySwapchain(ISwapchain* pSwapchain) override;
+		Result allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers);
 
-		virtual Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer) override;
-		virtual Result destroyFramebuffer(Framebuffer* pFramebuffer) override;
+		Result createImageView(const ImageViewCreateInfo& pDesc, ImageView** pImageView);
+		Result destroyImageView(ImageView* pImageView);
+
+		Result createSwapchain(const SwapchainCreateInfo& pDesc, ISwapchain** pSwapchain);
+		Result destroySwapchain(ISwapchain* pSwapchain);
+
+		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer);
+		Result destroyFramebuffer(Framebuffer* pFramebuffer);
+
+		Result createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo);
+		Result waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout);
+		Result resetFences(Fence* pFences, u32 pCount);
 
 		// create image
 		// destroy image
 		// check memory resources valid
 		// add exar_result
 
+		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo);
 	private:
+
 		std::unique_ptr<Allocator> mAllocator;
 	};
 }

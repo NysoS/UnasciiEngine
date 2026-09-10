@@ -16,6 +16,7 @@ namespace Exar
 {
 	class DeviceMemory;
 	class IRessource;
+	class AreaMemory;
 
 	class Allocator 
 	{
@@ -32,6 +33,7 @@ namespace Exar
 		bool dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept;
 
 		size_t getMemoryAreaSizeRemaining(const AreaMemoryType mAreaType) const noexcept;
+		void* findRessource(const FindRessourceInfo& pFindInfo) const noexcept;
 
 	private:
 

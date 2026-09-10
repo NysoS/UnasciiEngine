@@ -27,12 +27,13 @@ namespace Exar {
 		const AreaMemoryCreateInfo* areaMemory;
 	};
 
-	struct AllocatorCreateInfo
+	struct EXA_API AllocatorCreateInfo
 	{
 		size_t totalSize = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
 		AreaMemoryType areaType = AreaMemoryType::NONE;
-		u32	pageIndex = -1;
+		u32	pageIndex = 0;
+		AllocationMode mode = AllocationMode::ALLOC_HEAP;
 	};
 
 	struct EXA_API AttachmentDesc
@@ -47,12 +48,12 @@ namespace Exar {
 		ImageLayout finalLayout = ImageLayout::UNDEFINED;
 	};
 
-	struct ImageCreateInfo
+	struct EXA_API ImageCreateInfo
 	{
 		u32 width = 0;
 		u32 height = 0;
 		AlignMemory align = AlignMemory::ALIGN_32;
-		AllocLocation allocLocation = AllocLocation::ALLOC_HEAP;
+		AllocationMode allocLocation = AllocationMode::ALLOC_HEAP;
 	};
 
 	struct EXA_API ImageSubresource
@@ -97,7 +98,7 @@ namespace Exar {
 		const SubpassDescription* subpasses;
 	};
 
-	struct SwapchainCreateInfo
+	struct EXA_API SwapchainCreateInfo
 	{
 		Surface surface;
 		u32 minImageCount;
@@ -121,6 +122,47 @@ namespace Exar {
 		u32 attachmentCount;
 		u32 width, height;
 		u32 layer;
+	};
+
+	struct EXA_API CommandPoolCreateInfo
+	{
+		AreaMemoryType type;
+		QueueFamily family;
+		CommandPoolFlags flags;
+	};
+
+	struct EXA_API CommandBufferAllocateInfo
+	{
+		CommandPool commandPool;
+		// todo make level command buffer
+		uint32_t commandBufferCount;
+	};
+
+	struct EXA_API SubmitInfo
+	{
+		u32 commandBufferCount;
+		CommandBuffer* pCommandBuffers;
+	};
+
+	struct EXA_API CommandBufferBeginInfo
+	{
+		// TODO : add fields
+		CommandBufferUsageFlags flags;
+	};
+
+	struct EXA_API FenceCreateInfo
+	{
+		FenceCreateFlags flags = FenceCreateFlags::UNSIGNALED_BIT;
+	};
+
+	struct FindRessourceInfo
+	{
+		RessourceType ressourceType;
+		SearchPageFlag searchPageFlag;
+		AreaMemoryType areaMemoryType;
+		QueueFamily family;
+		uint32_t pageCount;
+		uint32_t pageStartIndex;
 	};
 }
 

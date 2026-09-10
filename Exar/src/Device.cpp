@@ -6,20 +6,22 @@
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/Framebuffer.hpp"
+#include "Exar/Internal/Memory.hpp"
 #include "Exar/ImageView.hpp"
+#include "Exar/Fence.hpp"
 
 #include <assert.h>
 
-Exar::Device::Device()
+Exar::Device_::Device_()
 	: mAllocator(nullptr)
 {
 }
 
-Exar::Device::~Device()
+Exar::Device_::~Device_()
 {
 }
 
-bool Exar::Device::createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo)
+bool Exar::Device_::createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemoryCreateInfo)
 {
 	mAllocator = std::make_unique<Allocator>();
 	mAllocator->createDeviceMemory(pDeviceMemoryCreateInfo);
@@ -30,16 +32,16 @@ bool Exar::Device::createDeviceMemory(const DeviceMemoryCreateInfo& pDeviceMemor
 	return false;
 }
 
-Exar::IBuffer* Exar::Device::createBuffer(const BufferDesc& pDesc)
+Exar::IBuffer* Exar::Device_::createBuffer(const BufferDesc& pDesc)
 {
-	Buffer* lBuffer = new Buffer();
+	/*Buffer* lBuffer = new Buffer();
 	lBuffer->mDesc = pDesc;
-	lBuffer->mDevice = this;
+	lBuffer->mDevice = this;*/
 
-	return lBuffer;
+	return nullptr;
 }
 
-Exar::MemoryRequirement Exar::Device::getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept
+Exar::MemoryRequirement Exar::Device_::getBufferMemoryRequirements(const IBuffer* pBuffer) noexcept
 {
 	// todo : refacto buffer
 
@@ -59,7 +61,7 @@ Exar::MemoryRequirement Exar::Device::getBufferMemoryRequirements(const IBuffer*
 	return lMemRequirement;
 }
 
-Exar::Result Exar::Device::allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pInfo, const MemoryRequirement& pRequirement) noexcept
+Exar::Result Exar::Device_::allocateResourceMemory(void** pMemory, const AllocatorCreateInfo& pInfo, const MemoryRequirement& pRequirement) noexcept
 {
 	if (!pMemory) return Result::ERROR_ALLOCATOR_NULL_POINTER;
 	if (!mAllocator) return Result::ERROR_ALLOCATOR_NULL_POINTER;
@@ -79,7 +81,7 @@ Exar::Result Exar::Device::allocateResourceMemory(void** pMemory, const Allocato
 	return Result::SUCCESS;
 }
 
-bool Exar::Device::updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
+bool Exar::Device_::updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept
 {
 	void* lPtr = static_cast<void*>(pMemHandle);
 	if (!lPtr || pData.empty()) return false;
@@ -94,7 +96,7 @@ bool Exar::Device::updateResourceData(Memory& pMemHandle, const MemoryRequiremen
 	return true;
 }
 
-Exar::Result Exar::Device::getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAllocatorInfo, const ImageCreateInfo& pInfo) noexcept
+Exar::Result Exar::Device_::getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAllocatorInfo, const ImageCreateInfo& pInfo) noexcept
 {
 	if (!pRequirement) return Result::ERROR_INVALID_ARG;
 	if (!mAllocator) return Result::ERROR_ALLOCATOR_NULL_POINTER;
@@ -115,7 +117,7 @@ Exar::Result Exar::Device::getImageMemoryRequirements(MemoryRequirement* pRequir
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::createImage(Image* pImage, const AllocatorCreateInfo& pInfo, const MemoryRequirement& pRequirement)
+Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo& pInfo, const MemoryRequirement& pRequirement)
 {
 	if (!pImage) return Result::NULL_POINTER;
 
@@ -134,19 +136,106 @@ Exar::Result Exar::Device::createImage(Image* pImage, const AllocatorCreateInfo&
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::destroyImage(Image pImage, const AllocatorCreateInfo& pInfo)
+Exar::Result Exar::Device_::destroyImage(Image pImage, const AllocatorCreateInfo& pInfo)
 {
-	// todo : clear
+	if (!pImage) return Result::NULL_POINTER;
+	
+	Image_* lImg = static_cast<Image_*>(pImage);
+	if (!lImg) return Result::NULL_POINTER;
 
-	// revome in memory area selected
-	if (pImage) return Result::NULL_POINTER;
+	if (!lImg->data) return Result::ERROR_MEMORY_NULL_HANDLE;
 
-	mAllocator->dealloc(static_cast<void*>(pImage), pInfo);
+	if (!mAllocator->dealloc(lImg->data, pInfo)) {
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	delete lImg;
+	lImg = nullptr;
 
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::createImageView(const ImageViewCreateInfo& pInfo, ImageView** pImageView)
+Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (pInfo.type != pAllocatorInfo.areaType) return Result::ERROR_INVALID_MEMORY_AREA;
+
+	if (!pCommandPool) return Result::NULL_POINTER;
+	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
+
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
+	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
+
+	MemoryRequirement lRequired;
+	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
+	lRequired.align = pAllocatorInfo.align;
+
+	void* lPoolPtr = nullptr;
+	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
+	if (lResult != Result::SUCCESS) return lResult;
+
+	CommandPool_* lCmdPool = reinterpret_cast<CommandPool_*>(lPoolPtr);
+	lCmdPool->resetMode = (u32)pInfo.flags;
+	lCmdPool->queueFamily = pInfo.family;
+
+	size_t lCmdPoolHeader = MemoryOperation::alignValue(sizeof(CommandPool_), AlignMemory::ALIGN_16);
+	size_t lCmdPoolHalfSize = MemoryOperation::alignDown(((size_t)pAllocatorInfo.totalSize - lCmdPoolHeader) / 2, AlignMemory::ALIGN_16);
+	lCmdPool->halfSize = lCmdPoolHalfSize;
+	lCmdPool->fullSize = (size_t)pAllocatorInfo.totalSize;
+
+	if (pAllocatorInfo.mode == AllocationMode::ALLOC_DOUBLE_SCRATCH) {
+		lCmdPool->offsets = { lCmdPoolHeader, (lCmdPoolHeader + lCmdPoolHalfSize) };
+	}
+	else {
+		lCmdPool->offsets = { lCmdPoolHeader };
+	}
+
+	*pCommandPool = lCmdPool;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
+	
+	if (!mAllocator->dealloc(*pCommandPool, pAllocatorInfo)) {
+		assert(false && "Command Pool dealloc failed");
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	*pCommandPool = nullptr;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers)
+{
+	if (!pInfo.commandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (pInfo.commandBufferCount > pInfo.commandPool->offsets.size()) return Result::ERROR_INVALID_SIZE;
+	
+	size_t lCommandBufferAligned = MemoryOperation::alignValue(sizeof(CommandBuffer_), AlignMemory::ALIGN_16);
+	size_t lCapacity = (pInfo.commandPool->halfSize - lCommandBufferAligned) / sizeof(Cmd_);
+	 
+	u8* lBase = reinterpret_cast<u8*>(pInfo.commandPool);
+
+	for (size_t i = 0; i < pInfo.commandBufferCount; ++i)
+	{
+		CommandBuffer_* lCommandBuffer = reinterpret_cast<CommandBuffer_*>(lBase + pInfo.commandPool->offsets.at(i));
+		
+		lCommandBuffer->state = CommandBufferState::INITIAL;
+		lCommandBuffer->count = 0;
+		lCommandBuffer->capacity = lCapacity;
+		lCommandBuffer->cmdOffset = lCommandBufferAligned;
+		lCommandBuffer->cmdBaseOffset = lCommandBufferAligned;
+		lCommandBuffer->pQueueFamily = pInfo.commandPool->queueFamily;
+
+		pCommandBuffers[i] = lCommandBuffer;
+	}
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::createImageView(const ImageViewCreateInfo& pInfo, ImageView** pImageView)
 {
 	if (!pInfo.image) return Result::NULL_POINTER;
 
@@ -158,7 +247,7 @@ Exar::Result Exar::Device::createImageView(const ImageViewCreateInfo& pInfo, Ima
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::destroyImageView(ImageView* pImageView)
+Exar::Result Exar::Device_::destroyImageView(ImageView* pImageView)
 {
 	if (!pImageView) return Result::NULL_POINTER;
 
@@ -167,7 +256,7 @@ Exar::Result Exar::Device::destroyImageView(ImageView* pImageView)
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::createSwapchain(const SwapchainCreateInfo& pInfo, ISwapchain** pSwapchain)
+Exar::Result Exar::Device_::createSwapchain(const SwapchainCreateInfo& pInfo, ISwapchain** pSwapchain)
 {
 	if (!pSwapchain) return Result::NULL_POINTER;
 
@@ -186,7 +275,7 @@ Exar::Result Exar::Device::createSwapchain(const SwapchainCreateInfo& pInfo, ISw
 		AllocatorCreateInfo lImageAllocInfo;
 		lImageAllocInfo.align = AlignMemory::ALIGN_32;
 		lImageAllocInfo.areaType = AreaMemoryType::SWAPCHAIN;
-		lImageAllocInfo.pageIndex = i;
+		lImageAllocInfo.pageIndex = (u32)i;
 
 		MemoryRequirement lMemImageRequired;
 		Result lImageMemReqResult = getImageMemoryRequirements(&lMemImageRequired, lImageAllocInfo, lImageInfo);
@@ -204,7 +293,7 @@ Exar::Result Exar::Device::createSwapchain(const SwapchainCreateInfo& pInfo, ISw
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::destroySwapchain(ISwapchain* pSwapchain)
+Exar::Result Exar::Device_::destroySwapchain(ISwapchain* pSwapchain)
 {
 	if (!pSwapchain) return Result::NULL_POINTER;
 
@@ -222,7 +311,7 @@ Exar::Result Exar::Device::destroySwapchain(ISwapchain* pSwapchain)
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer)
+Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer)
 {
 	if (pInfo.attachmentCount == 0 || pInfo.width == 0 || pInfo.height == 0) return Result::ERROR_INVALID_SIZE;
 	if (!pInfo.attachments) return Result::NULL_POINTER;
@@ -244,11 +333,100 @@ Exar::Result Exar::Device::createFramebuffer(const FramebufferCreateInfo& pInfo,
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device::destroyFramebuffer(Framebuffer* pFramebuffer)
+Exar::Result Exar::Device_::destroyFramebuffer(Framebuffer* pFramebuffer)
 {
 	if (!pFramebuffer) return Result::NULL_POINTER;
 
 	delete pFramebuffer;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	// REFACTO SAME CODE //
+	if (!pFence) return Result::NULL_POINTER;
+	if (pAllocatorInfo.areaType != AreaMemoryType::FENCE) return Result::ERROR_INVALID_MEMORY_AREA;
+	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
+
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
+	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
+
+	MemoryRequirement lRequired;
+	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
+	lRequired.align = pAllocatorInfo.align;
+
+	void* lPoolPtr = nullptr;
+	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
+	if (lResult != Result::SUCCESS) return lResult;
+	//////////////////////
+
+	Fence_* lFence = reinterpret_cast<Fence_*>(lPoolPtr);
+	lFence->setCurrentState(pInfo.flags == FenceCreateFlags::SIGNALED_BIT ? FenceState::Signaled : FenceState::Waiting);
+
+	*pFence = lFence;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (!pFence) return Result::ERROR_MEMORY_NULL_HANDLE;
+
+	if (!mAllocator->dealloc(*pFence, pAllocatorInfo)) {
+		assert(false && "Command Pool dealloc failed");
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	*pFence = nullptr;
+
+	return Result::SUCCESS;
+}
+
+// pWaitAll only more fence
+Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout)
+{
+	if (!pFence) return Result::NULL_POINTER;
+
+	FenceState lCurrentState = pFence->getCurrentState();
+	
+	if (pTimeout == u64max) {
+		pFence->wait();
+	}
+
+	if (lCurrentState == FenceState::Waiting && pWaitAll == ExarBool::B_TRUE) return Result::FENCE_PROCESSING;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
+{
+	if (!pFences) return Result::NULL_POINTER;
+
+	for (size_t i = 0; i < pCount; ++i)
+	{
+		Fence lFence = pFences[i];
+		if (!lFence) return Result::ERROR_INVALID_FENCE;
+		lFence->reset();
+	}
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo)
+{
+	if (pSearchInfo.ressourceType != RessourceType::COMMAND_POOL) return Result::ERROR_RESSOURCE_TYPE;
+
+	if (!pCommandPool) return Result::NULL_POINTER;
+
+	void* lRessource = mAllocator->findRessource(pSearchInfo);
+	if (!lRessource) return Result::ERROR_ALLOCATOR_NULL_POINTER;
+
+	CommandPool lCommandPool = reinterpret_cast<CommandPool>(lRessource);
+	if (!lCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (lCommandPool->queueFamily != pSearchInfo.family) return Result::ERROR_FAMILY_NOT_SAME;
+
+	*pCommandPool = lCommandPool;
 
 	return Result::SUCCESS;
 }

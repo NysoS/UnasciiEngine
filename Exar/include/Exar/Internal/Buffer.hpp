@@ -18,9 +18,9 @@ namespace Exar
 		Buffer& operator=(const Buffer&) = delete;
 
 		virtual BufferDesc getDesc() const noexcept;
-		virtual inline IDevice* getDevice() const noexcept override {
+		/*virtual inline IDevice* getDevice() const noexcept override {
 			return mDevice;
-		}
+		}*/
 		
 		[[nodiscard]] virtual BufferView getView() const override;
 
@@ -32,10 +32,10 @@ namespace Exar
 
 	private:
 		BufferDesc mDesc;
-		IDevice* mDevice; // raw ptn because not owner memory allocation
+		Device* mDevice; // raw ptn because not owner memory allocation
 		Memory mData;
 
-		friend class Device;
+		friend class Device_;
 	};
 }
 
