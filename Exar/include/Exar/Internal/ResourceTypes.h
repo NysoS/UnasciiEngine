@@ -31,14 +31,6 @@ namespace Exar
 		size_t cmdBaseOffset;
 	};
 
-	typedef union {
-		ClearColorValue color;
-#ifdef _DEBUG
-		uint32_t test;
-#endif // !_DEBUG
-		// ... other cmd values
-	} CmdValue;
-
 	struct alignas(16) Cmd_
 	{
 		CommandType type;

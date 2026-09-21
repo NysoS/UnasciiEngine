@@ -275,6 +275,14 @@ namespace Exar {
 		int32_t int32[4];
 		uint32_t uint32[4];
 	};
+
+	typedef union {
+		ClearColorValue color;
+#ifdef _DEBUG
+		uint32_t test;
+#endif // !_DEBUG
+		// ... other cmd values
+	} CmdValue;
 }
 
 #endif // EXAR_DEF_HPP
