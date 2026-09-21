@@ -211,6 +211,12 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 
 Exar::CommandBufferWithWorkerThread::~CommandBufferWithWorkerThread()
 {
+	mWorkerThread.request_stop();
+	mWorkerThread.join();
+
+	for (size_t i = 0; i < 2; ++i) {
+		mDevice->destroyFence(&mInFlightFences[i], mFenceAllocatorInfos[i]);
+	}
 }
 
 void Exar::CommandBufferWithWorkerThread::WorkerSystemProcess(std::stop_token pSt, const std::vector<Fence>& pFences)
