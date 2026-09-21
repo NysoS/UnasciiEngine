@@ -23,12 +23,14 @@ namespace Exar {
 		std::vector<CommandBuffer> mCommandBuffers;
 
 		std::vector<AllocatorCreateInfo> mFenceAllocatorInfos;
-		std::vector<Fence> mFences;
+		std::vector<Fence> mInFlightFences;
+		std::vector<Fence> mImagesInFlight;
+
 		size_t mCurrentFrame = 0;
 
 		size_t mWorkerFrameProcess = 0;
 		std::jthread mWorkerThread;
-		};
+	};
 }
 
 #endif // !EXAR_COMMAND_BUFFER_WITH_WORKER_THREAD_HPP

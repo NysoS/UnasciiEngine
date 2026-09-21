@@ -9,7 +9,6 @@
 Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 	: mDevice(std::make_unique<Device_>())
 	, mCommandPools({})
-	, mFences({})
 {
 	std::vector<AreaMemoryCreateInfo> lAreaCreateInfos;
 	AreaMemoryCreateInfo lAreaMemoryInfo{};
@@ -58,7 +57,8 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 
 	mCommandPools.resize(2);
 	mCmdPoolAllocatorInfos.resize(2);
-	mFences.resize(2);
+	mInFlightFences.resize(2, nullptr);
+	mImagesInFlight.resize(2, nullptr);
 	mFenceAllocatorInfos.resize(2);
 
 	EXAR_MEMORY_LOG(stdout, "---- [Command Pool Creation] ----\n");
@@ -104,7 +104,7 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 
 		mFenceAllocatorInfos[i] = lFenceAllocatorCreateInfo;
 
-		if (Result lResult = mDevice->createFence(&mFences[i], lFenceCreateInfo, lFenceAllocatorCreateInfo); lResult != Result::SUCCESS) {
+		if (Result lResult = mDevice->createFence(&mInFlightFences[i], lFenceCreateInfo, lFenceAllocatorCreateInfo); lResult != Result::SUCCESS) {
 			EXAR_MEMORY_LOG(stderr, "Error when create fence %u`\n", (u32)lResult);
 			return;
 		}
@@ -133,11 +133,11 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 	size_t lIteration = 0;
 
 	EXAR_MEMORY_LOG(stdout, "---- [Worker Thread Creation] ----\n");
-	mWorkerThread = std::jthread(std::bind_front(&CommandBufferWithWorkerThread::WorkerSystemProcess, this), std::ref(mFences));
+	mWorkerThread = std::jthread(std::bind_front(&CommandBufferWithWorkerThread::WorkerSystemProcess, this), std::ref(mInFlightFences));
 
 	while (lIteration < lMaxIteration) {
 		EXAR_MEMORY_LOG(stdout, "---- [Main Thread - Logic updated] ----\n");
-		if (Result lResult = mDevice->waitForFence(mFences[mCurrentFrame], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING) {
+		if (Result lResult = mDevice->waitForFence(mInFlightFences[mCurrentFrame], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING) {
 			++lIteration;
 			mCurrentFrame = (mCurrentFrame + 1) % 2;
 			continue;
@@ -146,7 +146,14 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 
 		// get newImageIndex
 		u32 lImageIndex = (mCurrentFrame + 1) % 2;
-
+		if (mImagesInFlight[lImageIndex] != EXAR_NULL_HANDLE) {
+			if (Result lResult = mDevice->waitForFence(mImagesInFlight[lImageIndex], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING) {
+				++lIteration;
+				mCurrentFrame = (mCurrentFrame + 1) % 2;
+				continue;
+			}
+		}
+		mImagesInFlight[lImageIndex] = mInFlightFences[mCurrentFrame];
 
 		EXAR_MEMORY_LOG(stdout, "---- [Command Buffer Cmd] ----\n");
 		// reset command buffer
@@ -179,13 +186,13 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 		lSubmitInfo.pCommandBuffers = &mCommandBuffers[lImageIndex];
 
 		// reset fence
-		if (Result lResultFenceReset = mDevice->resetFences(&mFences[mCurrentFrame], 1); lResultFenceReset != Result::SUCCESS)
+		if (Result lResultFenceReset = mDevice->resetFences(&mInFlightFences[mCurrentFrame], 1); lResultFenceReset != Result::SUCCESS)
 		{
 			EXAR_MEMORY_LOG(stderr, "Reset fence failed %u\n", (u32)lResultFenceReset);
 			throw std::runtime_error("Reset fence failed\n");
 		}
 
-		if (Result lResultQueueSubmit = queueSubmit(QueueFamily::GRAPHICS, 1, lSubmitInfo, mFences[mCurrentFrame]); lResultQueueSubmit != Result::SUCCESS)
+		if (Result lResultQueueSubmit = queueSubmit(QueueFamily::GRAPHICS, 1, lSubmitInfo, mInFlightFences[mCurrentFrame]); lResultQueueSubmit != Result::SUCCESS)
 		{
 			EXAR_MEMORY_LOG(stderr, "Queue Submit failed %u\n", (u32)lResultQueueSubmit);
 			throw std::runtime_error("Error to Queue Submit\n");
