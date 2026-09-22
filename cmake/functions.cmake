@@ -1,10 +1,11 @@
 macro(register_sources TARGET)
     foreach(file ${ARGN})
         message(STATUS "SOURCE: ${CMAKE_CURRENT_SOURCE_DIR}/${file}")
-        list(APPEND ALL_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${file})
+        # file(RELATIVE_PATH REL_FILE "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
+        # list(APPEND ALL_SOURCES "${REL_FILE}")
     endforeach()
     
-    target_sources(${TARGET} PRIVATE ${ALL_SOURCES})
+    target_sources(${TARGET} PRIVATE ${ARGN})
     unset(ALL_SOURCES)
 endmacro()
 

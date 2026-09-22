@@ -3,6 +3,9 @@
 
 #include <string>
 
+#define NUM_MIN(T) constexpr T T##min = std::numeric_limits<T>::min();
+#define NUM_MAX(T) constexpr T T##max = std::numeric_limits<T>::max();
+
 namespace Exar {
 	using u8 = uint8_t;
 	using u16 = uint16_t;
@@ -20,6 +23,24 @@ namespace Exar {
 	using String = std::string;
 	using StringC = const char*;
 	using StringV = std::string_view;
+
+	NUM_MIN(i8)
+	NUM_MIN(i16)
+	NUM_MIN(i32)
+	NUM_MIN(i64)
+	NUM_MAX(i8)
+	NUM_MAX(i16)
+	NUM_MAX(i32)
+	NUM_MAX(i64)
+
+	NUM_MIN(u8)
+	NUM_MIN(u16)
+	NUM_MIN(u32)
+	NUM_MIN(u64)
+	NUM_MAX(u8)
+	NUM_MAX(u16)
+	NUM_MAX(u32)
+	NUM_MAX(u64)
 
 #if WIN32
 #include <Windows.h>

@@ -7,7 +7,7 @@
 
 namespace Exar
 {
-	class Device;
+	class Device_;
 
 	class Swapchain : public ISwapchain
 	{
@@ -30,11 +30,11 @@ namespace Exar
 		
 		SwapchainCreateInfo mInfo;
 		Image* mImages;
-		Device* mDevice;
+		Device_* mDevice;
 
 		int index = 0;
 
-		friend class Device;
+		friend class Device_;
 	};
 }
 

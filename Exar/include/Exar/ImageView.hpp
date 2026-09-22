@@ -23,7 +23,7 @@ namespace Exar
 	private:
 		ImageViewCreateInfo mInfo;
 		
-		friend class Device;
+		friend class Device_;
 	};
 }
 

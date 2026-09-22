@@ -3,6 +3,10 @@ set (SOURCES
     BufferView.cpp
     Device.cpp
     DeviceFactory.cpp
+    API.cpp
+    ImageView.cpp
+    Fence.cpp
+    Semaphore.cpp
 )
 
 add_subdirectories(
