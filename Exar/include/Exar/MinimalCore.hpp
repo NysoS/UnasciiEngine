@@ -24,6 +24,7 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(Cmd);
 	DECLARE_EXAR_HANDLE(Device);
 	DECLARE_EXAR_HANDLE(Fence);
+	DECLARE_EXAR_HANDLE(Semaphore);
 
 #define EXAR_NULL_HANDLE nullptr
 

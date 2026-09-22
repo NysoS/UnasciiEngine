@@ -23,5 +23,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <stop_token>
+#include <semaphore>
 
 #endif // EXARPCH_H
