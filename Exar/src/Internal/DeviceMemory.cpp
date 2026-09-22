@@ -31,6 +31,10 @@ Exar::Result Exar::DeviceMemory::createAreaMemory(const AreaMemoryCreateInfo& pA
 		std::cout << "Type FENCE" << std::endl;
 		mFenceArea = std::make_unique<AreaMemory>();
 		return mFenceArea->createMemory(pAreaCreateInfo, lVram);
+	case AreaMemoryType::SEMAPHORE:
+		std::cout << "Type SEMAPHORE" << std::endl;
+		mSemaphoreArea = std::make_unique<AreaMemory>();
+		return mSemaphoreArea->createMemory(pAreaCreateInfo, lVram);
 	default:
 		break;
 	}

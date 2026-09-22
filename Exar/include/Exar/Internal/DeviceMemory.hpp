@@ -26,7 +26,8 @@ namespace Exar
 			return {
 				mSwapchainArea.get(),
 				mCommandPoolArea.get(),
-				mFenceArea.get()
+				mFenceArea.get(),
+				mSemaphoreArea.get()
 			};
 		}
 
@@ -34,6 +35,7 @@ namespace Exar
 		std::unique_ptr<AreaMemory> mSwapchainArea;
 		std::unique_ptr<AreaMemory> mCommandPoolArea;
 		std::unique_ptr<AreaMemory> mFenceArea;
+		std::unique_ptr<AreaMemory> mSemaphoreArea;
 	};
 }
 

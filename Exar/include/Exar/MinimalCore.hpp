@@ -74,7 +74,8 @@ namespace Exar {
 		SWAPCHAIN,
 		COMMAND_POOL,
 		TEXTURE,
-		FENCE
+		FENCE,
+		SEMAPHORE
 	};
 
 	enum class MemoryType : uint32_t
