@@ -53,6 +53,8 @@ Exar::Result Exar::Allocator::createDeviceMemory(const DeviceMemoryCreateInfo& p
 
 void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept
 {
+	// TODO: check allocation mod
+
 	// Check area type and page index avaiblable
 	if (pDesc.areaType == AreaMemoryType::NONE) return nullptr;
 
@@ -108,6 +110,7 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 
 bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept
 {
+	// TODO: check allocation mod
 	if (pDesc.areaType == AreaMemoryType::NONE) return false;
 
 	u8* lRessourceAddr = reinterpret_cast<u8*>(pRessource);
@@ -150,6 +153,7 @@ size_t Exar::Allocator::getMemoryAreaSizeRemaining(const AreaMemoryType mAreaTyp
 
 void* Exar::Allocator::findRessource(const FindRessourceInfo& pFindInfo) const noexcept
 {
+	// TODO: check allocation mod
 	if (!mVram) return nullptr;
 
 	Exar::AreaMemory* lArea = mVram->getAreaMemory(pFindInfo.areaMemoryType);
