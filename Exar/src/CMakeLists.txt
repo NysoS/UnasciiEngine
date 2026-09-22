@@ -6,6 +6,7 @@ set (SOURCES
     API.cpp
     ImageView.cpp
     Fence.cpp
+    Semaphore.cpp
 )
 
 add_subdirectories(

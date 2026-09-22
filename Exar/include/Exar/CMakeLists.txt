@@ -20,6 +20,7 @@ set (HEADERS
     SwapchainDesc.hpp
     Types.hpp
     Fence.hpp
+    Semaphore.hpp
 )
 
 add_subdirectories(
