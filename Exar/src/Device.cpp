@@ -374,7 +374,7 @@ Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInf
 	if (!pFence) return Result::ERROR_MEMORY_NULL_HANDLE;
 
 	if (!mAllocator->dealloc(*pFence, pAllocatorInfo)) {
-		assert(false && "Command Pool dealloc failed");
+		assert(false && "Fence dealloc failed");
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
 
