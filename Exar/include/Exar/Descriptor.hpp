@@ -142,6 +142,10 @@ namespace Exar {
 	{
 		u32 commandBufferCount;
 		CommandBuffer* pCommandBuffers;
+		u32 waitSemaphoreCount;
+		Semaphore* pWaitSemaphores;
+		u32 signalSemaphoreCount;
+		Semaphore* pSignalSemaphores;
 	};
 
 	struct EXA_API CommandBufferBeginInfo
