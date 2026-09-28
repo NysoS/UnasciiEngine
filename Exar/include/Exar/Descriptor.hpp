@@ -159,6 +159,20 @@ namespace Exar {
 		FenceCreateFlags flags = FenceCreateFlags::UNSIGNALED_BIT;
 	};
 
+	// no used because only flags is used on vulkan and is always 0, and i dont't need type variable
+	/*struct EXA_API SemaphoreCreateInfo 
+	{
+	};*/
+
+	struct EXA_API PresentInfo
+	{
+		u32 waitSemaphoreCount;
+		Semaphore* pWaitSemaphores;
+		u32 swapchainCount;
+		Swapchain* pSwapchains;
+		u32 pImageIndices;
+	};
+
 	struct FindRessourceInfo
 	{
 		RessourceType ressourceType;
