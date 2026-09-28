@@ -47,6 +47,9 @@ namespace Exar
 		Result waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout);
 		Result resetFences(Fence* pFences, u32 pCount);
 
+		Result createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo);
+
 		// create image
 		// destroy image
 		// check memory resources valid

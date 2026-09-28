@@ -413,6 +413,42 @@ Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
 	return Result::SUCCESS;
 }
 
+Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (!pSemaphore) return Result::NULL_POINTER;
+	if (pAllocatorInfo.areaType != AreaMemoryType::SEMAPHORE) return Result::ERROR_INVALID_MEMORY_AREA;
+	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
+	
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
+	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
+
+	MemoryRequirement lRequired;
+	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
+	lRequired.align = pAllocatorInfo.align;
+
+	void* lPoolPtr = nullptr;
+	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
+	if (lResult != Result::SUCCESS) return lResult;
+
+	Semaphore_* lSemaphore = reinterpret_cast<Semaphore_*>(lPoolPtr);
+	*pSemaphore = lSemaphore;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	if (!pSemaphore) return Result::ERROR_MEMORY_NULL_HANDLE;
+
+	if (!mAllocator->dealloc(*pSemaphore, pAllocatorInfo)) {
+		assert(false && "Semaphore dealloc failed");
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
+	*pSemaphore = nullptr;
+	return Result::SUCCESS;
+}
+
 Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo)
 {
 	if (pSearchInfo.ressourceType != RessourceType::COMMAND_POOL) return Result::ERROR_RESSOURCE_TYPE;
