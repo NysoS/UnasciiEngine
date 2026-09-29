@@ -58,8 +58,7 @@ namespace Exar
 
 		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo);
 	private:
-		// todo: create generic function to createObject in allocator
-		// todo: create generic function to destroyObject in allocator
+		Result createResourceObject(EXAR_HANDLE* pResourceHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType);
 
 		std::unique_ptr<Allocator> mAllocator;
 	};

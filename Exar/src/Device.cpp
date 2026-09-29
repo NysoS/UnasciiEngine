@@ -160,18 +160,12 @@ Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const C
 	if (pInfo.type != pAllocatorInfo.areaType) return Result::ERROR_INVALID_MEMORY_AREA;
 
 	if (!pCommandPool) return Result::NULL_POINTER;
-	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
-
-	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
-	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
-
-	MemoryRequirement lRequired;
-	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
-	lRequired.align = pAllocatorInfo.align;
 
 	void* lPoolPtr = nullptr;
-	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
-	if (lResult != Result::SUCCESS) return lResult;
+	if (Result lResourceResult = createResourceObject(&lPoolPtr, pAllocatorInfo, AreaMemoryType::COMMAND_POOL); lResourceResult != Result::SUCCESS)
+	{
+		return lResourceResult;
+	}
 
 	CommandPool_* lCmdPool = reinterpret_cast<CommandPool_*>(lPoolPtr);
 	lCmdPool->resetMode = (u32)pInfo.flags;
@@ -349,22 +343,13 @@ Exar::Result Exar::Device_::destroyFramebuffer(Framebuffer* pFramebuffer)
 
 Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
 {
-	// REFACTO SAME CODE //
 	if (!pFence) return Result::NULL_POINTER;
-	if (pAllocatorInfo.areaType != AreaMemoryType::FENCE) return Result::ERROR_INVALID_MEMORY_AREA;
-	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
-
-	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
-	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
-
-	MemoryRequirement lRequired;
-	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
-	lRequired.align = pAllocatorInfo.align;
 
 	void* lPoolPtr = nullptr;
-	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
-	if (lResult != Result::SUCCESS) return lResult;
-	//////////////////////
+	if (Result lCreateResourceResult = createResourceObject(&lPoolPtr, pAllocatorInfo, AreaMemoryType::FENCE); lCreateResourceResult != Result::SUCCESS)
+	{
+		return lCreateResourceResult;
+	}
 
 	Fence_* lFence = reinterpret_cast<Fence_*>(lPoolPtr);
 	lFence->setCurrentState(pInfo.flags == FenceCreateFlags::SIGNALED_BIT ? FenceState::Signaled : FenceState::Waiting);
@@ -421,19 +406,12 @@ Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
 Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pSemaphore) return Result::NULL_POINTER;
-	if (pAllocatorInfo.areaType != AreaMemoryType::SEMAPHORE) return Result::ERROR_INVALID_MEMORY_AREA;
-	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
-	
-	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
-	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
-
-	MemoryRequirement lRequired;
-	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
-	lRequired.align = pAllocatorInfo.align;
 
 	void* lPoolPtr = nullptr;
-	Result lResult = allocateResourceMemory(&lPoolPtr, pAllocatorInfo, lRequired);
-	if (lResult != Result::SUCCESS) return lResult;
+	if (Result lCreateResourceResult = createResourceObject(&lPoolPtr, pAllocatorInfo, AreaMemoryType::SEMAPHORE); lCreateResourceResult != Result::SUCCESS)
+	{
+		return lCreateResourceResult;
+	}
 
 	Semaphore_* lSemaphore = reinterpret_cast<Semaphore_*>(lPoolPtr);
 	*pSemaphore = lSemaphore;
@@ -469,5 +447,23 @@ Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const Fin
 
 	*pCommandPool = lCommandPool;
 
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::createResourceObject(EXAR_HANDLE* pHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType)
+{
+	if (pAllocatorInfo.areaType != pCompareType) return Result::ERROR_INVALID_MEMORY_AREA;
+	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
+
+	size_t lRemainingMemory = mAllocator->getMemoryAreaSizeRemaining(pAllocatorInfo.areaType);
+	if (pAllocatorInfo.totalSize > lRemainingMemory) return Result::ERROR_OUT_OF_MEMORY;
+
+	MemoryRequirement lRequired;
+	lRequired.sizeInBytes = pAllocatorInfo.totalSize;
+	lRequired.align = pAllocatorInfo.align;
+
+	Result lResult = allocateResourceMemory(pHandle, pAllocatorInfo, lRequired);
+	if (lResult != Result::SUCCESS) return lResult;
+	
 	return Result::SUCCESS;
 }
