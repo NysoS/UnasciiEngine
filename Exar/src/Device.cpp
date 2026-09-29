@@ -191,13 +191,15 @@ Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const C
 Exar::Result Exar::Device_::destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (!*pCommandPool) return Result::SUCCESS;
 	
-	if (!mAllocator->dealloc(*pCommandPool, pAllocatorInfo)) {
+	EXAR_HANDLE lHandle = *pCommandPool;
+	*pCommandPool = nullptr;
+
+	if (!mAllocator->dealloc(lHandle, pAllocatorInfo)) {
 		assert(false && "Command Pool dealloc failed");
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
-
-	*pCommandPool = nullptr;
 
 	return Result::SUCCESS;
 }
@@ -362,13 +364,15 @@ Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pI
 Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pFence) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (!*pFence) return Result::SUCCESS;
 
-	if (!mAllocator->dealloc(*pFence, pAllocatorInfo)) {
+	EXAR_HANDLE lHandle = *pFence;
+	*pFence = nullptr;
+
+	if (!mAllocator->dealloc(lHandle, pAllocatorInfo)) {
 		assert(false && "Fence dealloc failed");
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
-
-	*pFence = nullptr;
 
 	return Result::SUCCESS;
 }
@@ -422,13 +426,16 @@ Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const Allocat
 Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pSemaphore) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (!*pSemaphore) return Result::SUCCESS;
 
-	if (!mAllocator->dealloc(*pSemaphore, pAllocatorInfo)) {
+	EXAR_HANDLE lhandle = *pSemaphore;
+	*pSemaphore = nullptr;
+
+	if (!mAllocator->dealloc(lhandle, pAllocatorInfo)) {
 		assert(false && "Semaphore dealloc failed");
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
 
-	*pSemaphore = nullptr;
 	return Result::SUCCESS;
 }
 
