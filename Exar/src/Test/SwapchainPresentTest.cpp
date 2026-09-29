@@ -10,7 +10,7 @@
 #endif
 
 Exar::SwapchainPresentTest::SwapchainPresentTest()
-	: mDevice(std::make_unique<Device>())
+	: mDevice(new Device_())
 {
 	
 #ifdef WIN32
@@ -87,4 +87,8 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 
 Exar::SwapchainPresentTest::~SwapchainPresentTest()
 {
+	if (mDevice) {
+		delete mDevice;
+		mDevice = nullptr;
+	}
 }

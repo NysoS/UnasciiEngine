@@ -24,6 +24,8 @@ namespace UnasciiEngine::RHI
 #ifdef _DEBUG
 		std::unique_ptr<Test::IRHIBufferAllocationTest> createBufferAllocationTest();
 		std::unique_ptr<Test::IRHISwapchainTest> createSwapchainPresentTest();
+		std::unique_ptr<Test::IRHICommandPoolTest> createCommandPoolAllocationTest();
+		std::unique_ptr<Test::IRHICommandBufferWithWorkerThread> createCommandBufferWithWorkerThread();
 #endif // _DEBUG
 
 		std::unique_ptr<IDeviceFactory> createDeviceFactory();
