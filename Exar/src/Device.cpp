@@ -311,6 +311,11 @@ Exar::Result Exar::Device_::destroySwapchain(ISwapchain* pSwapchain)
 	return Result::SUCCESS;
 }
 
+Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex)
+{
+	return Result::SUCCESS;
+}
+
 Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer)
 {
 	if (pInfo.attachmentCount == 0 || pInfo.width == 0 || pInfo.height == 0) return Result::ERROR_INVALID_SIZE;
