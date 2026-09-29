@@ -254,7 +254,7 @@ Exar::Result Exar::Device_::createSwapchain(const SwapchainCreateInfo& pInfo, IS
 {
 	if (!pSwapchain) return Result::NULL_POINTER;
 
-	std::unique_ptr<Swapchain> lSwapchain = std::make_unique<Swapchain>();
+	std::unique_ptr<Swapchain_> lSwapchain = std::make_unique<Swapchain_>();
 	lSwapchain->mInfo = pInfo;
 	lSwapchain->mDevice = this;
 	lSwapchain->initImages();

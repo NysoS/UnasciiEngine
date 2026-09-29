@@ -8,7 +8,7 @@
 uint32_t testBuffer[600 * 600] = {};
 uint32_t testBuffer2[600 * 600] = {};
 
-Exar::Swapchain::Swapchain()
+Exar::Swapchain_::Swapchain_()
 	: mInfo{}
 	, mImages(EXAR_NULL_HANDLE)
 {
@@ -28,18 +28,18 @@ Exar::Swapchain::Swapchain()
 	}
 }
 
-Exar::Swapchain::~Swapchain()
+Exar::Swapchain_::~Swapchain_()
 {
 	delete[] mImages;
 	mImages = nullptr;
 }
 
-Exar::Surface Exar::Swapchain::getSurfaceImageHandle()
+Exar::Surface Exar::Swapchain_::getSurfaceImageHandle()
 {
 	return mInfo.surface;
 }
 
-void Exar::Swapchain::present()
+void Exar::Swapchain_::present()
 {
 	HWND lHandle = reinterpret_cast<HWND>(mInfo.surface);
 	if (!lHandle) return;
@@ -80,17 +80,17 @@ void Exar::Swapchain::present()
 	ReleaseDC(lHandle, hdc);
 }
 
-void Exar::Swapchain::swap() noexcept
+void Exar::Swapchain_::swap() noexcept
 {
 	index = (index + 1) % 2;
 }
 
-Exar::u32 Exar::Swapchain::getImageCount() const noexcept
+Exar::u32 Exar::Swapchain_::getImageCount() const noexcept
 {
 	return mInfo.minImageCount;
 }
 
-Exar::Result Exar::Swapchain::getImages(Image* pImages)
+Exar::Result Exar::Swapchain_::getImages(Image* pImages)
 {
 	for (size_t i = 0; i < mInfo.minImageCount; ++i)
 	{
@@ -102,7 +102,7 @@ Exar::Result Exar::Swapchain::getImages(Image* pImages)
 	return Result::SUCCESS;
 }
 
-void Exar::Swapchain::initImages()
+void Exar::Swapchain_::initImages()
 {
 	if (mImages != nullptr) return;
 

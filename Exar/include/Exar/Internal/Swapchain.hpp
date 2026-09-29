@@ -9,14 +9,14 @@ namespace Exar
 {
 	class Device_;
 
-	class Swapchain : public ISwapchain
+	class Swapchain_ : public ISwapchain
 	{
 	public:
-		Swapchain();
-		virtual ~Swapchain();
+		Swapchain_();
+		virtual ~Swapchain_();
 
-		Swapchain(const Swapchain&) = delete;
-		Swapchain& operator=(const Swapchain&) = delete;
+		Swapchain_(const Swapchain_&) = delete;
+		Swapchain_& operator=(const Swapchain_&) = delete;
 
 		virtual Surface getSurfaceImageHandle() override;
 		virtual void present() override;
