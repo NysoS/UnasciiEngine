@@ -51,7 +51,7 @@ Exar::Result Exar::Allocator::createDeviceMemory(const DeviceMemoryCreateInfo& p
 	return Result::SUCCESS;
 }
 
-void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept
+Exar::EXAR_HANDLE Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept
 {
 	// TODO: check allocation mod
 
@@ -108,7 +108,7 @@ void* Exar::Allocator::alloc(const AllocatorCreateInfo& pDesc, const MemoryRequi
 	return lAddMem;
 }
 
-bool Exar::Allocator::dealloc(void* pRessource, const AllocatorCreateInfo& pDesc) noexcept
+bool Exar::Allocator::dealloc(EXAR_HANDLE pRessource, const AllocatorCreateInfo& pDesc) noexcept
 {
 	// TODO: check allocation mod
 	if (pDesc.areaType == AreaMemoryType::NONE) return false;
@@ -151,7 +151,7 @@ size_t Exar::Allocator::getMemoryAreaSizeRemaining(const AreaMemoryType mAreaTyp
 	return lArea->getSize();
 }
 
-void* Exar::Allocator::findRessource(const FindRessourceInfo& pFindInfo) const noexcept
+Exar::EXAR_HANDLE Exar::Allocator::findRessource(const FindRessourceInfo& pFindInfo) const noexcept
 {
 	// TODO: check allocation mod
 	if (!mVram) return nullptr;

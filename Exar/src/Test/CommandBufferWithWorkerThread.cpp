@@ -286,7 +286,7 @@ void Exar::CommandBufferWithWorkerThread::WorkerSystemProcess(std::stop_token pS
 			for (size_t lIndex = 0; lIndex < lCmds.size(); ++lIndex) {
 				EXAR_MEMORY_LOG(stdout, "---- [Worker Thread Cmd Read] : %i ----\n", lIndex);
 				EXAR_MEMORY_LOG(stdout, "Command type %u\n", (u32)lCmds[lIndex]->type);
-				EXAR_MEMORY_LOG(stdout, "Command value %u\n", lCmds[lIndex]->value);
+				EXAR_MEMORY_LOG(stdout, "Command value %u\n", lCmds[lIndex]->value.test);
 				EXAR_MEMORY_LOG(stdout, "---------------------------------------\n");
 			}
 		}

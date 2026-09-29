@@ -27,6 +27,7 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(Fence);
 	DECLARE_EXAR_HANDLE(Semaphore);
 
+	typedef void* EXAR_HANDLE;
 #define EXAR_NULL_HANDLE nullptr
 
 	enum class Result
