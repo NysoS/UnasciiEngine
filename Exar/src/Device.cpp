@@ -266,7 +266,7 @@ Exar::Result Exar::Device_::createSwapchain(const SwapchainCreateInfo& pInfo, IS
 
 		AllocatorCreateInfo lImageAllocInfo;
 		lImageAllocInfo.align = AlignMemory::ALIGN_32;
-		lImageAllocInfo.areaType = AreaMemoryType::SWAPCHAIN;
+		lImageAllocInfo.areaType = AreaMemoryType::IMAGE;
 		lImageAllocInfo.pageIndex = (u32)i;
 
 		MemoryRequirement lMemImageRequired;

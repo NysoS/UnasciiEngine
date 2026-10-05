@@ -35,6 +35,9 @@ Exar::Result Exar::DeviceMemory::createAreaMemory(const AreaMemoryCreateInfo& pA
 		std::cout << "Type SEMAPHORE" << std::endl;
 		mSemaphoreArea = std::make_unique<AreaMemory>();
 		return mSemaphoreArea->createMemory(pAreaCreateInfo, lVram);
+	case AreaMemoryType::IMAGE:
+		mImageArea = std::make_unique<AreaMemory>();
+		return mImageArea->createMemory(pAreaCreateInfo, lVram);
 	default:
 		break;
 	}
@@ -55,6 +58,10 @@ Exar::AreaMemory* Exar::DeviceMemory::getAreaMemory(const AreaMemoryType& pAreaT
 		return mCommandPoolArea.get();
 	case AreaMemoryType::FENCE:
 		return mFenceArea.get();
+	case AreaMemoryType::SEMAPHORE:
+		return mSemaphoreArea.get();
+	case AreaMemoryType::IMAGE:
+		return mImageArea.get();
 	default:
 		break;
 	}
