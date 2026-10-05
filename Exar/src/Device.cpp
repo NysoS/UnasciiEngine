@@ -124,11 +124,11 @@ Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo
 	if (pRequirement.sizeInBytes == 0) return Result::ERROR_INVALID_SIZE;
 
 	void* lImagePtr = nullptr;
-	Result lResult = allocateResourceMemory(&lImagePtr, pInfo, pRequirement);
+	Result lResult = createResourceObject(&lImagePtr, pInfo, AreaMemoryType::SWAPCHAIN);
+	//Result lResult = allocateResourceMemory(&lImagePtr, pInfo, pRequirement);
 	if (lResult != Result::SUCCESS) return lResult;
 
-	Image_* lImage = new Image_();
-	lImage->data = lImagePtr;
+	Image_* lImage = reinterpret_cast<Image_*>(lImagePtr);
 	lImage->size = pInfo.totalSize;
 
 	*pImage = lImage;
@@ -136,21 +136,17 @@ Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyImage(Image pImage, const AllocatorCreateInfo& pInfo)
+Exar::Result Exar::Device_::destroyImage(Image* pImage, const AllocatorCreateInfo& pInfo)
 {
 	if (!pImage) return Result::NULL_POINTER;
+	if (!*pImage) return Result::SUCCESS;
 	
-	Image_* lImg = static_cast<Image_*>(pImage);
-	if (!lImg) return Result::NULL_POINTER;
+	EXAR_HANDLE lHandle = *pImage;
+	*pImage = nullptr;
 
-	if (!lImg->data) return Result::ERROR_MEMORY_NULL_HANDLE;
-
-	if (!mAllocator->dealloc(lImg->data, pInfo)) {
+	if (!mAllocator->dealloc(lHandle, pInfo)) {
 		return Result::ERROR_MEMORY_CLEANUP;
 	}
-
-	delete lImg;
-	lImg = nullptr;
 
 	return Result::SUCCESS;
 }

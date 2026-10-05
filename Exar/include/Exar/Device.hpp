@@ -26,7 +26,7 @@ namespace Exar
 
 		Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept;
 		Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement);
-		Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc);
+		Result destroyImage(Image* pImage, const AllocatorCreateInfo& pDesc);
 
 		Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo);
