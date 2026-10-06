@@ -118,7 +118,7 @@ namespace Exar {
 	struct EXA_API FramebufferCreateInfo
 	{
 		void* renderPass;
-		class ImageView** attachments;
+		ImageView* attachments;
 		u32 attachmentCount;
 		u32 width, height;
 		u32 layer;

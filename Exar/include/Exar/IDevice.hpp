@@ -12,7 +12,6 @@ namespace Exar {
 	class 	IRessource;
 	class 	ISwapchain;
 	class 	Framebuffer;
-	class	ImageView;
 	struct	DeviceMemoryCreateInfo;
 
 	template <typename Type>

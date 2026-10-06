@@ -231,7 +231,7 @@ Exar::Result Exar::Device_::createImageView(const ImageViewCreateInfo& pInfo, Im
 {
 	if (!pInfo.image) return Result::NULL_POINTER;
 
-	ImageView lImageView = new ImageView_();
+	ImageView_* lImageView = new ImageView_();
 	lImageView->format = pInfo.format;
 	lImageView->subresource = pInfo.subresource;
 	lImageView->viewType = pInfo.viewType;
@@ -323,7 +323,7 @@ Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo
 
 	Framebuffer* lFramebuffer = new Framebuffer();
 	lFramebuffer->mRenderPass = pInfo.renderPass;
-	lFramebuffer->mAttachments= pInfo.attachments;
+	lFramebuffer->mAttachments = pInfo.attachments;
 	lFramebuffer->mWidth = pInfo.width;
 	lFramebuffer->mHeight = pInfo.height;
 	lFramebuffer->mLayer = pInfo.layer;

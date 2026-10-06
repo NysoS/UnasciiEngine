@@ -5,8 +5,6 @@
 
 namespace Exar
 {
-	class ImageView;
-
 	class Framebuffer
 	{
 	public:
@@ -15,7 +13,7 @@ namespace Exar
 
 	private:
 		void* mRenderPass;
-		ImageView** mAttachments;
+		ImageView* mAttachments;
 		u32 mWidth, mHeight;
 		u32 mLayer;
 

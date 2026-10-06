@@ -21,9 +21,9 @@ namespace Exar
 		const u8* getData() const;
 
 	private:
-		Image image;
+		Image image = EXAR_NULL_HANDLE;
 		ImageViewType viewType = ImageViewType::VIEW_2D;
-		PixelFormat format;
+		PixelFormat format =  PixelFormat::B8G8R8A8_UNORM;
 		ImageSubresource subresource;
 		
 		friend class Device_;
