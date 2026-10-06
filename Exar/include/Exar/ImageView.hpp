@@ -6,11 +6,11 @@
 
 namespace Exar
 {
-	class EXA_API ImageView
+	class EXA_API ImageView_
 	{
 	public:
-		ImageView() = default;
-		~ImageView() = default;
+		ImageView_() = default;
+		~ImageView_() = default;
 
 		Image getImage() const;
 		
@@ -21,9 +21,12 @@ namespace Exar
 		const u8* getData() const;
 
 	private:
-		ImageViewCreateInfo mInfo;
+		Image image = EXAR_NULL_HANDLE;
+		ImageViewType viewType = ImageViewType::VIEW_2D;
+		PixelFormat format =  PixelFormat::B8G8R8A8_UNORM;
+		ImageSubresource subresource;
 		
-		friend class Device;
+		friend class Device_;
 	};
 }
 

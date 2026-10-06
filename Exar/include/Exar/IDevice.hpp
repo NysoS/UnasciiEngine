@@ -12,7 +12,6 @@ namespace Exar {
 	class 	IRessource;
 	class 	ISwapchain;
 	class 	Framebuffer;
-	class	ImageView;
 	struct	DeviceMemoryCreateInfo;
 
 	template <typename Type>
@@ -44,6 +43,11 @@ namespace Exar {
 		virtual Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept = 0;
 		virtual Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) = 0;
 		virtual Result destroyImage(Image pImage, const AllocatorCreateInfo& pDesc) = 0;
+
+		virtual Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) = 0;
+		virtual Result destroyCommandPool(CommandPool pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) = 0;
+
+		virtual Result allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers) = 0;
 
 		virtual Result createImageView(const ImageViewCreateInfo& pDesc, ImageView** pImageView) = 0;
 		virtual Result destroyImageView(ImageView* pImageView) = 0;
