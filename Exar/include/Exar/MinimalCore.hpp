@@ -31,6 +31,9 @@ namespace Exar {
 	typedef void* EXAR_HANDLE;
 #define EXAR_NULL_HANDLE nullptr
 
+	inline constexpr u32 FIFO_SWAPCHAIN_IMAGES = 2;
+	inline constexpr u32 MAILBOX_SWAPCHAIN_IMAGES = 3;
+
 	enum class Result
 	{
 		SUCCESS = 0,
@@ -75,6 +78,7 @@ namespace Exar {
 	{
 		NONE = 0,
 		SWAPCHAIN,
+		IMAGE,
 		COMMAND_POOL,
 		TEXTURE,
 		FENCE,

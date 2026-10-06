@@ -124,7 +124,7 @@ Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo
 	if (pRequirement.sizeInBytes == 0) return Result::ERROR_INVALID_SIZE;
 
 	void* lImagePtr = nullptr;
-	Result lResult = createResourceObject(&lImagePtr, pInfo, AreaMemoryType::SWAPCHAIN);
+	Result lResult = createResourceObject(&lImagePtr, pInfo, AreaMemoryType::IMAGE);
 	//Result lResult = allocateResourceMemory(&lImagePtr, pInfo, pRequirement);
 	if (lResult != Result::SUCCESS) return lResult;
 
