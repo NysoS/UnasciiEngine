@@ -227,14 +227,17 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createImageView(const ImageViewCreateInfo& pInfo, ImageView** pImageView)
+Exar::Result Exar::Device_::createImageView(const ImageViewCreateInfo& pInfo, ImageView* pImageView)
 {
 	if (!pInfo.image) return Result::NULL_POINTER;
 
-	std::unique_ptr<ImageView> lImageView = std::make_unique<ImageView>();
-	lImageView->mInfo = pInfo;
+	ImageView lImageView = new ImageView_();
+	lImageView->format = pInfo.format;
+	lImageView->subresource = pInfo.subresource;
+	lImageView->viewType = pInfo.viewType;
+	lImageView->image = pInfo.image;
 
-	*pImageView = lImageView.release();
+	*pImageView = lImageView;
 
 	return Result::SUCCESS;
 }
