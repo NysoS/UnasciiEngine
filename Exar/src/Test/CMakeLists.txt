@@ -3,6 +3,7 @@ set (SOURCES
     SwapchainPresentTest.cpp
     CommandPoolAllocationTest.cpp
     CommandBufferWithWorkerThread.cpp
+    CommandBufferAndSwapchainTest.cpp
 )
 
 register_sources(Exar ${SOURCES})
