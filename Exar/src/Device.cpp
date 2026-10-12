@@ -251,25 +251,23 @@ Exar::Result Exar::Device_::destroyImageView(ImageView* pImageView)
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createSwapchain(const SwapchainCreateInfo& pInfo, ISwapchain** pSwapchain)
+Exar::Result Exar::Device_::createSwapchain(Swapchain* pSwapchain, const SwapchainCreateInfo& pDesc, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pSwapchain) return Result::NULL_POINTER;
 
 	std::unique_ptr<Swapchain_> lSwapchain = std::make_unique<Swapchain_>();
-	lSwapchain->mInfo = pInfo;
+	lSwapchain->mInfo = pDesc;
 	lSwapchain->mDevice = this;
 	lSwapchain->initImages();
 
-	for (size_t i = 0; i < pInfo.minImageCount; ++i)
+	for (size_t i = 0; i < pDesc.minImageCount; ++i)
 	{
 		// create images
 		ImageCreateInfo lImageInfo;
-		lImageInfo.height = pInfo.extent.h;
-		lImageInfo.width = pInfo.extent.w;
+		lImageInfo.height = pDesc.extent.h;
+		lImageInfo.width = pDesc.extent.w;
 
-		AllocatorCreateInfo lImageAllocInfo;
-		lImageAllocInfo.align = AlignMemory::ALIGN_32;
-		lImageAllocInfo.areaType = AreaMemoryType::IMAGE;
+		AllocatorCreateInfo lImageAllocInfo = pAllocatorInfo;
 		lImageAllocInfo.pageIndex = (u32)i;
 
 		MemoryRequirement lMemImageRequired;
