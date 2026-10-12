@@ -21,6 +21,7 @@ namespace Exar {
 		
 		Swapchain mSwapchain;
 		std::vector<Image> mImages;
+		std::vector<AllocatorCreateInfo> mImageAllocatorInfos;
 		std::vector<ImageView> mImagesViews;
 	};
 }

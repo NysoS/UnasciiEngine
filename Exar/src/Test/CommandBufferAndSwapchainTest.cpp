@@ -13,6 +13,10 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	, mCommandPools({})
 	, mSwapchain(EXAR_NULL_HANDLE)
 {
+#ifdef WIN32
+	AllocConsole();
+#endif
+
 	std::vector<AreaMemoryCreateInfo> lAreaMemoryCreateInfos;
 
 	// command pool memory info
@@ -75,8 +79,73 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		return;
 	}
 
-	mCommandPools.reserve(FIFO_SWAPCHAIN_IMAGES);
-	mCmdPoolAllocatorInfos.reserve(FIFO_SWAPCHAIN_IMAGES);
+	mCommandPools.resize(FIFO_SWAPCHAIN_IMAGES, nullptr);
+	mCmdPoolAllocatorInfos.resize(FIFO_SWAPCHAIN_IMAGES);
+
+	// command pool creation
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		CommandPoolCreateInfo lCmdPoolInfo{
+			.type = AreaMemoryType::COMMAND_POOL,
+			.family = QueueFamily::GRAPHICS,
+			.flags = CommandPoolFlags::RESET_COMMAND_BUFFER_PAGE
+		};
+
+		AllocatorCreateInfo lCmdPoolAllocatorInfo{
+			.totalSize = 100 * 1024,
+			.align = AlignMemory::ALIGN_16,
+			.areaType = AreaMemoryType::COMMAND_POOL,
+			.pageIndex = (u32)i,
+			.mode = AllocationMode::ALLOC_SCRATCH
+		};
+		mCmdPoolAllocatorInfos[i] = lCmdPoolAllocatorInfo;
+
+		if (Result lResult = mDevice->createCommandPool(&mCommandPools[i], lCmdPoolInfo, lCmdPoolAllocatorInfo); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Creation command pool %u failed : Error code : %u", i, (u32)lResult);
+			return;
+		}
+	}
+
+	// swapchain creation 
+	SwapchainCreateInfo lSwapchainCreateInfo{};
+	lSwapchainCreateInfo.extent = Extent2D<u32>{ .w = 600, .h = 700 };
+	lSwapchainCreateInfo.minImageCount = FIFO_SWAPCHAIN_IMAGES;
+	lSwapchainCreateInfo.imageFormat = PixelFormat::B8G8R8A8_UNORM_SRGB;
+	lSwapchainCreateInfo.imageColor = ColorSpace::COLOR_SPACE_SRGB_NONLINEAR;
+	lSwapchainCreateInfo.imageUsage = ImageUsageFlags::COLOR_ATTACHMENT;
+	lSwapchainCreateInfo.imageSharingMode = SharingMode::EXCLUSIVE;
+	lSwapchainCreateInfo.presentMode = PresentationMode::FIFO;
+
+#ifdef WIN32
+	HWND lHwnd = GetConsoleWindow();
+	lSwapchainCreateInfo.surface = reinterpret_cast<Surface>(lHwnd);
+#endif // !WIN32
+
+	AllocatorCreateInfo lImageAllocatorInfo{
+		.totalSize = 512 * 1024 * 1024,
+		.align = AlignMemory::ALIGN_32,
+		.areaType = AreaMemoryType::IMAGE,
+		.pageIndex = 0,
+		.mode = AllocationMode::ALLOC_HEAP
+	};
+
+	Result lResult = mDevice->createSwapchain(&mSwapchain, lSwapchainCreateInfo, lImageAllocatorInfo);
+	if (lResult != Result::SUCCESS)
+	{
+		EXAR_MEMORY_LOG(stderr, "Swapchain creation failed : Error code : %u", (u32)lResult);
+		return;
+	}
+
+	mImages.resize(FIFO_SWAPCHAIN_IMAGES);
+	lResult = mDevice->getSwapchainImages(mSwapchain, FIFO_SWAPCHAIN_IMAGES, mImages.data());
+	if (lResult != Result::SUCCESS)
+	{
+		EXAR_MEMORY_LOG(stderr, "Get swpachain images failed : Error code : %u", (u32)lResult);
+		return;
+	}
+
+	mImagesViews.resize(FIFO_SWAPCHAIN_IMAGES);
 }
 
 Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()

@@ -7,6 +7,7 @@
 #include "Exar/Test/SwapchainPresentTest.hpp"
 #include "Exar/Test/CommandPoolAllocationTest.hpp"
 #include "Exar/Test/CommandBufferWithWorkerThread.hpp"
+#include "Exar/Test/CommandBufferAndSwapchainTest.hpp"
 #endif // !_DEBUG
 
 
@@ -53,7 +54,8 @@ namespace Exar {
 
 	extern "C" EXA_API void RHI_CommandBuffer_With_WorkerThreaad_Test()
 	{
-		CommandBufferWithWorkerThread lTest;
+		//CommandBufferWithWorkerThread lTest;
+		CommandBufferAndSwapchainTest lTest;
 	}
 	#endif
 }
