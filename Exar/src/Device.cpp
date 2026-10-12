@@ -311,6 +311,29 @@ Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSe
 	return Result::SUCCESS;
 }
 
+Exar::Result Exar::Device_::getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages)
+{
+	FindRessourceInfo lInfo{};
+	lInfo.areaMemoryType = AreaMemoryType::IMAGE;
+	lInfo.family = QueueFamily::GRAPHICS;
+	lInfo.pageCount = pImagesCount;
+	lInfo.ressourceType = RessourceType::IMAGE;
+	lInfo.searchPageFlag = SearchPageFlag::SINGLE_RESSOURCE_MULTIPLE_PAGES;
+
+	for (size_t i = 0; i < pImagesCount; ++i)
+	{
+		lInfo.pageStartIndex = i;
+		Result lRes = findSwpachainImages(i, pImages, lInfo);
+		if (lRes != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "get swapchain images failde : Error code : %u", (u32)lRes);
+			throw;
+		}
+	}
+
+	return Result::SUCCESS;
+}
+
 Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer)
 {
 	if (pInfo.attachmentCount == 0 || pInfo.width == 0 || pInfo.height == 0) return Result::ERROR_INVALID_SIZE;
@@ -452,6 +475,21 @@ Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const Fin
 	if (lCommandPool->queueFamily != pSearchInfo.family) return Result::ERROR_FAMILY_NOT_SAME;
 
 	*pCommandPool = lCommandPool;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::findSwpachainImages(u32 pImageIndex, Image* pImages, const FindRessourceInfo& pSearchInfo)
+{
+	if (pSearchInfo.ressourceType != RessourceType::IMAGE) return Result::ERROR_RESSOURCE_TYPE;
+	if (!pImages) return Result::NULL_POINTER;
+
+	void* lRessource = mAllocator->findRessource(pSearchInfo);
+	if (!lRessource) return Result::ERROR_ALLOCATOR_NULL_POINTER;
+
+	Image lImage = reinterpret_cast<Image>(lRessource);
+	
+	pImages[pImageIndex] = lImage;
 
 	return Result::SUCCESS;
 }

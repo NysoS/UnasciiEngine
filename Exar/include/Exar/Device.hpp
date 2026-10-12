@@ -39,6 +39,7 @@ namespace Exar
 		Result createSwapchain(Swapchain* pSwapchain, const SwapchainCreateInfo& pDesc, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo);
 		Result acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex);
+		Result getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages);
 
 		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer);
 		Result destroyFramebuffer(Framebuffer* pFramebuffer);
@@ -57,6 +58,7 @@ namespace Exar
 		// add exar_result
 
 		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo);
+		Result findSwpachainImages(u32 pImageIndex, Image* pImages, const FindRessourceInfo& pSearchInfo);
 	private:
 		Result createResourceObject(EXAR_HANDLE* pResourceHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType);
 
