@@ -36,8 +36,8 @@ namespace Exar
 		Result createImageView(const ImageViewCreateInfo& pDesc, ImageView* pImageView);
 		Result destroyImageView(ImageView* pImageView);
 
-		Result createSwapchain(const SwapchainCreateInfo& pDesc, ISwapchain** pSwapchain);
-		Result destroySwapchain(ISwapchain* pSwapchain);
+		Result createSwapchain(Swapchain* pSwapchain, const SwapchainCreateInfo& pDesc, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo);
 		Result acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex);
 
 		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer);

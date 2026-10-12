@@ -288,13 +288,13 @@ Exar::Result Exar::Device_::createSwapchain(const SwapchainCreateInfo& pInfo, IS
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroySwapchain(ISwapchain* pSwapchain)
+Exar::Result Exar::Device_::destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pSwapchain) return Result::NULL_POINTER;
 
-	std::vector<Image> mImages(pSwapchain->getImageCount());
+	std::vector<Image> mImages((*pSwapchain)->getImageCount());
 
-	Result lImagesResult = pSwapchain->getImages(mImages.data());
+	Result lImagesResult = (*pSwapchain)->getImages(mImages.data());
 
 	for (const auto& lImage : mImages)
 	{
