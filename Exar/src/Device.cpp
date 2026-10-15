@@ -227,11 +227,18 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createImageView(const ImageViewCreateInfo& pInfo, ImageView* pImageView)
+Exar::Result Exar::Device_::createImageView(ImageView* pImageView, const ImageViewCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pInfo.image) return Result::NULL_POINTER;
 
-	ImageView_* lImageView = new ImageView_();
+	EXAR_HANDLE lPtr = nullptr;
+	if (Result lResult = createResourceObject(&lPtr, pAllocatorInfo, AreaMemoryType::IMAGEVIEW); lResult != Result::SUCCESS)
+	{
+		EXAR_MEMORY_LOG(stderr, "Create image view failed : Error code : %u", (u32)lResult);
+		return lResult;
+	}
+
+	ImageView_* lImageView = reinterpret_cast<ImageView_*>(lPtr);
 	lImageView->format = pInfo.format;
 	lImageView->subresource = pInfo.subresource;
 	lImageView->viewType = pInfo.viewType;
@@ -242,11 +249,19 @@ Exar::Result Exar::Device_::createImageView(const ImageViewCreateInfo& pInfo, Im
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyImageView(ImageView* pImageView)
+Exar::Result Exar::Device_::destroyImageView(ImageView* pImageView, const AllocatorCreateInfo& pAllocatorInfo)
 {
 	if (!pImageView) return Result::NULL_POINTER;
+	if (!*pImageView) return Result::SUCCESS;
+	
+	EXAR_HANDLE lPtr = *pImageView;
+	*pImageView = nullptr;
 
-	delete pImageView;
+	if (!mAllocator->dealloc(lPtr, pAllocatorInfo))
+	{
+		assert(false && "ImageView dealloc failed");
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
 
 	return Result::SUCCESS;
 }

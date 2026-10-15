@@ -33,8 +33,8 @@ namespace Exar
 
 		Result allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers);
 
-		Result createImageView(const ImageViewCreateInfo& pDesc, ImageView* pImageView);
-		Result destroyImageView(ImageView* pImageView);
+		Result createImageView(ImageView* pImageView, const ImageViewCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroyImageView(ImageView* pImageView, const AllocatorCreateInfo& pAllocatorInfo);
 
 		Result createSwapchain(Swapchain* pSwapchain, const SwapchainCreateInfo& pDesc, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo);
