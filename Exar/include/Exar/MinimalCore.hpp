@@ -79,6 +79,7 @@ namespace Exar {
 		NONE = 0,
 		SWAPCHAIN,
 		IMAGE,
+		IMAGEVIEW,
 		COMMAND_POOL,
 		TEXTURE,
 		FENCE,
