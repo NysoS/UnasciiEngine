@@ -17,6 +17,19 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	AllocConsole();
 #endif
 
+	if (!initMemory())
+	{
+		return;
+	}
+
+	if (!init()) return;
+}
+
+Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()
+{}
+
+bool Exar::CommandBufferAndSwapchainTest::initMemory()
+{
 	std::vector<AreaMemoryCreateInfo> lAreaMemoryCreateInfos;
 
 	// command pool memory info
@@ -44,7 +57,7 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		.size = 200
 	};
 	std::vector<PageMemoryCreateInfo> lSwapchainPageInfos{};
-	lSwapchainPageInfos.push_back({.size = 200});
+	lSwapchainPageInfos.push_back({ .size = 200 });
 	lSwapchainAreaMemoryInfo.pageMemory = lSwapchainPageInfos.data();
 	lAreaMemoryCreateInfos.push_back(lSwapchainAreaMemoryInfo);
 
@@ -65,6 +78,23 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	lImageSwapchainAreaMemoryInfo.pageMemory = lImageSwapchainPageInfo.data();
 	lAreaMemoryCreateInfos.push_back(lImageSwapchainAreaMemoryInfo);
 
+	// imageView memory info
+	AreaMemoryCreateInfo lImageViewAreaMemoryInfo{
+		.mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE,
+		.areaType = AreaMemoryType::IMAGEVIEW,
+		.pageCount = FIFO_SWAPCHAIN_IMAGES,
+		.size = 1024 * 1024 * 1024
+	};
+
+	std::vector<PageMemoryCreateInfo> lImageViewPagesInfo{};
+	lImageViewPagesInfo.reserve(FIFO_SWAPCHAIN_IMAGES);
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		lImageViewPagesInfo.push_back({ .size = 512 * 1024 * 1024 });
+	}
+	lImageViewAreaMemoryInfo.pageMemory = lImageViewPagesInfo.data();
+	lAreaMemoryCreateInfos.push_back(lImageViewAreaMemoryInfo);
+
 	// device memory info
 	DeviceMemoryCreateInfo lDeviceMemoryInfo{
 		.memoryType = MemoryType::AREA,
@@ -76,9 +106,14 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	if (!lMemoryCreated)
 	{
 		EXAR_MEMORY_LOG(stderr, "Memory can't create, maybe no space remaining\n");
-		return;
+		return false;
 	}
 
+	return true;
+}
+
+bool Exar::CommandBufferAndSwapchainTest::init()
+{
 	mCommandPools.resize(FIFO_SWAPCHAIN_IMAGES, nullptr);
 	mCmdPoolAllocatorInfos.resize(FIFO_SWAPCHAIN_IMAGES);
 
@@ -103,7 +138,7 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		if (Result lResult = mDevice->createCommandPool(&mCommandPools[i], lCmdPoolInfo, lCmdPoolAllocatorInfo); lResult != Result::SUCCESS)
 		{
 			EXAR_MEMORY_LOG(stderr, "Creation command pool %u failed : Error code : %u", i, (u32)lResult);
-			return;
+			return false;
 		}
 	}
 
@@ -134,19 +169,48 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	if (lResult != Result::SUCCESS)
 	{
 		EXAR_MEMORY_LOG(stderr, "Swapchain creation failed : Error code : %u", (u32)lResult);
-		return;
+		return false;
 	}
+	mImageAllocatorInfos = lImageAllocatorInfo;
 
 	mImages.resize(FIFO_SWAPCHAIN_IMAGES);
+
 	lResult = mDevice->getSwapchainImages(mSwapchain, FIFO_SWAPCHAIN_IMAGES, mImages.data());
 	if (lResult != Result::SUCCESS)
 	{
 		EXAR_MEMORY_LOG(stderr, "Get swpachain images failed : Error code : %u", (u32)lResult);
-		return;
+		return false;
 	}
 
 	mImagesViews.resize(FIFO_SWAPCHAIN_IMAGES);
-}
+	mImageViewAllocatorInfos.resize(FIFO_SWAPCHAIN_IMAGES);
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		ImageViewCreateInfo lImageViewCreateInfo{
+			.image = mImages[i],
+			.viewType = ImageViewType::VIEW_2D,
+			.format = PixelFormat::B8G8R8A8_UNORM_SRGB,
+			.subresource = ImageSubresource {
+				.aspectMask = ImageAspectMask::COLOR_BIT
+			},
+		};
 
-Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()
-{}
+		AllocatorCreateInfo lImageViewAllocatorCreateInfo{
+			.totalSize = 512 * 1024 * 1024,
+			.align = AlignMemory::ALIGN_32,
+			.areaType = AreaMemoryType::IMAGEVIEW,
+			.pageIndex = (u32)i,
+			.mode = AllocationMode::ALLOC_HEAP
+		};
+
+		Result lResult = mDevice->createImageView(&mImagesViews[i], lImageViewCreateInfo, lImageViewAllocatorCreateInfo);
+		if (lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "ImageView creation failed : Error code : %u", (u32)lResult);
+			return false;
+		}
+		mImageViewAllocatorInfos[i] = lImageViewAllocatorCreateInfo;
+	}
+
+	return true;
+}

@@ -14,6 +14,9 @@ namespace Exar {
 		CommandBufferAndSwapchainTest();
 		~CommandBufferAndSwapchainTest();
 	private:
+		bool initMemory();
+		bool init();
+
 		std::unique_ptr<Device_> mDevice;
 		std::vector<CommandPool> mCommandPools;
 		std::vector<AllocatorCreateInfo> mCmdPoolAllocatorInfos;
@@ -21,8 +24,9 @@ namespace Exar {
 		
 		Swapchain mSwapchain;
 		std::vector<Image> mImages;
-		std::vector<AllocatorCreateInfo> mImageAllocatorInfos;
+		AllocatorCreateInfo mImageAllocatorInfos;
 		std::vector<ImageView> mImagesViews;
+		std::vector<AllocatorCreateInfo> mImageViewAllocatorInfos;
 	};
 }
 #endif // !EXAR_COMMAND_BUFFER_AND_SWAPCHAIN_TEST_HPP
