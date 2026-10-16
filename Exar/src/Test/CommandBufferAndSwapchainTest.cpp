@@ -215,6 +215,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		return false;
 	}
 
+	// image view creation
 	mImagesViews.resize(FIFO_SWAPCHAIN_IMAGES);
 	mImageViewAllocatorInfos.resize(FIFO_SWAPCHAIN_IMAGES);
 	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
@@ -243,6 +244,64 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 			return false;
 		}
 		mImageViewAllocatorInfos[i] = lImageViewAllocatorCreateInfo;
+	}
+
+	// fences creation
+	mInFlightFences.resize(FIFO_SWAPCHAIN_IMAGES, nullptr);
+	mImagesInFlight.reserve(FIFO_SWAPCHAIN_IMAGES);
+	mInFlightFencesAllocatorInfo.resize(FIFO_SWAPCHAIN_IMAGES);
+	
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		FenceCreateInfo lFenceCreateInfo{
+			.flags = FenceCreateFlags::SIGNALED_BIT
+		};
+
+		AllocatorCreateInfo lFenceAllocatorInfo{
+			.totalSize = 100 * 1024,
+			.align = AlignMemory::ALIGN_64,
+			.areaType = AreaMemoryType::FENCE,
+			.pageIndex = (u32)i,
+			.mode = AllocationMode::ALLOC_HEAP
+		};
+
+		Result lResult = mDevice->createFence(&mInFlightFences[i], lFenceCreateInfo, lFenceAllocatorInfo);
+		if (lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Fence creation failed : Error code : %u", (u32)lResult);
+			return false;
+		}
+		mInFlightFencesAllocatorInfo[i] = lFenceAllocatorInfo;
+	}
+
+	// semaphore creation
+	mImageAvailableSemaphores.resize(FIFO_SWAPCHAIN_IMAGES, nullptr);
+	mRenderFinishedSemaphores.resize(FIFO_SWAPCHAIN_IMAGES, nullptr);
+	mImageAvailableSemaphoreAllocatorInfo.resize(FIFO_SWAPCHAIN_IMAGES);
+	mRenderFinishedSemaphoreAllocatorInfo.resize(FIFO_SWAPCHAIN_IMAGES);
+
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		AllocatorCreateInfo lImageAvailableSemaphoreAllocatorCreateInfo {
+			.totalSize = 100 * 1024,
+			.align = AlignMemory::ALIGN_64,
+			.areaType = AreaMemoryType::SEMAPHORE,
+			.pageIndex = (u32)i,
+			.mode = AllocationMode::ALLOC_HEAP
+		};
+
+		AllocatorCreateInfo lRenderFinishedSemaphoreAllocatorCreateInfo = lImageAvailableSemaphoreAllocatorCreateInfo;
+		lRenderFinishedSemaphoreAllocatorCreateInfo.pageIndex = FIFO_SWAPCHAIN_IMAGES + i;
+
+		if (mDevice->createSemaphore(&mImageAvailableSemaphores[i], lImageAvailableSemaphoreAllocatorCreateInfo) != Result::SUCCESS ||
+			mDevice->createSemaphore(&mRenderFinishedSemaphores[i], lRenderFinishedSemaphoreAllocatorCreateInfo) != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Semaphores creation failed : Error code : %u", (u32)lResult);
+			return false;
+		}
+
+		mImageAvailableSemaphoreAllocatorInfo[i] = lImageAvailableSemaphoreAllocatorCreateInfo;
+		mRenderFinishedSemaphoreAllocatorInfo[i] = lRenderFinishedSemaphoreAllocatorCreateInfo;
 	}
 
 	return true;
