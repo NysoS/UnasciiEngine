@@ -42,7 +42,7 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 
 	lAreaFenceMemoryInfo.pageMemory = lFencePagesMemory.data();
 	lAreaCreateInfos.push_back(lAreaFenceMemoryInfo);
-
+		
 	DeviceMemoryCreateInfo lDeviceMemoryInfo{};
 	lDeviceMemoryInfo.memoryType = MemoryType::AREA;
 	lDeviceMemoryInfo.areaCount = lAreaCreateInfos.size();

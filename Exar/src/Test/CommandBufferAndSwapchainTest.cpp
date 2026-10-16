@@ -170,7 +170,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 
 		if (Result lResult = mDevice->createCommandPool(&mCommandPools[i], lCmdPoolInfo, lCmdPoolAllocatorInfo); lResult != Result::SUCCESS)
 		{
-			EXAR_MEMORY_LOG(stderr, "Creation command pool %u failed : Error code : %u", i, (u32)lResult);
+			EXAR_MEMORY_LOG(stderr, "Creation command pool failed : Error code : %u", (u32)lResult);
 			return false;
 		}
 	}
