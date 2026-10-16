@@ -27,6 +27,15 @@ namespace Exar {
 		AllocatorCreateInfo mImageAllocatorInfos;
 		std::vector<ImageView> mImagesViews;
 		std::vector<AllocatorCreateInfo> mImageViewAllocatorInfos;
+
+		std::vector<Fence> mInFlightFences;
+		std::vector<Fence> mImagesInFlight;
+		std::vector<AllocatorCreateInfo> mInFlightFencesAllocatorInfo;
+
+		std::vector<Semaphore> mImageAvailableSemaphores;
+		std::vector<AllocatorCreateInfo> mImageAvailableSemaphoreAllocatorInfo;
+		std::vector<Semaphore> mRenderFinishedSemaphores;
+		std::vector<AllocatorCreateInfo> mRenderFinishedSemaphoreAllocatorInfo;
 	};
 }
 #endif // !EXAR_COMMAND_BUFFER_AND_SWAPCHAIN_TEST_HPP

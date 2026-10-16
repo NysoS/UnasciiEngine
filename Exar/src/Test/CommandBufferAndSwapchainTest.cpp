@@ -95,6 +95,39 @@ bool Exar::CommandBufferAndSwapchainTest::initMemory()
 	lImageViewAreaMemoryInfo.pageMemory = lImageViewPagesInfo.data();
 	lAreaMemoryCreateInfos.push_back(lImageViewAreaMemoryInfo);
 
+	// fence memory info
+	AreaMemoryCreateInfo lFenceAreaMemoryInfo{
+		.mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE,
+		.areaType = AreaMemoryType::FENCE,
+		.pageCount = FIFO_SWAPCHAIN_IMAGES,
+		.size = 1024 * 1024
+	};
+
+	std::vector<PageMemoryCreateInfo> lFencePagesInfo{};
+	lFencePagesInfo.reserve(FIFO_SWAPCHAIN_IMAGES);
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		lFencePagesInfo.push_back({ .size = 100 * 1024 });
+	}
+	lFenceAreaMemoryInfo.pageMemory = lFencePagesInfo.data();
+	lAreaMemoryCreateInfos.push_back(lFenceAreaMemoryInfo);
+
+	// semaphore memory info
+	AreaMemoryCreateInfo lSemaphoreMemoryInfo{
+		.mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE,
+		.areaType = AreaMemoryType::SEMAPHORE,
+		.pageCount = FIFO_SWAPCHAIN_IMAGES*2,
+		.size = 1024 * 1024
+	};
+	std::vector<PageMemoryCreateInfo> lSemaphorePagesInfo{};
+	lSemaphorePagesInfo.reserve(FIFO_SWAPCHAIN_IMAGES * 2);
+	for (size_t i = 0; i < lSemaphoreMemoryInfo.pageCount; ++i)
+	{
+		lSemaphorePagesInfo.push_back({ .size = 100 * 1024 });
+	}
+	lSemaphoreMemoryInfo.pageMemory = lSemaphorePagesInfo.data();
+	lAreaMemoryCreateInfos.push_back(lSemaphoreMemoryInfo);
+
 	// device memory info
 	DeviceMemoryCreateInfo lDeviceMemoryInfo{
 		.memoryType = MemoryType::AREA,
