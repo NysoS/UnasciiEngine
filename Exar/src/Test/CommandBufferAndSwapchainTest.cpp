@@ -23,10 +23,118 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	}
 
 	if (!init()) return;
+
+	mWorkerThread = std::jthread(std::bind_front(&CommandBufferAndSwapchainTest::workerThreadProcess, this), std::ref(mInFlightFences));
+	mDisplayThread = std::jthread(std::bind_front(&CommandBufferAndSwapchainTest::displayThreadProcess, this), std::ref(mImageAvailableSemaphores), std::ref(mRenderFinishedSemaphores));
+
+	size_t lMaxIteration = 500;
+	size_t lIteration = 0;
+
+	while (lIteration < lMaxIteration)
+	{
+		Result lResult;
+		// check fences free, else skip 
+		if (lResult = mDevice->waitForFence(mInFlightFences[mMainFrameIndex], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING)
+		{
+			++lIteration;
+			//mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;
+			continue;
+		}
+
+		// Peek the index of the next swapchain image (not acquired yet).
+		u32 lNextImageIndex = 0; // get from swapchain
+		
+		// If a previous frame is still using this image, wait for its fence.
+		// Nothing has been acquired at this point, so skipping the iteration is safe.
+		// Assumes only this thread acquires images (peeked index == acquired index).
+		if (mImagesInFlight[lNextImageIndex] != EXAR_NULL_HANDLE) {
+			if (lResult = mDevice->waitForFence(mImagesInFlight[lNextImageIndex], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING) {
+				++lIteration;
+				continue;
+			}
+		}
+		mImagesInFlight[lNextImageIndex] = mInFlightFences[mMainFrameIndex];
+
+		// reset command buffer
+		if (lResult = resetCommandBuffer(mCommandBuffers[mMainFrameIndex]); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Reset command buffer failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to reset commandBuffer\n");
+		}
+
+		CommandBufferBeginInfo lCommandBufferBeginInfo{
+			.flags = 0
+		};
+
+		if (lResult = beginCommandBuffer(mCommandBuffers[mMainFrameIndex], lCommandBufferBeginInfo); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Begin commandBuffer failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to begin commandBuffer\n");
+		}
+
+		cmdTest(mCommandBuffers[mMainFrameIndex], 6 + mMainFrameIndex);
+		cmdClearColorImage(mCommandBuffers[mMainFrameIndex], mImages[mMainFrameIndex], ClearColorValue{ .uint32{255,0,0,255 } });
+
+		if (lResult = endCommandBuffer(mCommandBuffers[mMainFrameIndex]); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "End commandBuffer failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to end commandBuffer\n");
+		}
+
+		// declare submitInfo
+		SubmitInfo lSubmitInfo{
+			.commandBufferCount = 1,
+			.pCommandBuffers = &mCommandBuffers[mMainFrameIndex],
+		};
+
+		// declare waitSemaphore
+
+		// declare signalSemaphore
+
+		// reset fence
+		if (lResult = mDevice->resetFences(&mInFlightFences[mMainFrameIndex], 1); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Reset fence failed: Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to reset fence\n");
+		}
+
+		//QueueSubmit
+		if (lResult = queueSubmit(QueueFamily::GRAPHICS, 1, lSubmitInfo, mInFlightFences[mMainFrameIndex]); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Queue submit failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to queue submit\n");
+		}
+
+		// make present info
+
+		// queuePresent
+
+		++lIteration;
+		mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;
+	}
+	//mWorkerThread.request_stop();
+	//mDisplayThread.request_stop();
 }
 
 Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()
-{}
+{
+	mDisplayThread.request_stop();
+	mWorkerThread.request_stop();
+	mDisplayThread.join();
+	mWorkerThread.join();
+
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		mDevice->destroySemaphore(&mImageAvailableSemaphores[i], mImageAvailableSemaphoreAllocatorInfo[i]);
+		mDevice->destroySemaphore(&mRenderFinishedSemaphores[i], mRenderFinishedSemaphoreAllocatorInfo[i]);
+		mDevice->destroyFence(&mImagesInFlight[i], mInFlightFencesAllocatorInfo[i]);
+	
+		mDevice->destroyCommandPool(&mCommandPools[i], mCmdPoolAllocatorInfos[i]);
+
+		mDevice->destroyImageView(&mImagesViews[i], mImageViewAllocatorInfos[i]);
+	}
+	mDevice->destroySwapchain(&mSwapchain, mImageAllocatorInfos);
+ }
 
 bool Exar::CommandBufferAndSwapchainTest::initMemory()
 {
