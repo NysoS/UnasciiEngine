@@ -17,6 +17,9 @@ namespace Exar {
 		bool initMemory();
 		bool init();
 
+		void workerThreadProcess(std::stop_token pSt, const std::vector<Fence>& pFences);
+		void displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>& pImageAvailableSemaphores, const std::vector<Semaphore>& pRenderFinishedSemaphores);
+
 		std::unique_ptr<Device_> mDevice;
 		std::vector<CommandPool> mCommandPools;
 		std::vector<AllocatorCreateInfo> mCmdPoolAllocatorInfos;
@@ -36,6 +39,13 @@ namespace Exar {
 		std::vector<AllocatorCreateInfo> mImageAvailableSemaphoreAllocatorInfo;
 		std::vector<Semaphore> mRenderFinishedSemaphores;
 		std::vector<AllocatorCreateInfo> mRenderFinishedSemaphoreAllocatorInfo;
+
+		size_t mMainFrameIndex = 0;
+		size_t mWorkerFrameIndex = 0;
+		size_t mDisplayThreadIndex = 0;
+
+		std::jthread mWorkerThread;
+		std::jthread mDisplayThread;
 	};
 }
 #endif // !EXAR_COMMAND_BUFFER_AND_SWAPCHAIN_TEST_HPP

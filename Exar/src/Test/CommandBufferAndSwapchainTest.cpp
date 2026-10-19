@@ -306,3 +306,9 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 
 	return true;
 }
+
+void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pSt, const std::vector<Fence>& pFences)
+{}
+
+void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>&pImageAvailableSemaphores, const std::vector<Semaphore>&pRenderFinishedSemaphores)
+{}
