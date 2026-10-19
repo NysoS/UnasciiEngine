@@ -170,7 +170,21 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 
 		if (Result lResult = mDevice->createCommandPool(&mCommandPools[i], lCmdPoolInfo, lCmdPoolAllocatorInfo); lResult != Result::SUCCESS)
 		{
-			EXAR_MEMORY_LOG(stderr, "Creation command pool failed : Error code : %u", (u32)lResult);
+			EXAR_MEMORY_LOG(stderr, "Creation command pool failed : Error code : %u\n", (u32)lResult);
+			return false;
+		}
+	}
+	// command buffer creation
+	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
+	{
+		CommandBufferAllocateInfo lCommandBufferAllocateInfo{
+			.commandPool = mCommandPools[i],
+			.commandBufferCount = 1
+		};
+
+		if (Result lResult = mDevice->allocateCommandBuffer(lCommandBufferAllocateInfo, &mCommandBuffers[i]); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Allocation command buffer failed : Error code : %u\n", (u32)lResult);
 			return false;
 		}
 	}
@@ -201,7 +215,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 	Result lResult = mDevice->createSwapchain(&mSwapchain, lSwapchainCreateInfo, lImageAllocatorInfo);
 	if (lResult != Result::SUCCESS)
 	{
-		EXAR_MEMORY_LOG(stderr, "Swapchain creation failed : Error code : %u", (u32)lResult);
+		EXAR_MEMORY_LOG(stderr, "Swapchain creation failed : Error code : %u\n", (u32)lResult);
 		return false;
 	}
 	mImageAllocatorInfos = lImageAllocatorInfo;
@@ -211,7 +225,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 	lResult = mDevice->getSwapchainImages(mSwapchain, FIFO_SWAPCHAIN_IMAGES, mImages.data());
 	if (lResult != Result::SUCCESS)
 	{
-		EXAR_MEMORY_LOG(stderr, "Get swpachain images failed : Error code : %u", (u32)lResult);
+		EXAR_MEMORY_LOG(stderr, "Get swpachain images failed : Error code : %u\n", (u32)lResult);
 		return false;
 	}
 
@@ -240,7 +254,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		Result lResult = mDevice->createImageView(&mImagesViews[i], lImageViewCreateInfo, lImageViewAllocatorCreateInfo);
 		if (lResult != Result::SUCCESS)
 		{
-			EXAR_MEMORY_LOG(stderr, "ImageView creation failed : Error code : %u", (u32)lResult);
+			EXAR_MEMORY_LOG(stderr, "ImageView creation failed : Error code : %u\n", (u32)lResult);
 			return false;
 		}
 		mImageViewAllocatorInfos[i] = lImageViewAllocatorCreateInfo;
@@ -268,7 +282,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		Result lResult = mDevice->createFence(&mInFlightFences[i], lFenceCreateInfo, lFenceAllocatorInfo);
 		if (lResult != Result::SUCCESS)
 		{
-			EXAR_MEMORY_LOG(stderr, "Fence creation failed : Error code : %u", (u32)lResult);
+			EXAR_MEMORY_LOG(stderr, "Fence creation failed : Error code : %u\n", (u32)lResult);
 			return false;
 		}
 		mInFlightFencesAllocatorInfo[i] = lFenceAllocatorInfo;
@@ -283,7 +297,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
 	{
 		AllocatorCreateInfo lImageAvailableSemaphoreAllocatorCreateInfo {
-			.totalSize = 100 * 1024,
+			.totalSize = 100 * 1024, 
 			.align = AlignMemory::ALIGN_64,
 			.areaType = AreaMemoryType::SEMAPHORE,
 			.pageIndex = (u32)i,
@@ -296,7 +310,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		if (mDevice->createSemaphore(&mImageAvailableSemaphores[i], lImageAvailableSemaphoreAllocatorCreateInfo) != Result::SUCCESS ||
 			mDevice->createSemaphore(&mRenderFinishedSemaphores[i], lRenderFinishedSemaphoreAllocatorCreateInfo) != Result::SUCCESS)
 		{
-			EXAR_MEMORY_LOG(stderr, "Semaphores creation failed : Error code : %u", (u32)lResult);
+			EXAR_MEMORY_LOG(stderr, "Semaphores creation failed : Error code : %u\n", (u32)lResult);
 			return false;
 		}
 
