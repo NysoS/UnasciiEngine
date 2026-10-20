@@ -24,12 +24,22 @@ namespace Exar
 
 		inline std::vector<const AreaMemory*> getAreaFamilies() noexcept {
 			return {
-				mSwapchainArea.get()
+				mSwapchainArea.get(),
+				mCommandPoolArea.get(),
+				mFenceArea.get(),
+				mSemaphoreArea.get(),
+				mImageArea.get(),
+				mImageViewArea.get()
 			};
 		}
 
 	private:
 		std::unique_ptr<AreaMemory> mSwapchainArea;
+		std::unique_ptr<AreaMemory> mCommandPoolArea;
+		std::unique_ptr<AreaMemory> mFenceArea;
+		std::unique_ptr<AreaMemory> mSemaphoreArea;
+		std::unique_ptr<AreaMemory> mImageArea;
+		std::unique_ptr<AreaMemory> mImageViewArea;
 	};
 }
 

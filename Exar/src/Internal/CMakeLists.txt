@@ -4,6 +4,7 @@ set(SOURCES
     AreaMemory.cpp
     Framebuffer.cpp
     Swapchain_del.cpp
+    InternalApi.cpp
 )
 
 register_sources(Exar ${SOURCES})

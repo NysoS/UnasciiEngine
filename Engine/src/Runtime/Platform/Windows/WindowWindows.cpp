@@ -17,7 +17,7 @@ namespace UnasciiEngine {
 
 	bool WindowWindows::init()
 	{
-		AllocConsole();
+		/*AllocConsole();
 
 		SetConsoleTitle(mWinInfo.mTitle);
 
@@ -75,7 +75,7 @@ namespace UnasciiEngine {
 
 		SetConsoleCursorInfo(lHandleConsole, &lInfo);
 
-		mOutHandle = (Handle)lHandleConsole;
+		mOutHandle = (Handle)lHandleConsole;*/
 		return true;
 	}
 

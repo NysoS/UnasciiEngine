@@ -15,15 +15,15 @@ namespace Exar
 
 		Result createMemory(const AreaMemoryCreateInfo& pAreaCreateInfo, Memory lVram);
 
-		Memory getMemory();
-		Memory getMemory() const;
+		Memory getMemory(u32 pOffset = 0);
+		Memory getMemory(u32 pOffset = 0) const;
 		const PageMemory* getPage(u32 pIndex) const;
 		inline const size_t getSize() const noexcept {
 			return mSize;
 		}
 
-		Result allocate(size_t pSize, u32 pPageIndex = -1);
-		Result deallocate(size_t pSize, u32 pPageIndex = -1);
+		Result allocate(size_t pSize, u32 pPageIndex = 0);
+		Result deallocate(size_t pSize, u32 pPageIndex = 0);
 
 	private:
 		Memory mHandle;
