@@ -51,14 +51,14 @@ Exar::Result Exar::Internal::findCommands(Cmd* pCmd, CommandBuffer pCommandBuffe
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Internal::assignCommandBufferCmd(CommandBuffer pCommandBuffer, CmdValue pValue)
+Exar::Result Exar::Internal::assignCommandBufferCmd(CommandBuffer pCommandBuffer, CommandType pCmdType, CmdValue pValue)
 {
 	if (!pCommandBuffer) return Result::NULL_POINTER;
 
 	u8* lBase = reinterpret_cast<u8*>(pCommandBuffer);
 
 	Cmd_* lCmd = reinterpret_cast<Cmd_*>(lBase + pCommandBuffer->cmdOffset);
-	lCmd->type = CommandType::NONE;
+	lCmd->type = pCmdType;
 	lCmd->value = pValue;
 
 	pCommandBuffer->count++;

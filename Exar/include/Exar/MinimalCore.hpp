@@ -231,6 +231,7 @@ namespace Exar {
 	{
 		TEST = 0,
 		NONE = 1,
+		CLEAR_COLOR_IMAGE = 2
 	};
 
 	enum class CommandBufferState : uint32_t

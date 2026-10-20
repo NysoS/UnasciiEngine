@@ -117,7 +117,7 @@ namespace Exar
 		pCmdBuffer->count++;
 		pCmdBuffer->cmdOffset += sizeof(Cmd_);*/
 
-		return Internal::assignCommandBufferCmd(pCmdBuffer, CmdValue{.color = pColor});
+		return Internal::assignCommandBufferCmd(pCmdBuffer, CommandType::CLEAR_COLOR_IMAGE, CmdValue{.color = pColor});
 	}
 
 #ifdef _DEBUG
