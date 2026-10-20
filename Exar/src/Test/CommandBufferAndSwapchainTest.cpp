@@ -430,7 +430,86 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 }
 
 void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pSt, const std::vector<Fence>& pFences)
-{}
+{
+	while (!pSt.stop_requested())
+	{
+		if (pSt.stop_requested()) return;
+
+		if (pFences.size() == 0) return;
+
+		Fence lFence = pFences[mWorkerFrameIndex];
+		if (!lFence) continue;
+
+		CommandPool lCommandPool = nullptr;
+
+		FindRessourceInfo lFindInfo{
+			.ressourceType = RessourceType::COMMAND_POOL,
+			.searchPageFlag = SearchPageFlag::SINGLE_RESSOURCE_PAGE,
+			.areaMemoryType = AreaMemoryType::COMMAND_POOL,
+			.family = QueueFamily::GRAPHICS,
+			.pageCount = 1,
+			.pageStartIndex = mWorkerFrameIndex
+		};
+
+		Result lResult = mDevice->findCommandPool(&lCommandPool, lFindInfo);
+		if (lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Find commandPool failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to find commandPool\n");
+		}
+
+		FindRessourceInfo lSearchCommandBufferInfo{
+			.ressourceType = RessourceType::COMMAND_BUFFER,
+			.searchPageFlag = SearchPageFlag::SINGLE_RESSOURCE_PAGE,
+			.areaMemoryType = AreaMemoryType::COMMAND_POOL,
+			.family = QueueFamily::GRAPHICS,
+			.pageCount = 1,
+			.pageStartIndex = mWorkerFrameIndex
+		};
+
+		std::vector<CommandBuffer> lCommandBuffers;
+		size_t lBufferCount = 0;
+		if (lResult = Internal::getCommandBufferCount(&lBufferCount, lCommandPool); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Get commandBuffer count failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to fetch command buffer count\n");
+		}
+
+		lCommandBuffers.resize(lBufferCount);
+		if (lResult = Internal::findCommandBuffer(lCommandBuffers.data(), lCommandPool, lSearchCommandBufferInfo); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Find commandBuffer failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to find commandBuffers\n");
+		}
+
+		for (CommandBuffer lCommandBuffer : lCommandBuffers)
+		{
+			std::vector<Cmd> lCmds(lCommandBuffer->count);
+
+			FindRessourceInfo lSearchCmdInfo{
+				.ressourceType = RessourceType::CMD
+			};
+
+			if (lResult = Internal::findCommands(lCmds.data(), lCommandBuffer, lSearchCmdInfo); lResult != Result::SUCCESS)
+			{
+				EXAR_MEMORY_LOG(stderr, "find commands failed : Error code : %u\n", (u32)lResult);
+				throw std::runtime_error("Error to find commands\n");
+			}
+
+			for (Cmd lCmd : lCmds)
+			{
+				if (lCmd->type == CommandType::CLEAR_COLOR_IMAGE)
+				{
+					// copy color value into swapchain image
+					EXAR_MEMORY_LOG(stdout, "Copy color values into swapchain images : Color %u %u %u\n", lCmd->value.color.uint32[0], lCmd->value.color.uint32[1], lCmd->value.color.uint32[2]);
+				}
+			}
+		}
+
+		lFence->signal();
+		mWorkerFrameIndex = (mWorkerFrameIndex + 1) % 2;
+	}
+}
 
 void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>&pImageAvailableSemaphores, const std::vector<Semaphore>&pRenderFinishedSemaphores)
 {}
