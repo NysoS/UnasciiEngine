@@ -27,12 +27,14 @@ namespace Exar {
 	DECLARE_EXAR_HANDLE(Device);
 	DECLARE_EXAR_HANDLE(Fence);
 	DECLARE_EXAR_HANDLE(Semaphore);
+	DECLARE_EXAR_HANDLE(Queue);
 
 	typedef void* EXAR_HANDLE;
 #define EXAR_NULL_HANDLE nullptr
 
 	inline constexpr u32 FIFO_SWAPCHAIN_IMAGES = 2;
 	inline constexpr u32 MAILBOX_SWAPCHAIN_IMAGES = 3;
+	inline constexpr u32 MAX_FRAME_IN_FLIGHT = 2;
 
 	enum class Result
 	{

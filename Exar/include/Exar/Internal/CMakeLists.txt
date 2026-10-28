@@ -9,6 +9,7 @@ set (HEADERS
     ResourceTypes.h
     Swapchain.hpp
     InternalApi.hpp
+    Queue.hpp
 )
 
 register_sources(Exar ${HEADERS})
