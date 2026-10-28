@@ -474,6 +474,21 @@ Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const Alloca
 	return Result::SUCCESS;
 }
 
+Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo)
+{
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Device_::getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily)
+{
+	return Result::SUCCESS;
+}
+
 Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo)
 {
 	if (pSearchInfo.ressourceType != RessourceType::COMMAND_POOL) return Result::ERROR_RESSOURCE_TYPE;

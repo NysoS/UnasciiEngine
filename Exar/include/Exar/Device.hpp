@@ -52,6 +52,10 @@ namespace Exar
 		Result createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo);
 
+		Result createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
+		Result destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo);
+		Result getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily);
+
 		// create image
 		// destroy image
 		// check memory resources valid
