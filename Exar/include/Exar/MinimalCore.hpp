@@ -214,8 +214,9 @@ namespace Exar {
 	enum class QueueFamily : uint32_t 
 	{
 		GRAPHICS = 0,
-		COMPUTE = 1,
-		TRANSFERT = 2
+		PRESENT,
+		COMPUTE,
+		TRANSFERT
 	};
 
 	enum class CommandPoolFlags : uint32_t 

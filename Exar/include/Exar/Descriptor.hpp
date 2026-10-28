@@ -124,6 +124,12 @@ namespace Exar {
 		u32 layer;
 	};
 
+	struct EXA_API QueueCreateInfo
+	{
+		QueueFamily family;
+		u32 count;
+	};
+
 	struct EXA_API CommandPoolCreateInfo
 	{
 		AreaMemoryType type;
