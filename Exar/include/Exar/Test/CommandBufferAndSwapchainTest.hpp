@@ -40,9 +40,9 @@ namespace Exar {
 		std::vector<Semaphore> mRenderFinishedSemaphores;
 		std::vector<AllocatorCreateInfo> mRenderFinishedSemaphoreAllocatorInfo;
 
-		size_t mMainFrameIndex = 0;
-		size_t mWorkerFrameIndex = 0;
-		size_t mDisplayThreadIndex = 0;
+		u32 mMainFrameIndex = 0;
+		u32 mWorkerFrameIndex = 0;
+		u32 mDisplayThreadIndex = 0;
 
 		std::jthread mWorkerThread;
 		std::jthread mDisplayThread;

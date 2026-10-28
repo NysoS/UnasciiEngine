@@ -10,7 +10,7 @@ namespace Exar::Internal
 	Result findCommandBuffer(CommandBuffer* pCommandBuffer, CommandPool pCommandPool, const FindRessourceInfo& pSearchInfo);
 	Result findCommands(Cmd* pCmd, CommandBuffer pCommandBuffer, const FindRessourceInfo& pSearchInfo);
 
-	Result assignCommandBufferCmd(CommandBuffer pCommandBuffer, CmdValue pValue);
+	Result assignCommandBufferCmd(CommandBuffer pCommandBuffer, CommandType pCmdType, CmdValue pValue);
 }
 
 #endif // !EXAR_INTERNAL_API_HPP
