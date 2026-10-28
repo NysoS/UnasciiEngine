@@ -88,8 +88,14 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		};
 
 		// declare waitSemaphore
+		Semaphore lWaitSemaphore[] = { mImageAvailableSemaphores[mMainFrameIndex] };
+		lSubmitInfo.waitSemaphoreCount = 1;
+		lSubmitInfo.pWaitSemaphores = lWaitSemaphore;
 
 		// declare signalSemaphore
+		Semaphore lSignalSemaphore[] = { mRenderFinishedSemaphores[mMainFrameIndex] };
+		lSubmitInfo.signalSemaphoreCount = 1;
+		lSubmitInfo.pSignalSemaphores = lSignalSemaphore;
 
 		// reset fence
 		if (lResult = mDevice->resetFences(&mInFlightFences[mMainFrameIndex], 1); lResult != Result::SUCCESS)
@@ -437,6 +443,8 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 
 		if (pFences.size() == 0) return;
 
+		// acquire imageAvailableSemaphore
+
 		Fence lFence = pFences[mWorkerFrameIndex];
 		if (!lFence) continue;
 
@@ -507,9 +515,15 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 		}
 
 		lFence->signal();
+		// signal renderFinished
+
 		mWorkerFrameIndex = (mWorkerFrameIndex + 1) % 2;
 	}
 }
 
 void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>&pImageAvailableSemaphores, const std::vector<Semaphore>&pRenderFinishedSemaphores)
-{}
+{
+	// acquire renderFinished
+
+	// signal imageAvailable
+}
