@@ -83,7 +83,8 @@ namespace Exar {
 		COMMAND_POOL,
 		TEXTURE,
 		FENCE,
-		SEMAPHORE
+		SEMAPHORE,
+		QUEUE
 	};
 
 	enum class MemoryType : uint32_t

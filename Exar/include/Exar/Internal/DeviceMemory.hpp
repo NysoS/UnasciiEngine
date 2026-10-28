@@ -29,7 +29,8 @@ namespace Exar
 				mFenceArea.get(),
 				mSemaphoreArea.get(),
 				mImageArea.get(),
-				mImageViewArea.get()
+				mImageViewArea.get(),
+				mQueueArea.get()
 			};
 		}
 
@@ -40,6 +41,7 @@ namespace Exar
 		std::unique_ptr<AreaMemory> mSemaphoreArea;
 		std::unique_ptr<AreaMemory> mImageArea;
 		std::unique_ptr<AreaMemory> mImageViewArea;
+		std::unique_ptr<AreaMemory> mQueueArea;
 	};
 }
 

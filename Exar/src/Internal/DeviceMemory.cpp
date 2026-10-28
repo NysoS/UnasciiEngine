@@ -36,11 +36,17 @@ Exar::Result Exar::DeviceMemory::createAreaMemory(const AreaMemoryCreateInfo& pA
 		mSemaphoreArea = std::make_unique<AreaMemory>();
 		return mSemaphoreArea->createMemory(pAreaCreateInfo, lVram);
 	case AreaMemoryType::IMAGE:
+		std::cout << "Type IMAGE" << std::endl;
 		mImageArea = std::make_unique<AreaMemory>();
 		return mImageArea->createMemory(pAreaCreateInfo, lVram);
 	case AreaMemoryType::IMAGEVIEW:
+		std::cout << "Type IMAGE VIEW" << std::endl;
 		mImageViewArea = std::make_unique<AreaMemory>();
 		return mImageViewArea->createMemory(pAreaCreateInfo, lVram);
+	case AreaMemoryType::QUEUE:
+		std::cout << "Type QUEUE" << std::endl;
+		mQueueArea = std::make_unique<AreaMemory>();
+		return mQueueArea->createMemory(pAreaCreateInfo, lVram);
 	default:
 		break;
 	}
@@ -67,6 +73,8 @@ Exar::AreaMemory* Exar::DeviceMemory::getAreaMemory(const AreaMemoryType& pAreaT
 		return mImageArea.get();
 	case AreaMemoryType::IMAGEVIEW:
 		return mImageViewArea.get();
+	case AreaMemoryType::QUEUE:
+		return mQueueArea.get();
 	default:
 		break;
 	}
