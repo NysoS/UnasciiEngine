@@ -476,16 +476,44 @@ Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const Alloca
 
 Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
 {
+	// rework queue creation after custom allocator reworked
+	if (!pQueue) return Result::NULL_POINTER;
+
+	EXAR_HANDLE lQueuePtr = nullptr;
+	if (Result lResult = createResourceObject(&lQueuePtr, pAllocatorInfo, AreaMemoryType::QUEUE); lResult != Result::SUCCESS)
+	{
+		return lResult;
+	}
+
+	Queue lQueue = reinterpret_cast<Queue>(lQueuePtr);
+	lQueue->mFamily = pInfo.family;
+	lQueue->runProc(pInfo.proc);
+
+	*pQueue = lQueue;
+
 	return Result::SUCCESS;
 }
 
 Exar::Result Exar::Device_::destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo)
 {
+	if (!pQueue) return Result::ERROR_MEMORY_NULL_HANDLE;
+	if (!*pQueue) return Result::SUCCESS;
+
+	EXAR_HANDLE lHandle = *pQueue;
+	*pQueue = nullptr;
+
+	if (!mAllocator->dealloc(lHandle, pAllocatorInfo))
+	{
+		assert(false && "Queue dealloc failed");
+		return Result::ERROR_MEMORY_CLEANUP;
+	}
+
 	return Result::SUCCESS;
 }
 
 Exar::Result Exar::Device_::getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily)
 {
+	// after rework allocator
 	return Result::SUCCESS;
 }
 
