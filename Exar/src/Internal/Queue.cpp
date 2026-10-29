@@ -9,7 +9,7 @@ Exar::Queue_::~Queue_()
 	mRunner.join();
 }
 
-void Exar::Queue_::setRunnerProc(std::function<void(std::stop_token)> pProc)
+void Exar::Queue_::runProc(std::function<void(std::stop_token)> pProc)
 {
-	mRunner = std::jthread(std::bind_front(pProc));
+	mRunner = std::jthread(std::move(pProc));
 }
