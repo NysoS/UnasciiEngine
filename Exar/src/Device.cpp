@@ -9,6 +9,7 @@
 #include "Exar/Internal/Memory.hpp"
 #include "Exar/ImageView.hpp"
 #include "Exar/Fence.hpp"
+#include "Exar/Internal/Queue.hpp"
 
 #include <assert.h>
 
