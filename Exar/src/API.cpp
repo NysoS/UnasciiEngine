@@ -3,6 +3,7 @@
 #include "Exar/Fence.hpp"
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/InternalApi.hpp"
+#include "Exar/Internal/Queue.hpp"
 
 #include <assert.h>
 
@@ -83,15 +84,28 @@ namespace Exar
 		return Result::SUCCESS;
 	}
 
-	EXA_API Result queueSubmit(QueueFamily pFamily, u32 pCount, const SubmitInfo& pInfo, Fence pFence) noexcept
+	EXA_API Result queueSubmit(Queue pQueue, u32 pCount, const SubmitInfo& pInfo, Fence pFence) noexcept
 	{
 		if (!pFence) return Result::ERROR_INVALID_FENCE;
 		if (pCount > pInfo.commandBufferCount) Result::ERROR_INVALID_ARG;
+		if (!pQueue) return Result::NULL_POINTER;
+
+		SubmitHeader* lSumbitHeader = reinterpret_cast<SubmitHeader*>(pQueue + 1);
+		lSumbitHeader->commandBufferCount = pInfo.commandBufferCount;
+		lSumbitHeader->signalSemaphoreCount = pInfo.signalSemaphoreCount;
+		lSumbitHeader->waitSemaphoreCount = pInfo.waitSemaphoreCount;
+		lSumbitHeader->hasFences = pFence != nullptr;
+	
+		EXAR_HANDLE* lDist = reinterpret_cast<EXAR_HANDLE*>(lSumbitHeader + 1);
+		std::memcpy(lDist, pInfo.pCommandBuffers, lSumbitHeader->commandBufferCount * sizeof(EXAR_HANDLE)); lDist += lSumbitHeader->commandBufferCount;
+		std::memcpy(lDist, pInfo.pWaitSemaphores, lSumbitHeader->waitSemaphoreCount * sizeof(EXAR_HANDLE)); lDist += lSumbitHeader->waitSemaphoreCount;
+		std::memcpy(lDist, pInfo.pSignalSemaphores, lSumbitHeader->signalSemaphoreCount * sizeof(EXAR_HANDLE)); lDist += lSumbitHeader->signalSemaphoreCount;
+		if (pFence) *lDist = pFence;
 
 		for (size_t i = 0; i < pCount; ++i) {
 			CommandBuffer lBuffer = pInfo.pCommandBuffers[i];
 			if (!lBuffer) return Result::NULL_POINTER;
-			if (lBuffer->pQueueFamily != pFamily) return Result::ERROR_INVALID_FAMILIES;
+			if (lBuffer->pQueueFamily != pQueue->family) return Result::ERROR_INVALID_FAMILIES;
 			if (lBuffer->state != CommandBufferState::INITIAL) Result::ERROR_COMMAND_BUFFER_ALREADY_SUBMIT;
 
 			lBuffer->state = CommandBufferState::PENDING;

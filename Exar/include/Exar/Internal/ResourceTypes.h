@@ -37,6 +37,14 @@ namespace Exar
 	};
 	static_assert(sizeof(Cmd_) % 16 == 0);
 	static_assert(alignof(Cmd_) == 16);
+
+	struct SubmitHeader
+	{
+		u32 commandBufferCount;
+		u32 waitSemaphoreCount;
+		u32 signalSemaphoreCount;
+		u32 hasFences;
+	};
 }
 
 #endif // !EXAR_RESOURCE_TYPES_HPP
