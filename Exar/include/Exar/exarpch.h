@@ -13,6 +13,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <array>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
