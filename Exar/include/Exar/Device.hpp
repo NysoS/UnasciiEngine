@@ -25,46 +25,46 @@ namespace Exar
 		bool updateResourceData(Memory& pMemHandle, const MemoryRequirement& pRequirement, std::span<const u8> pData) noexcept;
 
 		Result getImageMemoryRequirements(MemoryRequirement* pRequirement, const AllocatorCreateInfo& pAlloctorInfo, const ImageCreateInfo& pDesc) noexcept;
-		Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement);
-		Result destroyImage(Image* pImage, const AllocatorCreateInfo& pDesc);
+		Result createImage(Image* pImage, const AllocatorCreateInfo& pDesc, const MemoryRequirement& pRequirement) noexcept;
+		Result destroyImage(Image* pImage, const AllocatorCreateInfo& pDesc) noexcept;
 
-		Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
-		Result destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo);
+		Result createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
 
-		Result allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers);
+		Result allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers) noexcept;
 
-		Result createImageView(ImageView* pImageView, const ImageViewCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
-		Result destroyImageView(ImageView* pImageView, const AllocatorCreateInfo& pAllocatorInfo);
+		Result createImageView(ImageView* pImageView, const ImageViewCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result destroyImageView(ImageView* pImageView, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
 
 		Result createSwapchain(Swapchain* pSwapchain, const SwapchainCreateInfo& pDesc, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo);
-		Result acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex);
-		Result getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages);
+		Result acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex) noexcept;
+		Result getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages) noexcept;
 
-		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer);
-		Result destroyFramebuffer(Framebuffer* pFramebuffer);
+		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer) noexcept;
+		Result destroyFramebuffer(Framebuffer* pFramebuffer) noexcept;
 
-		Result createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
-		Result destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo);
-		Result waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout);
-		Result resetFences(Fence* pFences, u32 pCount);
+		Result createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept;
+		Result resetFences(Fence* pFences, u32 pCount) noexcept;
 
-		Result createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo);
-		Result destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo);
+		Result createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
 
-		Result createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo);
-		Result destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo);
-		Result getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily);
+		Result createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo) noexcept;
+		Result getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily) noexcept;
 
 		// create image
 		// destroy image
 		// check memory resources valid
 		// add exar_result
 
-		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo);
-		Result findSwpachainImages(u32 pImageIndex, Image* pImages, const FindRessourceInfo& pSearchInfo);
+		Result findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo) noexcept;
+		Result findSwpachainImages(u32 pImageIndex, Image* pImages, const FindRessourceInfo& pSearchInfo) noexcept;
 	private:
-		Result createResourceObject(EXAR_HANDLE* pResourceHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType);
+		Result createResourceObject(EXAR_HANDLE* pResourceHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType) noexcept;
 
 		std::unique_ptr<Allocator> mAllocator;
 	};

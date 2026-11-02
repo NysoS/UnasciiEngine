@@ -118,7 +118,7 @@ Exar::Result Exar::Device_::getImageMemoryRequirements(MemoryRequirement* pRequi
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo& pInfo, const MemoryRequirement& pRequirement)
+Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo& pInfo, const MemoryRequirement& pRequirement) noexcept
 {
 	if (!pImage) return Result::NULL_POINTER;
 
@@ -137,7 +137,7 @@ Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyImage(Image* pImage, const AllocatorCreateInfo& pInfo)
+Exar::Result Exar::Device_::destroyImage(Image* pImage, const AllocatorCreateInfo& pInfo) noexcept
 {
 	if (!pImage) return Result::NULL_POINTER;
 	if (!*pImage) return Result::SUCCESS;
@@ -152,7 +152,7 @@ Exar::Result Exar::Device_::destroyImage(Image* pImage, const AllocatorCreateInf
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const CommandPoolCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (pInfo.type != pAllocatorInfo.areaType) return Result::ERROR_INVALID_MEMORY_AREA;
 
@@ -185,7 +185,7 @@ Exar::Result Exar::Device_::createCommandPool(CommandPool* pCommandPool, const C
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroyCommandPool(CommandPool* pCommandPool, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pCommandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
 	if (!*pCommandPool) return Result::SUCCESS;
@@ -201,7 +201,7 @@ Exar::Result Exar::Device_::destroyCommandPool(CommandPool* pCommandPool, const 
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers)
+Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInfo& pInfo, CommandBuffer* pCommandBuffers) noexcept
 {
 	if (!pInfo.commandPool) return Result::ERROR_MEMORY_NULL_HANDLE;
 	if (pInfo.commandBufferCount > pInfo.commandPool->offsets.size()) return Result::ERROR_INVALID_SIZE;
@@ -228,7 +228,7 @@ Exar::Result Exar::Device_::allocateCommandBuffer(const CommandBufferAllocateInf
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createImageView(ImageView* pImageView, const ImageViewCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::createImageView(ImageView* pImageView, const ImageViewCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pInfo.image) return Result::NULL_POINTER;
 
@@ -250,7 +250,7 @@ Exar::Result Exar::Device_::createImageView(ImageView* pImageView, const ImageVi
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyImageView(ImageView* pImageView, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroyImageView(ImageView* pImageView, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pImageView) return Result::NULL_POINTER;
 	if (!*pImageView) return Result::SUCCESS;
@@ -302,7 +302,7 @@ Exar::Result Exar::Device_::createSwapchain(Swapchain* pSwapchain, const Swapcha
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo) 
 {
 	if (!pSwapchain) return Result::NULL_POINTER;
 
@@ -320,12 +320,12 @@ Exar::Result Exar::Device_::destroySwapchain(Swapchain* pSwapchain, const Alloca
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex)
+Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex) noexcept
 {
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages)
+Exar::Result Exar::Device_::getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages) noexcept
 {
 	FindRessourceInfo lInfo{};
 	lInfo.areaMemoryType = AreaMemoryType::IMAGE;
@@ -348,7 +348,7 @@ Exar::Result Exar::Device_::getSwapchainImages(Swapchain pSwapchain, u32 pImages
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer)
+Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer) noexcept
 {
 	if (pInfo.attachmentCount == 0 || pInfo.width == 0 || pInfo.height == 0) return Result::ERROR_INVALID_SIZE;
 	if (!pInfo.attachments) return Result::NULL_POINTER;
@@ -370,7 +370,7 @@ Exar::Result Exar::Device_::createFramebuffer(const FramebufferCreateInfo& pInfo
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyFramebuffer(Framebuffer* pFramebuffer)
+Exar::Result Exar::Device_::destroyFramebuffer(Framebuffer* pFramebuffer) noexcept
 {
 	if (!pFramebuffer) return Result::NULL_POINTER;
 
@@ -379,7 +379,7 @@ Exar::Result Exar::Device_::destroyFramebuffer(Framebuffer* pFramebuffer)
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pFence) return Result::NULL_POINTER;
 
@@ -397,7 +397,7 @@ Exar::Result Exar::Device_::createFence(Fence* pFence, const FenceCreateInfo& pI
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pFence) return Result::ERROR_MEMORY_NULL_HANDLE;
 	if (!*pFence) return Result::SUCCESS;
@@ -414,7 +414,7 @@ Exar::Result Exar::Device_::destroyFence(Fence* pFence, const AllocatorCreateInf
 }
 
 // pWaitAll only more fence
-Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout)
+Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept
 {
 	if (!pFence) return Result::NULL_POINTER;
 
@@ -429,7 +429,7 @@ Exar::Result Exar::Device_::waitForFence(Fence pFence, ExarBool pWaitAll, u64 pT
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
+Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount) noexcept
 {
 	if (!pFences) return Result::NULL_POINTER;
 
@@ -443,7 +443,7 @@ Exar::Result Exar::Device_::resetFences(Fence* pFences, u32 pCount)
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pSemaphore) return Result::NULL_POINTER;
 
@@ -459,7 +459,7 @@ Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const Allocat
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pSemaphore) return Result::ERROR_MEMORY_NULL_HANDLE;
 	if (!*pSemaphore) return Result::SUCCESS;
@@ -475,7 +475,7 @@ Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const Alloca
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pInfo, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	// rework queue creation after custom allocator reworked
 	if (!pQueue) return Result::NULL_POINTER;
@@ -495,7 +495,7 @@ Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pI
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo)
+Exar::Result Exar::Device_::destroyQueue(Queue* pQueue, const AllocatorCreateInfo& pAllocatorInfo) noexcept
 {
 	if (!pQueue) return Result::ERROR_MEMORY_NULL_HANDLE;
 	if (!*pQueue) return Result::SUCCESS;
@@ -512,13 +512,13 @@ Exar::Result Exar::Device_::destroyQueue(Queue* pQueue, const AllocatorCreateInf
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily)
+Exar::Result Exar::Device_::getQueue(Queue* pQueue, u32 pQueueIndex, QueueFamily pQueueFamily) noexcept
 {
 	// after rework allocator
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo)
+Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const FindRessourceInfo& pSearchInfo) noexcept
 {
 	if (pSearchInfo.ressourceType != RessourceType::COMMAND_POOL) return Result::ERROR_RESSOURCE_TYPE;
 
@@ -536,7 +536,7 @@ Exar::Result Exar::Device_::findCommandPool(CommandPool* pCommandPool, const Fin
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::findSwpachainImages(u32 pImageIndex, Image* pImages, const FindRessourceInfo& pSearchInfo)
+Exar::Result Exar::Device_::findSwpachainImages(u32 pImageIndex, Image* pImages, const FindRessourceInfo& pSearchInfo) noexcept
 {
 	if (pSearchInfo.ressourceType != RessourceType::IMAGE) return Result::ERROR_RESSOURCE_TYPE;
 	if (!pImages) return Result::NULL_POINTER;
@@ -551,7 +551,7 @@ Exar::Result Exar::Device_::findSwpachainImages(u32 pImageIndex, Image* pImages,
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::createResourceObject(EXAR_HANDLE* pHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType)
+Exar::Result Exar::Device_::createResourceObject(EXAR_HANDLE* pHandle, const AllocatorCreateInfo& pAllocatorInfo, AreaMemoryType pCompareType) noexcept
 {
 	if (pAllocatorInfo.areaType != pCompareType) return Result::ERROR_INVALID_MEMORY_AREA;
 	if (pAllocatorInfo.totalSize == 0) return Result::ERROR_INVALID_SIZE;
