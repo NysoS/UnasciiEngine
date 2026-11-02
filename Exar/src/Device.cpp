@@ -487,7 +487,7 @@ Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pI
 	}
 
 	Queue lQueue = reinterpret_cast<Queue>(lQueuePtr);
-	lQueue->mFamily = pInfo.family;
+	lQueue->family = pInfo.family;
 	lQueue->runProc(pInfo.proc);
 
 	*pQueue = lQueue;

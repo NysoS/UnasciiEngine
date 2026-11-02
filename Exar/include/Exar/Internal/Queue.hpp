@@ -17,7 +17,7 @@ namespace Exar
 
 		void runProc(std::function<void(std::stop_token)> pProc);
 
-		const QueueFamily family;
+		QueueFamily family;
 	private:
 		std::counting_semaphore<MAX_FRAME_IN_FLIGHT> mJob{0};
 		std::jthread mRunner;
