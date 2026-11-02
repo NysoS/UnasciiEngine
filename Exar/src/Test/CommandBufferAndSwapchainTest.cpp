@@ -7,11 +7,14 @@
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/ImageView.hpp"
+#include "Exar/Internal/Queue.hpp"
 
 Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	: mDevice(std::make_unique<Device_>())
 	, mCommandPools({})
 	, mSwapchain(EXAR_NULL_HANDLE)
+	, mGraphicQueue(EXAR_NULL_HANDLE)
+	, mPresentQueue(EXAR_NULL_HANDLE)
 {
 #ifdef WIN32
 	AllocConsole();
@@ -37,7 +40,6 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		if (lResult = mDevice->waitForFence(mInFlightFences[mMainFrameIndex], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING)
 		{
 			++lIteration;
-			//mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;
 			continue;
 		}
 
@@ -105,7 +107,7 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		}
 
 		//QueueSubmit
-		if (lResult = queueSubmit(QueueFamily::GRAPHICS, 1, lSubmitInfo, mInFlightFences[mMainFrameIndex]); lResult != Result::SUCCESS)
+		if (lResult = queueSubmit(mGraphicQueue, 1, lSubmitInfo, mInFlightFences[mMainFrameIndex]); lResult != Result::SUCCESS)
 		{
 			EXAR_MEMORY_LOG(stderr, "Queue submit failed : Error code : %u\n", (u32)lResult);
 			throw std::runtime_error("Error to queue submit\n");
@@ -241,6 +243,21 @@ bool Exar::CommandBufferAndSwapchainTest::initMemory()
 	}
 	lSemaphoreMemoryInfo.pageMemory = lSemaphorePagesInfo.data();
 	lAreaMemoryCreateInfos.push_back(lSemaphoreMemoryInfo);
+
+	// queue memory info
+	AreaMemoryCreateInfo lQueueMemoryInfo{
+		.mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE,
+		.areaType = AreaMemoryType::QUEUE,
+		.pageCount = 2,
+		.size = 1024 * 1024
+	};
+	std::vector<PageMemoryCreateInfo> lQueueMemoryPageInfo{};
+	for (size_t i = 0; i < lQueueMemoryInfo.pageCount; ++i)
+	{
+		lQueueMemoryPageInfo.push_back({ .size = 512 * 1024 });
+	}
+	lQueueMemoryInfo.pageMemory = lQueueMemoryPageInfo.data();
+	lAreaMemoryCreateInfos.push_back(lQueueMemoryInfo);
 
 	// device memory info
 	DeviceMemoryCreateInfo lDeviceMemoryInfo{
@@ -432,20 +449,56 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		mRenderFinishedSemaphoreAllocatorInfo[i] = lRenderFinishedSemaphoreAllocatorCreateInfo;
 	}
 
+	// queue creation
+	std::vector<QueueFamily> lFamilies = { QueueFamily::GRAPHICS, QueueFamily::PRESENT};
+	mQueueAllocatorInfo.reserve(lFamilies.size());
+	for (size_t i = 0; i < lFamilies.size(); ++i)
+	{
+		const auto& lFamily = lFamilies[i];
+		AllocatorCreateInfo lMemoryInfo{
+			.totalSize = 512 * 1024,
+			.align = AlignMemory::ALIGN_64,
+			.areaType = AreaMemoryType::QUEUE,
+			.pageIndex = i,
+			.mode = AllocationMode::ALLOC_HEAP
+		};
+
+		mQueueAllocatorInfo.push_back(lMemoryInfo);
+	}
+
+	QueueCreateInfo lInfo{
+		.family = lFamilies[0],
+		.proc = std::bind_front(&CommandBufferAndSwapchainTest::workerThreadProcess, this)
+	};
+
+	mDevice->createQueue(&mGraphicQueue, lInfo, mQueueAllocatorInfo[0]);
+
 	return true;
 }
 
-void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pSt, const std::vector<Fence>& pFences)
+void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pSt)
 {
 	while (!pSt.stop_requested())
 	{
 		if (pSt.stop_requested()) return;
 
-		if (pFences.size() == 0) return;
+		SubmitHeader* lSumbitHeader = reinterpret_cast<SubmitHeader*>(mGraphicQueue + 1);
+
+		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lSumbitHeader + 1);
+
+		std::vector<CommandBuffer> lCommandBuffers(lSumbitHeader->commandBufferCount);
+		std::vector<Semaphore> lWaitSemaphores(lSumbitHeader->waitSemaphoreCount);
+		std::vector<Semaphore> lSignalSemaphores(lSumbitHeader->signalSemaphoreCount);
+		Fence lFence = EXAR_NULL_HANDLE;
+
+		std::memcpy(lCommandBuffers.data(), lQueueData, lSumbitHeader->commandBufferCount * sizeof(EXAR_HANDLE)); lQueueData += lSumbitHeader->commandBufferCount;
+		std::memcpy(lWaitSemaphores.data(), lQueueData, lSumbitHeader->waitSemaphoreCount * sizeof(EXAR_HANDLE)); lQueueData += lSumbitHeader->waitSemaphoreCount;
+		std::memcpy(lSignalSemaphores.data(), lQueueData, lSumbitHeader->signalSemaphoreCount * sizeof(EXAR_HANDLE)); lQueueData += lSumbitHeader->signalSemaphoreCount;
+		if (lSumbitHeader->hasFences) lFence = reinterpret_cast<Fence>(*lQueueData);
 
 		// acquire imageAvailableSemaphore
 
-		Fence lFence = pFences[mWorkerFrameIndex];
+		///Fence lFence = pFences[mWorkerFrameIndex];
 		if (!lFence) continue;
 
 		CommandPool lCommandPool = nullptr;
@@ -475,7 +528,7 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 			.pageStartIndex = mWorkerFrameIndex
 		};
 
-		std::vector<CommandBuffer> lCommandBuffers;
+		/*std::vector<CommandBuffer> lCommandBuffers;
 		size_t lBufferCount = 0;
 		if (lResult = Internal::getCommandBufferCount(&lBufferCount, lCommandPool); lResult != Result::SUCCESS)
 		{
@@ -488,7 +541,7 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 		{
 			EXAR_MEMORY_LOG(stderr, "Find commandBuffer failed : Error code : %u\n", (u32)lResult);
 			throw std::runtime_error("Error to find commandBuffers\n");
-		}
+		}*/
 
 		for (CommandBuffer lCommandBuffer : lCommandBuffers)
 		{

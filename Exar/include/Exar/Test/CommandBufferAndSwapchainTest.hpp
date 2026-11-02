@@ -17,7 +17,7 @@ namespace Exar {
 		bool initMemory();
 		bool init();
 
-		void workerThreadProcess(std::stop_token pSt, const std::vector<Fence>& pFences);
+		void workerThreadProcess(std::stop_token pSt);
 		void displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>& pImageAvailableSemaphores, const std::vector<Semaphore>& pRenderFinishedSemaphores);
 
 		std::unique_ptr<Device_> mDevice;
@@ -39,6 +39,10 @@ namespace Exar {
 		std::vector<AllocatorCreateInfo> mImageAvailableSemaphoreAllocatorInfo;
 		std::vector<Semaphore> mRenderFinishedSemaphores;
 		std::vector<AllocatorCreateInfo> mRenderFinishedSemaphoreAllocatorInfo;
+
+		Queue mGraphicQueue;
+		Queue mPresentQueue;
+		std::vector<AllocatorCreateInfo> mQueueAllocatorInfo;
 
 		u32 mMainFrameIndex = 0;
 		u32 mWorkerFrameIndex = 0;

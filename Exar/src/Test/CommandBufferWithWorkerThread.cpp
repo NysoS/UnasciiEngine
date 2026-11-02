@@ -192,7 +192,7 @@ Exar::CommandBufferWithWorkerThread::CommandBufferWithWorkerThread()
 			throw std::runtime_error("Reset fence failed\n");
 		}
 
-		if (Result lResultQueueSubmit = queueSubmit(QueueFamily::GRAPHICS, 1, lSubmitInfo, mInFlightFences[mCurrentFrame]); lResultQueueSubmit != Result::SUCCESS)
+		if (Result lResultQueueSubmit = queueSubmit(EXAR_NULL_HANDLE, 1, lSubmitInfo, mInFlightFences[mCurrentFrame]); lResultQueueSubmit != Result::SUCCESS)
 		{
 			EXAR_MEMORY_LOG(stderr, "Queue Submit failed %u\n", (u32)lResultQueueSubmit);
 			throw std::runtime_error("Error to Queue Submit\n");
