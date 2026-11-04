@@ -45,6 +45,13 @@ namespace Exar
 		u32 signalSemaphoreCount;
 		u32 hasFences;
 	};
+
+	struct PresentHeader
+	{
+		u32 signalSemaphoreCount;
+		u32 swapchainCount;
+		u32 imageIndices;
+	};
 }
 
 #endif // !EXAR_RESOURCE_TYPES_HPP
