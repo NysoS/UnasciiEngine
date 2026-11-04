@@ -8,6 +8,7 @@
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/ImageView.hpp"
 #include "Exar/Internal/Queue.hpp"
+#include "Exar/Semaphore.hpp"
 
 Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	: mDevice(std::make_unique<Device_>())
@@ -120,8 +121,6 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		++lIteration;
 		mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;
 	}
-	//mWorkerThread.request_stop();
-	//mDisplayThread.request_stop();
 }
 
 Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()
@@ -466,13 +465,26 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		mQueueAllocatorInfo.push_back(lMemoryInfo);
 	}
 
-	QueueCreateInfo lInfo{
+	QueueCreateInfo lQraphicQueueCreationInfo {
 		.family = lFamilies[0],
 		.proc = std::bind_front(&CommandBufferAndSwapchainTest::workerThreadProcess, this)
 	};
+	if (Result lResult = mDevice->createQueue(&mGraphicQueue, lQraphicQueueCreationInfo, mQueueAllocatorInfo[0]); lResult != Result::SUCCESS)
+	{ 
+		EXAR_MEMORY_LOG(stderr, "Qraphic queue creation failed : Error code : %u\n", (u32)lResult);
+		return false;
+	}
 
-	mDevice->createQueue(&mGraphicQueue, lInfo, mQueueAllocatorInfo[0]);
-
+	QueueCreateInfo lPresentQueueCreateInfo{
+		.family = lFamilies[1],
+		.proc = std::bind_front(&CommandBufferAndSwapchainTest::displayThreadProcess, this)
+	};
+	if (Result lResult = mDevice->createQueue(&mPresentQueue, lPresentQueueCreateInfo, mQueueAllocatorInfo[1]); lResult != Result::SUCCESS)
+	{
+		EXAR_MEMORY_LOG(stderr, "Present queue creation failed : Error code : %u\n", (u32)lResult);
+		return false;
+	}
+	
 	return true;
 }
 
@@ -482,6 +494,7 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 	{
 		if (pSt.stop_requested()) return;
 
+		assert(mGraphicQueue != EXAR_NULL_HANDLE);
 		SubmitHeader* lSumbitHeader = reinterpret_cast<SubmitHeader*>(mGraphicQueue + 1);
 
 		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lSumbitHeader + 1);
@@ -497,8 +510,11 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 		if (lSumbitHeader->hasFences) lFence = reinterpret_cast<Fence>(*lQueueData);
 
 		// acquire imageAvailableSemaphore
+		for (const auto& lWaitSemaphore : lWaitSemaphores)
+		{
+			lWaitSemaphore->acquire();
+		}
 
-		///Fence lFence = pFences[mWorkerFrameIndex];
 		if (!lFence) continue;
 
 		CommandPool lCommandPool = nullptr;
@@ -528,21 +544,6 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 			.pageStartIndex = mWorkerFrameIndex
 		};
 
-		/*std::vector<CommandBuffer> lCommandBuffers;
-		size_t lBufferCount = 0;
-		if (lResult = Internal::getCommandBufferCount(&lBufferCount, lCommandPool); lResult != Result::SUCCESS)
-		{
-			EXAR_MEMORY_LOG(stderr, "Get commandBuffer count failed : Error code : %u\n", (u32)lResult);
-			throw std::runtime_error("Error to fetch command buffer count\n");
-		}
-
-		lCommandBuffers.resize(lBufferCount);
-		if (lResult = Internal::findCommandBuffer(lCommandBuffers.data(), lCommandPool, lSearchCommandBufferInfo); lResult != Result::SUCCESS)
-		{
-			EXAR_MEMORY_LOG(stderr, "Find commandBuffer failed : Error code : %u\n", (u32)lResult);
-			throw std::runtime_error("Error to find commandBuffers\n");
-		}*/
-
 		for (CommandBuffer lCommandBuffer : lCommandBuffers)
 		{
 			std::vector<Cmd> lCmds(lCommandBuffer->count);
@@ -568,15 +569,40 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 		}
 
 		lFence->signal();
-		// signal renderFinished
+		
+		// signal renderFinished - signal semaphore
+		for (const auto& lSignalSemaphore : lSignalSemaphores)
+		{
+			lSignalSemaphore->release();
+		}
+
 
 		mWorkerFrameIndex = (mWorkerFrameIndex + 1) % 2;
 	}
 }
 
-void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>&pImageAvailableSemaphores, const std::vector<Semaphore>&pRenderFinishedSemaphores)
+void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt)
 {
-	// acquire renderFinished
+	while (!pSt.stop_requested())
+	{
+		if (pSt.stop_requested()) return;
 
-	// signal imageAvailable
+		assert(mPresentQueue != EXAR_NULL_HANDLE);
+		PresentHeader* lPresentHeader = reinterpret_cast<PresentHeader*>(mPresentQueue + 1);
+
+		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lPresentHeader + 1);
+
+		std::vector<Semaphore> lWaitSemaphores(lPresentHeader->signalSemaphoreCount);
+		std::vector<Swapchain> lSwapchains(lPresentHeader->swapchainCount);
+		u32 lImageIndice = lPresentHeader->imageIndices;
+
+		std::memcpy(lWaitSemaphores.data(), lQueueData, lPresentHeader->signalSemaphoreCount * sizeof(EXAR_HANDLE)); lQueueData += lPresentHeader->signalSemaphoreCount;
+		std::memcpy(lSwapchains.data(), lQueueData, lPresentHeader->swapchainCount * sizeof(EXAR_HANDLE));
+		
+		
+		// acquire renderFinished
+
+		// signal imageAvailable
+	}
+
 }

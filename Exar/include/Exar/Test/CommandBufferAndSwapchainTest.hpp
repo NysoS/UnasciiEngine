@@ -18,7 +18,7 @@ namespace Exar {
 		bool init();
 
 		void workerThreadProcess(std::stop_token pSt);
-		void displayThreadProcess(std::stop_token pSt, const std::vector<Semaphore>& pImageAvailableSemaphores, const std::vector<Semaphore>& pRenderFinishedSemaphores);
+		void displayThreadProcess(std::stop_token pSt);
 
 		std::unique_ptr<Device_> mDevice;
 		std::vector<CommandPool> mCommandPools;
