@@ -25,5 +25,6 @@
 #include <condition_variable>
 #include <stop_token>
 #include <semaphore>
+#include <assert.h>
 
 #endif // EXARPCH_H
