@@ -115,8 +115,17 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		}
 
 		// make present info
+		Swapchain lSwapchain[] = { mSwapchain };
+		PresentInfo lPresentInfo{
+			.waitSemaphoreCount = 1,
+			.pWaitSemaphores = lSignalSemaphore,
+			.swapchainCount = 1,
+			.pSwapchains = lSwapchain,
+			.pImageIndices = &lNextImageIndex
+		};
 
 		// queuePresent
+
 
 		++lIteration;
 		mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;

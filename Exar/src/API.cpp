@@ -115,6 +115,26 @@ namespace Exar
 		return Result::SUCCESS;
 	}
 
+	EXA_API Result queuePresent(Queue pQueue, const PresentInfo& pInfo) noexcept
+	{
+		assert(pQueue != nullptr && "Queue must not bet zero");
+		if (!pQueue) return Result::NULL_POINTER;
+
+		assert(pInfo.swapchainCount == 0 && "No swapchain founded");
+		if (pInfo.swapchainCount == 0) return Result::ERROR_INVALID_ARG;
+
+		PresentHeader* lPresentHeader = reinterpret_cast<PresentHeader*>(pQueue + 1);
+		lPresentHeader->waitSemaphoreCount = pInfo.waitSemaphoreCount;
+		lPresentHeader->swapchainCount = pInfo.swapchainCount;
+
+		EXAR_HANDLE* lDist = reinterpret_cast<EXAR_HANDLE*>(lPresentHeader + 1);
+		std::memcpy(lDist, pInfo.pWaitSemaphores, lPresentHeader->waitSemaphoreCount * sizeof(EXAR_HANDLE)); lDist += lPresentHeader->waitSemaphoreCount;
+		std::memcpy(lDist, pInfo.pSwapchains, lPresentHeader->swapchainCount * sizeof(EXAR_HANDLE)); lDist += lPresentHeader->swapchainCount;
+		std::memcpy(lDist, pInfo.pImageIndices, lPresentHeader->swapchainCount * sizeof(u32));
+
+		return Result::SUCCESS;
+	}
+
 	EXA_API Result waitForFences(Device pDevice, u32 pFenceCount, Fence pFence, ExarBool pWaitAll, u64 pTimeout) noexcept
 	{
 		return pDevice->waitForFence(pFence, pWaitAll, pTimeout);

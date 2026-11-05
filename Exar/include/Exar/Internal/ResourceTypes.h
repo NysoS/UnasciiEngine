@@ -48,9 +48,8 @@ namespace Exar
 
 	struct PresentHeader
 	{
-		u32 signalSemaphoreCount;
+		u32 waitSemaphoreCount;
 		u32 swapchainCount;
-		u32 imageIndices;
 	};
 }
 
