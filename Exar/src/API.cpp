@@ -92,7 +92,7 @@ namespace Exar
 
 		SubmitHeader* lSumbitHeader = reinterpret_cast<SubmitHeader*>(pQueue + 1);
 		lSumbitHeader->commandBufferCount = pInfo.commandBufferCount;
-		lSumbitHeader->signalSemaphoreCount = pInfo.signalSemaphoreCount;
+		lSumbitHeader->signalSemaphoreCount = pInfo.signalSemaphoreCount;	
 		lSumbitHeader->waitSemaphoreCount = pInfo.waitSemaphoreCount;
 		lSumbitHeader->hasFences = pFence != nullptr;
 	

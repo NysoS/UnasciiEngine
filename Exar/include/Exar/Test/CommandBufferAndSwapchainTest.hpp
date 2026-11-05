@@ -47,9 +47,6 @@ namespace Exar {
 		u32 mMainFrameIndex = 0;
 		u32 mWorkerFrameIndex = 0;
 		u32 mDisplayThreadIndex = 0;
-
-		std::jthread mWorkerThread;
-		std::jthread mDisplayThread;
 	};
 }
 #endif // !EXAR_COMMAND_BUFFER_AND_SWAPCHAIN_TEST_HPP

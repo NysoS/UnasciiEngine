@@ -2,12 +2,12 @@
 #include "Exar/Device.hpp"
 #include "Exar/Descriptor.hpp"
 #include "Exar/API.hpp"
-#include "Exar/Fence.hpp"
+#include "Exar/Internal/Queue.hpp"
 #include "Exar/Internal/InternalApi.hpp"
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/Swapchain.hpp"
+#include "Exar/Fence.hpp"
 #include "Exar/ImageView.hpp"
-#include "Exar/Internal/Queue.hpp"
 #include "Exar/Semaphore.hpp"
 
 Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
@@ -27,9 +27,6 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	}
 
 	if (!init()) return;
-
-	mWorkerThread = std::jthread(std::bind_front(&CommandBufferAndSwapchainTest::workerThreadProcess, this), std::ref(mInFlightFences));
-	mDisplayThread = std::jthread(std::bind_front(&CommandBufferAndSwapchainTest::displayThreadProcess, this), std::ref(mImageAvailableSemaphores), std::ref(mRenderFinishedSemaphores));
 
 	size_t lMaxIteration = 500;
 	size_t lIteration = 0;
@@ -139,11 +136,6 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 
 Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()
 {
-	mDisplayThread.request_stop();
-	mWorkerThread.request_stop();
-	mDisplayThread.join();
-	mWorkerThread.join();
-
 	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
 	{
 		mDevice->destroySemaphore(&mImageAvailableSemaphores[i], mImageAvailableSemaphoreAllocatorInfo[i]);
@@ -472,7 +464,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 			.totalSize = 512 * 1024,
 			.align = AlignMemory::ALIGN_64,
 			.areaType = AreaMemoryType::QUEUE,
-			.pageIndex = i,
+			.pageIndex = (u32)i,
 			.mode = AllocationMode::ALLOC_HEAP
 		};
 
