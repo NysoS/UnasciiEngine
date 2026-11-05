@@ -12,8 +12,8 @@
 #define EXAR_MEMORY_LOG(level, msg, ...) ((void)0)
 #endif // _DEBUG
 
-
-#define DECLARE_EXAR_HANDLE(name) typedef struct name##_ *name;
+// class, also crash compilation, error symbol
+#define DECLARE_EXAR_HANDLE(name) typedef class name##_ *name;
 
 namespace Exar {
 	DECLARE_EXAR_HANDLE(Memory);
@@ -53,6 +53,7 @@ namespace Exar {
 		ERROR_INVALID_MEMORY_AREA,
 		ERROR_INVALID_ALIGN_MEMORY,
 		ERROR_INVALID_FENCE,
+		ERROR_INVALID_SEMAPHORE,
 
 		ERROR_MEMORY_MAPING,
 		ERROR_MEMORY_MAP_FAILED,

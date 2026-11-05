@@ -10,8 +10,9 @@ namespace Exar
 		size_t size;
 	};
 
-	struct CommandPool_
+	class CommandPool_
 	{
+	public:
 		std::vector<size_t> offsets;
 		uint32_t resetMode;
 		QueueFamily queueFamily;
@@ -19,8 +20,9 @@ namespace Exar
 		size_t fullSize;
 	};
 
-	struct CommandBuffer_
+	class CommandBuffer_
 	{
+	public:
 		CommandBufferState state;
 		CommandBufferUsageFlags flags;
 		QueueFamily pQueueFamily;
@@ -30,8 +32,9 @@ namespace Exar
 		size_t cmdBaseOffset;
 	};
 
-	struct alignas(16) Cmd_
+	class alignas(16) Cmd_
 	{
+	public:
 		CommandType type;
 		CmdValue value;
 	};
