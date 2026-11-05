@@ -505,14 +505,11 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 
 		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lSumbitHeader + 1);
 
-		std::vector<CommandBuffer> lCommandBuffers(lSumbitHeader->commandBufferCount);
-		std::vector<Semaphore> lWaitSemaphores(lSumbitHeader->waitSemaphoreCount);
-		std::vector<Semaphore> lSignalSemaphores(lSumbitHeader->signalSemaphoreCount);
 		Fence lFence = EXAR_NULL_HANDLE;
+		std::span<const CommandBuffer> lCommandBuffers(reinterpret_cast<const CommandBuffer*>(lQueueData), lSumbitHeader->commandBufferCount); lQueueData += lSumbitHeader->commandBufferCount;
+		std::span<const Semaphore> lWaitSemaphores(reinterpret_cast<const Semaphore*>(lQueueData), lSumbitHeader->waitSemaphoreCount); lQueueData += lSumbitHeader->waitSemaphoreCount;
+		std::span<const Semaphore> lSignalSemaphores(reinterpret_cast<const Semaphore*>(lQueueData), lSumbitHeader->signalSemaphoreCount); lQueueData += lSumbitHeader->signalSemaphoreCount;
 
-		std::memcpy(lCommandBuffers.data(), lQueueData, lSumbitHeader->commandBufferCount * sizeof(EXAR_HANDLE)); lQueueData += lSumbitHeader->commandBufferCount;
-		std::memcpy(lWaitSemaphores.data(), lQueueData, lSumbitHeader->waitSemaphoreCount * sizeof(EXAR_HANDLE)); lQueueData += lSumbitHeader->waitSemaphoreCount;
-		std::memcpy(lSignalSemaphores.data(), lQueueData, lSumbitHeader->signalSemaphoreCount * sizeof(EXAR_HANDLE)); lQueueData += lSumbitHeader->signalSemaphoreCount;
 		if (lSumbitHeader->hasFences) lFence = reinterpret_cast<Fence>(*lQueueData);
 
 		// acquire imageAvailableSemaphore
@@ -598,17 +595,23 @@ void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token p
 
 		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lPresentHeader + 1);
 
-		std::vector<Semaphore> lWaitSemaphores(lPresentHeader->signalSemaphoreCount);
-		std::vector<Swapchain> lSwapchains(lPresentHeader->swapchainCount);
-		u32 lImageIndice = lPresentHeader->imageIndices;
+		std::span<const Semaphore> lWaitSemaphores(reinterpret_cast<const Semaphore*>(lQueueData), lPresentHeader->waitSemaphoreCount); lQueueData += lPresentHeader->waitSemaphoreCount;
+		std::span<Swapchain> lSwapchains(reinterpret_cast<Swapchain*>(lQueueData), lPresentHeader->swapchainCount); lQueueData += lPresentHeader->swapchainCount;
+		std::span<const u32> lImageIndices(reinterpret_cast<const u32*>(lQueueData), lPresentHeader->swapchainCount);
 
-		std::memcpy(lWaitSemaphores.data(), lQueueData, lPresentHeader->signalSemaphoreCount * sizeof(EXAR_HANDLE)); lQueueData += lPresentHeader->signalSemaphoreCount;
-		std::memcpy(lSwapchains.data(), lQueueData, lPresentHeader->swapchainCount * sizeof(EXAR_HANDLE));
-		
-		
 		// acquire renderFinished
+		for (const auto& lWaitSemaphore : lWaitSemaphores)
+			lWaitSemaphore->acquire();
 
 		// signal imageAvailable
+		for (const auto& lSwapchain : lSwapchains)
+		{
+			// ... draw pixel
+
+			lSwapchain->swap();
+			auto lSemaphore = lSwapchain->getSemaphore();
+			if (lSemaphore) lSemaphore->release();
+		}
 	}
 
 }
