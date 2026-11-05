@@ -45,7 +45,12 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		}
 
 		// Peek the index of the next swapchain image (not acquired yet).
-		u32 lNextImageIndex = 0; // get from swapchain
+		u32 lNextImageIndex = 0;
+		if (lResult = mDevice->acquireNextImage(mSwapchain, mImageAvailableSemaphores[mMainFrameIndex], &lNextImageIndex); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Acquire next image failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error try to acquire next image from swacphain\n");
+		}
 		
 		// If a previous frame is still using this image, wait for its fence.
 		// Nothing has been acquired at this point, so skipping the iteration is safe.

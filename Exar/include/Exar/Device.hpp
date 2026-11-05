@@ -38,7 +38,7 @@ namespace Exar
 
 		Result createSwapchain(Swapchain* pSwapchain, const SwapchainCreateInfo& pDesc, const AllocatorCreateInfo& pAllocatorInfo);
 		Result destroySwapchain(Swapchain* pSwapchain, const AllocatorCreateInfo& pAllocatorInfo);
-		Result acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex) noexcept;
+		Result acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, u32* pImageIndex) noexcept;
 		Result getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages) noexcept;
 
 		Result createFramebuffer(const FramebufferCreateInfo& pInfo, Framebuffer** pFramebuffer) noexcept;

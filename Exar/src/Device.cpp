@@ -320,8 +320,18 @@ Exar::Result Exar::Device_::destroySwapchain(Swapchain* pSwapchain, const Alloca
 	return Result::SUCCESS;
 }
 
-Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, Fence pFence, u32* pImageIndex) noexcept
+Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSemaphore, u32* pImageIndex) noexcept
 {
+	assert(pSwapchain != nullptr && "Swapchain must not be zero");
+	if (!pSwapchain) return Result::NULL_POINTER;
+	assert(pSwapchain != nullptr && "Semaphore must not be zero");
+	if (!pSemaphore) return Result::ERROR_INVALID_SEMAPHORE;
+	assert(pSwapchain != nullptr && "ImageIndex must not be zero");
+	if (!pImageIndex) return Result::ERROR_INVALID_ARG;
+
+	pSwapchain->setSemaphore(pSemaphore);
+	*pImageIndex = pSwapchain->getIndex();
+
 	return Result::SUCCESS;
 }
 
