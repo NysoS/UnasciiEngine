@@ -273,7 +273,6 @@ Exar::Result Exar::Device_::createSwapchain(Swapchain* pSwapchain, const Swapcha
 
 	std::unique_ptr<Swapchain_> lSwapchain = std::make_unique<Swapchain_>();
 	lSwapchain->mInfo = pDesc;
-	lSwapchain->mDevice = this;
 	lSwapchain->initImages();
 
 	for (size_t i = 0; i < pDesc.minImageCount; ++i)

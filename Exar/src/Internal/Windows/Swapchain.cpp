@@ -55,7 +55,7 @@ void Exar::Swapchain_::present()
 	bmi.bmiHeader.biCompression = BI_RGB;
 
 	void* finalBuffer = nullptr;
-	if (index == 0)
+	if (mIndex == 0)
 	{
 		finalBuffer = (void*)testBuffer;
 	}
@@ -82,7 +82,7 @@ void Exar::Swapchain_::present()
 
 void Exar::Swapchain_::swap() noexcept
 {
-	index = (index + 1) % 2;
+	mIndex = (mIndex + 1) % 2;
 }
 
 Exar::u32 Exar::Swapchain_::getImageCount() const noexcept
@@ -107,4 +107,19 @@ void Exar::Swapchain_::initImages()
 	if (mImages != nullptr) return;
 
 	mImages = new Image[mInfo.minImageCount]();
+}
+
+Exar::u32 Exar::Swapchain_::getIndex() const noexcept
+{
+	return mIndex;
+}
+
+void Exar::Swapchain_::setSemaphore(Semaphore pSemaphore) noexcept
+{
+	mImageAvailableSemaphore = pSemaphore;
+}
+
+Exar::Semaphore Exar::Swapchain_::getSemaphore() const noexcept
+{
+	return mImageAvailableSemaphore;
 }

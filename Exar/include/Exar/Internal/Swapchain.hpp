@@ -25,14 +25,19 @@ namespace Exar
 		virtual u32 getImageCount() const noexcept override;
 		virtual Result getImages(Image* pImages) override;
 
+		virtual u32 getIndex() const noexcept override;
+		virtual void setSemaphore(Semaphore pSemaphore) noexcept override;
+		virtual Semaphore getSemaphore() const noexcept override;
+
 	private:
 		virtual void initImages() override;
 		
 		SwapchainCreateInfo mInfo;
 		Image* mImages;
-		Device_* mDevice;
 
-		int index = 0;
+		Semaphore mImageAvailableSemaphore = EXAR_NULL_HANDLE;
+
+		u32 mIndex = 0;
 
 		friend class Device_;
 	};
