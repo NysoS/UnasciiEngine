@@ -18,6 +18,8 @@ namespace Exar
 		virtual u32 getImageCount() const noexcept = 0;
 		virtual Result getImages(Image* pImages) = 0;
 
+		virtual Result acquireIndex(Semaphore pSemaphore, u32* pIndex) noexcept = 0;
+		virtual Result releaseIndex(u32 pIndex) noexcept = 0;
 	private:
 		virtual void initImages() = 0;
 	};
