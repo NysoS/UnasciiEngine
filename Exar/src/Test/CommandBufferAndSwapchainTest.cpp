@@ -127,7 +127,11 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		};
 
 		// queuePresent
-
+		if (lResult = queuePresent(mPresentQueue, lPresentInfo); lResult != Result::SUCCESS)
+		{
+			EXAR_MEMORY_LOG(stderr, "Queue present failed : Error code : %u\n", (u32)lResult);
+			throw std::runtime_error("Error to queue present\n");
+		}
 
 		++lIteration;
 		mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;
@@ -604,13 +608,17 @@ void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token p
 			lWaitSemaphore->acquire();
 
 		// signal imageAvailable
-		for (const auto& lSwapchain : lSwapchains)
+		for (u32 i = 0; i < lPresentHeader->swapchainCount; ++i)
 		{
+			Swapchain lSwapchain = lSwapchains[i];
+			if (!lSwapchain)
+			{
+				EXAR_MEMORY_LOG(stdout, "Error, no Swapchain available\n");
+				continue;
+			}
 			// ... draw pixel
 
-			lSwapchain->swap();
-			auto lSemaphore = lSwapchain->getSemaphore();
-			if (lSemaphore) lSemaphore->release();
+			lSwapchain->releaseIndex(lImageIndices[i]);
 		}
 	}
 
