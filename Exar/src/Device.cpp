@@ -328,10 +328,7 @@ Exar::Result Exar::Device_::acquireNextImage(Swapchain pSwapchain, Semaphore pSe
 	assert(pSwapchain != nullptr && "ImageIndex must not be zero");
 	if (!pImageIndex) return Result::ERROR_INVALID_ARG;
 
-	pSwapchain->setSemaphore(pSemaphore);
-	*pImageIndex = pSwapchain->getIndex();
-
-	return Result::SUCCESS;
+	return pSwapchain->acquireIndex(pSemaphore, pImageIndex);
 }
 
 Exar::Result Exar::Device_::getSwapchainImages(Swapchain pSwapchain, u32 pImagesCount, Image* pImages) noexcept

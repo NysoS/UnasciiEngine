@@ -25,9 +25,8 @@ namespace Exar
 		virtual u32 getImageCount() const noexcept override;
 		virtual Result getImages(Image* pImages) override;
 
-		virtual u32 getIndex() const noexcept override;
-		virtual void setSemaphore(Semaphore pSemaphore) noexcept override;
-		virtual Semaphore getSemaphore() const noexcept override;
+		virtual Result acquireIndex(Semaphore pSemaphore, u32* pIndex) noexcept override;
+		virtual Result releaseIndex(u32 pIndex) noexcept override;
 
 	private:
 		virtual void initImages() override;
@@ -35,7 +34,9 @@ namespace Exar
 		SwapchainCreateInfo mInfo;
 		Image* mImages;
 
-		Semaphore mImageAvailableSemaphore = EXAR_NULL_HANDLE;
+		std::array<Semaphore, MAX_FRAME_IN_FLIGHT> mWaitingImagesSemaphores{EXAR_NULL_HANDLE, EXAR_NULL_HANDLE };
+		std::mutex mAcquireMutex;
+		std::array<bool, MAX_FRAME_IN_FLIGHT> mImageUsed{false, false};
 
 		u32 mIndex = 0;
 

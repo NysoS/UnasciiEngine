@@ -1,6 +1,7 @@
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/MinimalCore.hpp"
 #include "Exar/Device.hpp"
+#include "Exar/Semaphore.hpp"
 
 #include <Windows.h>
 
@@ -109,17 +110,43 @@ void Exar::Swapchain_::initImages()
 	mImages = new Image[mInfo.minImageCount]();
 }
 
-Exar::u32 Exar::Swapchain_::getIndex() const noexcept
+Exar::Result Exar::Swapchain_::acquireIndex(Semaphore pSemaphore, u32* pIndex) noexcept
 {
-	return mIndex;
+	std::lock_guard<std::mutex> lLoc(mAcquireMutex);
+	u32 lIndex = mIndex;
+	
+	assert((lIndex >= mImageUsed.size() && lIndex >= mWaitingImagesSemaphores.size()) && "index is out of range");
+	if (lIndex >= mImageUsed.size() || lIndex >= mWaitingImagesSemaphores.size()) return Result::ERROR_INVALID_SIZE;
+
+	swap();
+
+	if (!mImageUsed[lIndex])
+	{
+		mWaitingImagesSemaphores[lIndex]->release();
+	}
+	else {
+		mWaitingImagesSemaphores[lIndex] = pSemaphore;
+	}
+	mImageUsed[lIndex] = true;
+
+	*pIndex = lIndex;
+
+	return Result::SUCCESS;
 }
 
-void Exar::Swapchain_::setSemaphore(Semaphore pSemaphore) noexcept
+Exar::Result Exar::Swapchain_::releaseIndex(u32 pIndex) noexcept
 {
-	mImageAvailableSemaphore = pSemaphore;
-}
+	std::lock_guard<std::mutex> lLoc(mAcquireMutex);
+	assert((pIndex >= mImageUsed.size() && pIndex >= mWaitingImagesSemaphores.size()) && "index is out of range");
+	if (pIndex >= mImageUsed.size() || pIndex >= mWaitingImagesSemaphores.size()) return Result::ERROR_INVALID_SIZE;
 
-Exar::Semaphore Exar::Swapchain_::getSemaphore() const noexcept
-{
-	return mImageAvailableSemaphore;
+	if (mWaitingImagesSemaphores[pIndex])
+	{
+		mWaitingImagesSemaphores[pIndex]->release();
+		mWaitingImagesSemaphores[pIndex] = nullptr;
+	}
+	else 
+	{
+		mImageUsed.at(pIndex) = false;
+	}
 }
