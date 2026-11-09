@@ -120,7 +120,7 @@ namespace Exar
 		assert(pQueue != nullptr && "Queue must not bet zero");
 		if (!pQueue) return Result::NULL_POINTER;
 
-		assert(pInfo.swapchainCount == 0 && "No swapchain founded");
+		assert(pInfo.swapchainCount > 0 && "No swapchain founded");
 		if (pInfo.swapchainCount == 0) return Result::ERROR_INVALID_ARG;
 
 		PresentHeader* lPresentHeader = reinterpret_cast<PresentHeader*>(pQueue + 1);

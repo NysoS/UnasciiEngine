@@ -315,6 +315,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		}
 	}
 	// command buffer creation
+	mCommandBuffers.resize(mCommandPools.size());
 	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
 	{
 		CommandBufferAllocateInfo lCommandBufferAllocateInfo{
@@ -402,7 +403,7 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 
 	// fences creation
 	mInFlightFences.resize(FIFO_SWAPCHAIN_IMAGES, nullptr);
-	mImagesInFlight.reserve(FIFO_SWAPCHAIN_IMAGES);
+	mImagesInFlight.resize(FIFO_SWAPCHAIN_IMAGES);
 	mInFlightFencesAllocatorInfo.resize(FIFO_SWAPCHAIN_IMAGES);
 	
 	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)

@@ -126,7 +126,6 @@ Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo
 
 	void* lImagePtr = nullptr;
 	Result lResult = createResourceObject(&lImagePtr, pInfo, AreaMemoryType::IMAGE);
-	//Result lResult = allocateResourceMemory(&lImagePtr, pInfo, pRequirement);
 	if (lResult != Result::SUCCESS) return lResult;
 
 	Image_* lImage = reinterpret_cast<Image_*>(lImagePtr);
