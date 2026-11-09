@@ -116,14 +116,15 @@ Exar::Result Exar::Swapchain_::acquireIndex(Semaphore pSemaphore, u32* pIndex) n
 	std::lock_guard<std::mutex> lLoc(mAcquireMutex);
 	u32 lIndex = mIndex;
 	
-	assert((lIndex >= mImageUsed.size() && lIndex >= mWaitingImagesSemaphores.size()) && "index is out of range");
+	assert((lIndex < mImageUsed.size() && lIndex < mWaitingImagesSemaphores.size()) && "index is out of range");
 	if (lIndex >= mImageUsed.size() || lIndex >= mWaitingImagesSemaphores.size()) return Result::ERROR_INVALID_SIZE;
 
 	swap();
 
 	if (!mImageUsed[lIndex])
 	{
-		mWaitingImagesSemaphores[lIndex]->release();
+		if (mWaitingImagesSemaphores[lIndex])
+			mWaitingImagesSemaphores[lIndex]->release();
 	}
 	else {
 		mWaitingImagesSemaphores[lIndex] = pSemaphore;

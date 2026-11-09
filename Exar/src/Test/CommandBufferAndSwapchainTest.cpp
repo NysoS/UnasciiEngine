@@ -520,7 +520,8 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 		// acquire imageAvailableSemaphore
 		for (const auto& lWaitSemaphore : lWaitSemaphores)
 		{
-			lWaitSemaphore->acquire();
+			if (lWaitSemaphore)
+				lWaitSemaphore->acquire();
 		}
 
 		if (!lFence) continue;

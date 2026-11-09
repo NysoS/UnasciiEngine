@@ -10,6 +10,7 @@
 #include "Exar/ImageView.hpp"
 #include "Exar/Fence.hpp"
 #include "Exar/Internal/Queue.hpp"
+#include "Exar/Semaphore.hpp"
 
 #include <assert.h>
 
@@ -469,7 +470,8 @@ Exar::Result Exar::Device_::createSemaphore(Semaphore* pSemaphore, const Allocat
 		return lCreateResourceResult;
 	}
 
-	Semaphore_* lSemaphore = reinterpret_cast<Semaphore_*>(lPoolPtr);
+	Semaphore_* lSemaphore = std::construct_at(reinterpret_cast<Semaphore_*>(lPoolPtr));
+	
 	*pSemaphore = lSemaphore;
 
 	return Result::SUCCESS;
@@ -481,6 +483,7 @@ Exar::Result Exar::Device_::destroySemaphore(Semaphore* pSemaphore, const Alloca
 	if (!*pSemaphore) return Result::SUCCESS;
 
 	EXAR_HANDLE lhandle = *pSemaphore;
+	std::destroy_at(reinterpret_cast<Semaphore_*>(lhandle));
 	*pSemaphore = nullptr;
 
 	if (!mAllocator->dealloc(lhandle, pAllocatorInfo)) {
