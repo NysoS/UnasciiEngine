@@ -292,8 +292,14 @@ namespace Exar {
 		uint32_t uint32[4];
 	};
 
-	typedef union {
+	struct ClearColorImage
+	{
+		Image image;
 		ClearColorValue color;
+	};
+
+	typedef union {
+		ClearColorImage clColorImg;
 #ifdef _DEBUG
 		uint32_t test;
 #endif // !_DEBUG

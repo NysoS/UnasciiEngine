@@ -142,16 +142,7 @@ namespace Exar
 
 	EXA_API Result cmdClearColorImage(CommandBuffer pCmdBuffer, Image pImage, const ClearColorValue& pColor)
 	{
-		/*u8* lBase = reinterpret_cast<u8*>(pCmdBuffer);
-
-		Cmd_* lCmd = reinterpret_cast<Cmd_*>(lBase + pCmdBuffer->cmdOffset);
-		lCmd->type = CommandType::NONE;
-		lCmd->value.color = pColor;
-
-		pCmdBuffer->count++;
-		pCmdBuffer->cmdOffset += sizeof(Cmd_);*/
-
-		return Internal::assignCommandBufferCmd(pCmdBuffer, CommandType::CLEAR_COLOR_IMAGE, CmdValue{.color = pColor});
+		return Internal::assignCommandBufferCmd(pCmdBuffer, CommandType::CLEAR_COLOR_IMAGE, CmdValue{ .clColorImg = { .image = pImage, .color = pColor } });
 	}
 
 #ifdef _DEBUG
