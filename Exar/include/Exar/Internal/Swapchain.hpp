@@ -19,7 +19,7 @@ namespace Exar
 		Swapchain_& operator=(const Swapchain_&) = delete;
 
 		virtual Surface getSurfaceImageHandle() override;
-		virtual void present() override;
+		virtual void present(u32 pIndex) override;
 		virtual void swap() noexcept override;
 
 		virtual u32 getImageCount() const noexcept override;

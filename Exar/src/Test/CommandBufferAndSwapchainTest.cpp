@@ -610,6 +610,7 @@ void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token p
 		// signal imageAvailable
 		for (u32 i = 0; i < lPresentHeader->swapchainCount; ++i)
 		{
+			if (lSwapchains.size() == 0) continue;
 			Swapchain lSwapchain = lSwapchains[i];
 			if (!lSwapchain)
 			{
@@ -617,6 +618,7 @@ void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token p
 				continue;
 			}
 			// ... draw pixel
+			lSwapchain->present(lImageIndices[i]);
 
 			lSwapchain->releaseIndex(lImageIndices[i]);
 		}

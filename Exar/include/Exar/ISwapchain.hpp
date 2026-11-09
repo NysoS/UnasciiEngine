@@ -12,7 +12,7 @@ namespace Exar
 		virtual ~ISwapchain() = default;
 
 		virtual Surface getSurfaceImageHandle() = 0;
-		virtual void present() = 0;
+		virtual void present(u32 pIndex) = 0;
 		virtual void swap() noexcept = 0;
 
 		virtual u32 getImageCount() const noexcept = 0;

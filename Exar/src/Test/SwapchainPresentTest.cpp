@@ -72,7 +72,7 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 	{
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 
-		mSwapchain->present();
+		mSwapchain->present(0);
 		mSwapchain->swap();
 
 		lTime++;

@@ -39,7 +39,7 @@ Exar::Surface Exar::Swapchain_::getSurfaceImageHandle()
 	return mInfo.surface;
 }
 
-void Exar::Swapchain_::present()
+void Exar::Swapchain_::present(u32 pIndex)
 {
 	HWND lHandle = reinterpret_cast<HWND>(mInfo.surface);
 	if (!lHandle) return;
@@ -55,14 +55,16 @@ void Exar::Swapchain_::present()
 	bmi.bmiHeader.biCompression = BI_RGB;
 
 	void* finalBuffer = nullptr;
-	if (mIndex == 0)
+	/*if (mIndex == 0)
 	{
 		finalBuffer = (void*)testBuffer;
 	}
 	else
 	{
 		finalBuffer = (void*)testBuffer2;
-	}
+	}*/
+
+	finalBuffer = mImages[pIndex]->pixels;
 
 	SetDIBitsToDevice(
 		hdc,
