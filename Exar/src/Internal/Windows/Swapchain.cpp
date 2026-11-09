@@ -2,37 +2,36 @@
 #include "Exar/MinimalCore.hpp"
 #include "Exar/Device.hpp"
 #include "Exar/Semaphore.hpp"
+#include "Exar/Internal/ResourceTypes.h"
 
 #include <Windows.h>
 
 // Buffer de test 16x16 (Damier)
-uint32_t testBuffer[600 * 600] = {};
-uint32_t testBuffer2[600 * 600] = {};
+//uint32_t testBuffer[600 * 600] = {};
+//uint32_t testBuffer2[600 * 600] = {};
 
 Exar::Swapchain_::Swapchain_()
 	: mInfo{}
 	, mImages(EXAR_NULL_HANDLE)
 {
-	const uint32_t CELL = 32; // taille d'une case du damier
-	for (int y = 0; y < 600; y++) {
-		for (int x = 0; x < 600; x++) {
-			bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
-			testBuffer[y * 600 + x] = white ? 0xFFFFFFFF : 0xFF333333;
-		}
-	}
+	//const uint32_t CELL = 32; // taille d'une case du damier
+	//for (int y = 0; y < 600; y++) {
+	//	for (int x = 0; x < 600; x++) {
+	//		bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
+	//		testBuffer[y * 600 + x] = white ? 0xFFFFFFFF : 0xFF333333;
+	//	}
+	//}
 
-	for (int y = 0; y < 600; y++) {
-		for (int x = 0; x < 600; x++) {
-			bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
-			testBuffer2[y * 600 + x] = white ? 0xFFFF0000 : 0xFF0000FF;
-		}
-	}
+	//for (int y = 0; y < 600; y++) {
+	//	for (int x = 0; x < 600; x++) {
+	//		bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
+	//		testBuffer2[y * 600 + x] = white ? 0xFFFF0000 : 0xFF0000FF;
+	//	}
+	//}
 }
 
 Exar::Swapchain_::~Swapchain_()
 {
-	delete[] mImages;
-	mImages = nullptr;
 }
 
 Exar::Surface Exar::Swapchain_::getSurfaceImageHandle()
@@ -105,9 +104,9 @@ Exar::Result Exar::Swapchain_::getImages(Image* pImages)
 
 void Exar::Swapchain_::initImages()
 {
-	if (mImages != nullptr) return;
+	/*if (mImages != nullptr) return;
 
-	mImages = new Image[mInfo.minImageCount]();
+	mImages = new Image[mInfo.minImageCount]();*/
 }
 
 Exar::Result Exar::Swapchain_::acquireIndex(Semaphore pSemaphore, u32* pIndex) noexcept

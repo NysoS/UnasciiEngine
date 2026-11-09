@@ -7,7 +7,11 @@ namespace Exar
 {
 	struct Image_
 	{
-		size_t size;
+		size_t width;
+		size_t height;
+		size_t size = width * height;
+		PixelFormat format;
+		u8* pixels = nullptr;
 	};
 
 	class CommandPool_

@@ -273,8 +273,9 @@ Exar::Result Exar::Device_::createSwapchain(Swapchain* pSwapchain, const Swapcha
 
 	std::unique_ptr<Swapchain_> lSwapchain = std::make_unique<Swapchain_>();
 	lSwapchain->mInfo = pDesc;
-	lSwapchain->initImages();
 
+	lSwapchain->mImagesCreateInfo.reserve(pDesc.minImageCount);
+	
 	for (size_t i = 0; i < pDesc.minImageCount; ++i)
 	{
 		// create images
@@ -293,7 +294,12 @@ Exar::Result Exar::Device_::createSwapchain(Swapchain* pSwapchain, const Swapcha
 		Result lImageResult = createImage(&lImage, lImageAllocInfo, lMemImageRequired);
 		if (lImageResult != Result::SUCCESS) return lImageResult;
 
+		lImage->format = pDesc.imageFormat;
+		lImage->height = lImageInfo.height;
+		lImage->width = lImageInfo.width;
+
 		lSwapchain->mImages[i] = lImage;
+		lSwapchain->mImagesCreateInfo.push_back(lImageAllocInfo);
 	}
 
 	*pSwapchain = lSwapchain.release();
@@ -308,13 +314,18 @@ Exar::Result Exar::Device_::destroySwapchain(Swapchain* pSwapchain, const Alloca
 	std::vector<Image> mImages((*pSwapchain)->getImageCount());
 
 	Result lImagesResult = (*pSwapchain)->getImages(mImages.data());
-
-	for (const auto& lImage : mImages)
+	if (lImagesResult != Result::SUCCESS)
 	{
-		//ExarResult lImageDestroyResult = 
+		assert("Swapchain images null handle founded");
+		return lImagesResult;
 	}
 
-	delete pSwapchain;
+	for (size_t i = 0; i < mImages.size(); ++i)
+	{
+		Result lImageDestroyResult = destroyImage(&mImages[i], (*pSwapchain)->mImagesCreateInfo[i]);
+		assert(lImageDestroyResult == Result::SUCCESS && "Error when destroy swapchain images");
+		if (lImageDestroyResult != Result::SUCCESS) return lImageDestroyResult;
+	}
 
 	return Result::SUCCESS;
 }

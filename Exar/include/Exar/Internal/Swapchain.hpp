@@ -32,7 +32,8 @@ namespace Exar
 		virtual void initImages() override;
 		
 		SwapchainCreateInfo mInfo;
-		Image* mImages;
+		Image mImages[FIFO_SWAPCHAIN_IMAGES];
+		std::vector<AllocatorCreateInfo> mImagesCreateInfo;
 
 		std::array<Semaphore, MAX_FRAME_IN_FLIGHT> mWaitingImagesSemaphores{EXAR_NULL_HANDLE, EXAR_NULL_HANDLE };
 		std::mutex mAcquireMutex;
