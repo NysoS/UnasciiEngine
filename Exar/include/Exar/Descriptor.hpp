@@ -127,7 +127,7 @@ namespace Exar {
 	struct EXA_API QueueCreateInfo
 	{
 		QueueFamily family;
-		std::function<void(std::stop_token)> proc;
+		std::function<void(std::stop_token, Queue)> proc;
 	};
 
 	struct EXA_API CommandPoolCreateInfo

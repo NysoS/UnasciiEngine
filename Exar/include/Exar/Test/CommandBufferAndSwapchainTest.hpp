@@ -17,8 +17,8 @@ namespace Exar {
 		bool initMemory();
 		bool init();
 
-		void workerThreadProcess(std::stop_token pSt);
-		void displayThreadProcess(std::stop_token pSt);
+		void workerThreadProcess(std::stop_token pSt, Queue pGraphicQueue);
+		void displayThreadProcess(std::stop_token pSt, Queue pPresentQueue);
 
 		std::unique_ptr<Device_> mDevice;
 		std::vector<CommandPool> mCommandPools;

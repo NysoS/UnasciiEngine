@@ -15,10 +15,14 @@ namespace Exar
 		Queue_(Queue_&) = delete;
 		Queue_& operator=(const Queue_&) = delete;
 
-		void runProc(std::function<void(std::stop_token)> pProc);
+		void runProc(std::function<void(std::stop_token, Queue pQueue)> pProc);
+
+		void waitForWork();
+		void notifyWork();
 
 		QueueFamily family;
 	private:
+		Semaphore_ mControlWorker;
 		std::counting_semaphore<MAX_FRAME_IN_FLIGHT> mJob{0};
 		std::jthread mRunner;
 

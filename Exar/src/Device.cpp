@@ -505,7 +505,7 @@ Exar::Result Exar::Device_::createQueue(Queue* pQueue, const QueueCreateInfo& pI
 		return lResult;
 	}
 
-	Queue lQueue = reinterpret_cast<Queue>(lQueuePtr);
+	Queue lQueue = std::construct_at(reinterpret_cast<Queue>(lQueuePtr));
 	lQueue->family = pInfo.family;
 	lQueue->runProc(pInfo.proc);
 
@@ -520,6 +520,7 @@ Exar::Result Exar::Device_::destroyQueue(Queue* pQueue, const AllocatorCreateInf
 	if (!*pQueue) return Result::SUCCESS;
 
 	EXAR_HANDLE lHandle = *pQueue;
+	std::destroy_at(reinterpret_cast<Queue*>(lHandle));
 	*pQueue = nullptr;
 
 	if (!mAllocator->dealloc(lHandle, pAllocatorInfo))
