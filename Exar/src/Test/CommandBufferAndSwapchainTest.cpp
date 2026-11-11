@@ -527,14 +527,16 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 	return true;
 }
 
-void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pSt)
+void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pSt, Queue pGraphicQueue)
 {
 	while (!pSt.stop_requested())
 	{
 		if (pSt.stop_requested()) return;
 
-		assert(mGraphicQueue != EXAR_NULL_HANDLE);
-		SubmitHeader* lSumbitHeader = reinterpret_cast<SubmitHeader*>(mGraphicQueue + 1);
+		assert(pGraphicQueue != EXAR_NULL_HANDLE);
+		pGraphicQueue->waitForWork();
+
+		SubmitHeader* lSumbitHeader = reinterpret_cast<SubmitHeader*>(pGraphicQueue + 1);
 
 		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lSumbitHeader + 1);
 

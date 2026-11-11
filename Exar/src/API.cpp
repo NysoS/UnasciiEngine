@@ -113,6 +113,8 @@ namespace Exar
 			pFence->notifyOne();
 		}
 
+		pQueue->notifyWork();
+
 		return Result::SUCCESS;
 	}
 

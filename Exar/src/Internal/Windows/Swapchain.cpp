@@ -123,10 +123,11 @@ Exar::Result Exar::Swapchain_::acquireIndex(Semaphore pSemaphore, u32* pIndex) n
 
 	if (!mImageUsed[lIndex])
 	{
-		if (mWaitingImagesSemaphores[lIndex])
-			mWaitingImagesSemaphores[lIndex]->release();
+		if (pSemaphore)
+			pSemaphore->release();
 	}
 	else {
+		assert(mWaitingImagesSemaphores[lIndex] == nullptr && "semaphore en attente ecrase");
 		mWaitingImagesSemaphores[lIndex] = pSemaphore;
 	}
 	mImageUsed[lIndex] = true;
