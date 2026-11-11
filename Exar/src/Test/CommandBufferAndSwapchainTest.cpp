@@ -35,10 +35,10 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 	{
 		Result lResult;
 		// check fences free, else skip 
-		if (lResult = mDevice->waitForFence(mInFlightFences[mMainFrameIndex], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING)
+		if (lResult = mDevice->waitForFence(mInFlightFences[mMainFrameIndex], ExarBool::B_TRUE, u64max); lResult == Result::FENCE_PROCESSING)
 		{
-			++lIteration;
-			continue;
+			//++lIteration;
+			//continue;
 		}
 
 		// Peek the index of the next swapchain image (not acquired yet).
@@ -53,9 +53,9 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		// Nothing has been acquired at this point, so skipping the iteration is safe.
 		// Assumes only this thread acquires images (peeked index == acquired index).
 		if (mImagesInFlight[lNextImageIndex] != EXAR_NULL_HANDLE) {
-			if (lResult = mDevice->waitForFence(mImagesInFlight[lNextImageIndex], ExarBool::B_TRUE, 0); lResult == Result::FENCE_PROCESSING) {
-				++lIteration;
-				continue;
+			if (lResult = mDevice->waitForFence(mImagesInFlight[lNextImageIndex], ExarBool::B_TRUE, u64max); lResult == Result::FENCE_PROCESSING) {
+				//++lIteration;
+				//continue;
 			}
 		}
 		mImagesInFlight[lNextImageIndex] = mInFlightFences[mMainFrameIndex];
@@ -119,6 +119,7 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 			throw std::runtime_error("Error to reset fence\n");
 		}
 
+		EXAR_MEMORY_LOG(stderr, "INDEX %u\n", lNextImageIndex);
 		//QueueSubmit
 		if (lResult = queueSubmit(mGraphicQueue, 1, lSubmitInfo, mInFlightFences[mMainFrameIndex]); lResult != Result::SUCCESS)
 		{
@@ -546,6 +547,7 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 		std::span<const Semaphore> lSignalSemaphores(reinterpret_cast<const Semaphore*>(lQueueData), lSumbitHeader->signalSemaphoreCount); lQueueData += lSumbitHeader->signalSemaphoreCount;
 
 		if (lSumbitHeader->hasFences) lFence = reinterpret_cast<Fence>(*lQueueData);
+		if (!lFence) continue;
 
 		// acquire imageAvailableSemaphore
 		for (const auto& lWaitSemaphore : lWaitSemaphores)
@@ -553,8 +555,6 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 			if (lWaitSemaphore)
 				lWaitSemaphore->acquire();
 		}
-
-		if (!lFence) continue;
 
 		CommandPool lCommandPool = nullptr;
 

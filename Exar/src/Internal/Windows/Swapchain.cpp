@@ -7,20 +7,20 @@
 #include <Windows.h>
 
 // Buffer de test 16x16 (Damier)
-//uint32_t testBuffer[600 * 600] = {};
+uint32_t testBuffer[600 * 600] = {};
 //uint32_t testBuffer2[600 * 600] = {};
 
 Exar::Swapchain_::Swapchain_()
 	: mInfo{}
 	, mImages(EXAR_NULL_HANDLE)
 {
-	//const uint32_t CELL = 32; // taille d'une case du damier
-	//for (int y = 0; y < 600; y++) {
-	//	for (int x = 0; x < 600; x++) {
-	//		bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
-	//		testBuffer[y * 600 + x] = white ? 0xFFFFFFFF : 0xFF333333;
-	//	}
-	//}
+	const uint32_t CELL = 32; // taille d'une case du damier
+	for (int y = 0; y < 600; y++) {
+		for (int x = 0; x < 600; x++) {
+			bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
+			testBuffer[y * 600 + x] = white ? 0xFFFFFFFF : 0xFF333333;
+		}
+	}
 
 	//for (int y = 0; y < 600; y++) {
 	//	for (int x = 0; x < 600; x++) {
@@ -55,18 +55,10 @@ void Exar::Swapchain_::present(u32 pIndex)
 	bmi.bmiHeader.biCompression = BI_RGB;
 
 	void* finalBuffer = nullptr;
-	/*if (mIndex == 0)
-	{
-		finalBuffer = (void*)testBuffer;
-	}
-	else
-	{
-		finalBuffer = (void*)testBuffer2;
-	}*/
 
 	finalBuffer = mImages[pIndex]->pixels;
 
-	SetDIBitsToDevice(
+	int r = SetDIBitsToDevice(
 		hdc,
 		0, 0,
 		mInfo.extent.w, mInfo.extent.h,
@@ -140,8 +132,10 @@ Exar::Result Exar::Swapchain_::acquireIndex(Semaphore pSemaphore, u32* pIndex) n
 Exar::Result Exar::Swapchain_::releaseIndex(u32 pIndex) noexcept
 {
 	std::lock_guard<std::mutex> lLoc(mAcquireMutex);
-	assert((pIndex >= mImageUsed.size() && pIndex >= mWaitingImagesSemaphores.size()) && "index is out of range");
+	assert((pIndex < mImageUsed.size() && pIndex < mWaitingImagesSemaphores.size()) && "index is out of range");
 	if (pIndex >= mImageUsed.size() || pIndex >= mWaitingImagesSemaphores.size()) return Result::ERROR_INVALID_SIZE;
+
+	assert(mImageUsed[pIndex] && "release d'une image qui n'etait pas acquise");
 
 	if (mWaitingImagesSemaphores[pIndex])
 	{
