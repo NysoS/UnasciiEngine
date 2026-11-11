@@ -294,7 +294,7 @@ namespace Exar {
 
 	struct ClearColorImage
 	{
-		Image image;
+		Image image = nullptr;
 		ClearColorValue color;
 	};
 

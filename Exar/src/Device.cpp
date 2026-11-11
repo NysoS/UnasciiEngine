@@ -130,7 +130,7 @@ Exar::Result Exar::Device_::createImage(Image* pImage, const AllocatorCreateInfo
 	if (lResult != Result::SUCCESS) return lResult;
 
 	Image_* lImage = reinterpret_cast<Image_*>(lImagePtr);
-	lImage->size = pInfo.totalSize;
+	lImage->pixels = (u8*)(lImage + 1);
 
 	*pImage = lImage;
 
@@ -297,6 +297,7 @@ Exar::Result Exar::Device_::createSwapchain(Swapchain* pSwapchain, const Swapcha
 		lImage->format = pDesc.imageFormat;
 		lImage->height = lImageInfo.height;
 		lImage->width = lImageInfo.width;
+		lImage->size = lImageInfo.width * lImageInfo.height;
 
 		lSwapchain->mImages[i] = lImage;
 		lSwapchain->mImagesCreateInfo.push_back(lImageAllocInfo);

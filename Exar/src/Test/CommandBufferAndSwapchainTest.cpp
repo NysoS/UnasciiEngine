@@ -78,7 +78,17 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 		}
 
 		cmdTest(mCommandBuffers[mMainFrameIndex], 6 + mMainFrameIndex);
-		cmdClearColorImage(mCommandBuffers[mMainFrameIndex], mImages[lNextImageIndex], ClearColorValue{ .uint32{255,0,0,255 } });
+		
+		ClearColorValue lColor;
+		if (lNextImageIndex == 0)
+		{
+			lColor = { .uint32{255,0,0,255 } };
+		}
+		else {
+			lColor = { .uint32{0,0,255,255 } };
+		}
+
+		cmdClearColorImage(mCommandBuffers[mMainFrameIndex], mImages[lNextImageIndex], lColor);
 
 		if (lResult = endCommandBuffer(mCommandBuffers[mMainFrameIndex]); lResult != Result::SUCCESS)
 		{
@@ -597,6 +607,8 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 					lColorPacks |= lColor.uint32[1] << (1 * 8);
 					lColorPacks |= lColor.uint32[2] << (2 * 8);
 					lColorPacks |= lColor.uint32[3] << (3 * 8);
+
+					Image lImage = lCmd->value.clColorImg.image;
 
 					std::fill_n(reinterpret_cast<u32*>(lCmd->value.clColorImg.image->pixels), lCmd->value.clColorImg.image->size, lColorPacks);
 				}
