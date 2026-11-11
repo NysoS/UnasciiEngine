@@ -123,7 +123,8 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 			.pWaitSemaphores = lSignalSemaphore,
 			.swapchainCount = 1,
 			.pSwapchains = lSwapchain,
-			.pImageIndices = &lNextImageIndex
+			.pImageIndices = &lNextImageIndex,
+			.pPresentDoneSemaphore = mPresentDoneSemaphore
 		};
 
 		// queuePresent
@@ -135,11 +136,13 @@ Exar::CommandBufferAndSwapchainTest::CommandBufferAndSwapchainTest()
 
 		++lIteration;
 		mMainFrameIndex = (mMainFrameIndex + 1) % FIFO_SWAPCHAIN_IMAGES;
+		std::this_thread::sleep_for(std::chrono::seconds(2));
 	}
 }
 
 Exar::CommandBufferAndSwapchainTest::~CommandBufferAndSwapchainTest()
 {
+	mDevice->destroySemaphore(&mPresentDoneSemaphore, mPresentDoneAllocatorInfo);
 	for (size_t i = 0; i < FIFO_SWAPCHAIN_IMAGES; ++i)
 	{
 		mDevice->destroySemaphore(&mImageAvailableSemaphores[i], mImageAvailableSemaphoreAllocatorInfo[i]);
@@ -241,11 +244,11 @@ bool Exar::CommandBufferAndSwapchainTest::initMemory()
 	AreaMemoryCreateInfo lSemaphoreMemoryInfo{
 		.mode = MemoryModeFlagBits::READ | MemoryModeFlagBits::WRITE,
 		.areaType = AreaMemoryType::SEMAPHORE,
-		.pageCount = FIFO_SWAPCHAIN_IMAGES*2,
-		.size = 1024 * 1024
+		.pageCount = (FIFO_SWAPCHAIN_IMAGES*2)+1,
+		.size = 1024 * 1024 * 120
 	};
 	std::vector<PageMemoryCreateInfo> lSemaphorePagesInfo{};
-	lSemaphorePagesInfo.reserve(FIFO_SWAPCHAIN_IMAGES * 2);
+	lSemaphorePagesInfo.reserve((FIFO_SWAPCHAIN_IMAGES * 2) + 1);
 	for (size_t i = 0; i < lSemaphoreMemoryInfo.pageCount; ++i)
 	{
 		lSemaphorePagesInfo.push_back({ .size = 100 * 1024 });
@@ -459,6 +462,21 @@ bool Exar::CommandBufferAndSwapchainTest::init()
 		mRenderFinishedSemaphoreAllocatorInfo[i] = lRenderFinishedSemaphoreAllocatorCreateInfo;
 	}
 
+	// temp before refacto
+	AllocatorCreateInfo lPresentDoneSemaphore{
+		.totalSize = 100 * 1024,
+			.align = AlignMemory::ALIGN_64,
+			.areaType = AreaMemoryType::SEMAPHORE,
+			.pageIndex = 4,
+			.mode = AllocationMode::ALLOC_HEAP
+	};
+	if (mDevice->createSemaphore(&mPresentDoneSemaphore, lPresentDoneSemaphore) != Result::SUCCESS)
+	{
+		EXAR_MEMORY_LOG(stderr, "PresentDone Semaphores creation failed : Error code : %u\n", (u32)lResult);
+		return false;
+	}
+	mPresentDoneAllocatorInfo = lPresentDoneSemaphore;
+
 	// queue creation
 	std::vector<QueueFamily> lFamilies = { QueueFamily::GRAPHICS, QueueFamily::PRESENT};
 	mQueueAllocatorInfo.reserve(lFamilies.size());
@@ -598,24 +616,29 @@ void Exar::CommandBufferAndSwapchainTest::workerThreadProcess(std::stop_token pS
 	}
 }
 
-void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt)
+void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token pSt, Queue pPresentQueue)
 {
 	while (!pSt.stop_requested())
 	{
 		if (pSt.stop_requested()) return;
 
-		assert(mPresentQueue != EXAR_NULL_HANDLE);
-		PresentHeader* lPresentHeader = reinterpret_cast<PresentHeader*>(mPresentQueue + 1);
+		assert(pPresentQueue != EXAR_NULL_HANDLE);
+		pPresentQueue->waitForWork();
+
+		PresentHeader* lPresentHeader = reinterpret_cast<PresentHeader*>(pPresentQueue + 1);
 
 		EXAR_HANDLE* lQueueData = reinterpret_cast<EXAR_HANDLE*>(lPresentHeader + 1);
 
 		std::span<const Semaphore> lWaitSemaphores(reinterpret_cast<const Semaphore*>(lQueueData), lPresentHeader->waitSemaphoreCount); lQueueData += lPresentHeader->waitSemaphoreCount;
 		std::span<Swapchain> lSwapchains(reinterpret_cast<Swapchain*>(lQueueData), lPresentHeader->swapchainCount); lQueueData += lPresentHeader->swapchainCount;
-		std::span<const u32> lImageIndices(reinterpret_cast<const u32*>(lQueueData), lPresentHeader->swapchainCount);
+		std::span<const u32> lImageIndices(reinterpret_cast<const u32*>(lQueueData), lPresentHeader->swapchainCount); lQueueData += lPresentHeader->swapchainCount;
+		//temp
+		Semaphore lPresentDoneSemaphore = reinterpret_cast<Semaphore>(*lQueueData);
 
 		// acquire renderFinished
 		for (const auto& lWaitSemaphore : lWaitSemaphores)
-			lWaitSemaphore->acquire();
+			if (lWaitSemaphore)
+				lWaitSemaphore->acquire();
 
 		// signal imageAvailable
 		for (u32 i = 0; i < lPresentHeader->swapchainCount; ++i)
@@ -632,6 +655,9 @@ void Exar::CommandBufferAndSwapchainTest::displayThreadProcess(std::stop_token p
 
 			lSwapchain->releaseIndex(lImageIndices[i]);
 		}
-	}
 
+		// temp
+		if (lPresentDoneSemaphore)
+			lPresentDoneSemaphore->release();
+	}
 }

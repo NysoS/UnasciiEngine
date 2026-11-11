@@ -4,6 +4,7 @@
 #include "Exar/Internal/ResourceTypes.h"
 #include "Exar/Internal/InternalApi.hpp"
 #include "Exar/Internal/Queue.hpp"
+#include "Exar/Semaphore.hpp"
 
 #include <assert.h>
 
@@ -130,7 +131,15 @@ namespace Exar
 		EXAR_HANDLE* lDist = reinterpret_cast<EXAR_HANDLE*>(lPresentHeader + 1);
 		std::memcpy(lDist, pInfo.pWaitSemaphores, lPresentHeader->waitSemaphoreCount * sizeof(EXAR_HANDLE)); lDist += lPresentHeader->waitSemaphoreCount;
 		std::memcpy(lDist, pInfo.pSwapchains, lPresentHeader->swapchainCount * sizeof(EXAR_HANDLE)); lDist += lPresentHeader->swapchainCount;
-		std::memcpy(lDist, pInfo.pImageIndices, lPresentHeader->swapchainCount * sizeof(u32));
+		std::memcpy(lDist, pInfo.pImageIndices, lPresentHeader->swapchainCount * sizeof(u32)); lDist += lPresentHeader->swapchainCount;
+		//temp
+		*lDist = pInfo.pPresentDoneSemaphore;
+
+		pQueue->notifyWork();
+
+		if (pInfo.pPresentDoneSemaphore)
+			pInfo.pPresentDoneSemaphore->acquire();
+
 
 		return Result::SUCCESS;
 	}

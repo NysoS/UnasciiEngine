@@ -177,6 +177,8 @@ namespace Exar {
 		u32 swapchainCount;
 		Swapchain* pSwapchains;
 		u32* pImageIndices;
+		// temp
+		Semaphore pPresentDoneSemaphore;
 	};
 
 	struct FindRessourceInfo

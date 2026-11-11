@@ -2,6 +2,7 @@
 #define EXAR_QUEUE_HPP
 
 #include "Exar/MinimalCore.hpp"
+#include "Exar/Semaphore.hpp"
 
 namespace Exar
 {

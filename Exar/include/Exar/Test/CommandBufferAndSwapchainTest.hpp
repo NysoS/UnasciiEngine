@@ -40,6 +40,9 @@ namespace Exar {
 		std::vector<Semaphore> mRenderFinishedSemaphores;
 		std::vector<AllocatorCreateInfo> mRenderFinishedSemaphoreAllocatorInfo;
 
+		Semaphore mPresentDoneSemaphore; // temp, before queue refactor
+		AllocatorCreateInfo mPresentDoneAllocatorInfo;
+
 		Queue mGraphicQueue;
 		Queue mPresentQueue;
 		std::vector<AllocatorCreateInfo> mQueueAllocatorInfo;
