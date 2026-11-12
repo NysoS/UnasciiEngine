@@ -1,0 +1,42 @@
+#ifndef EXAR_BUFFER_HPP
+#define EXAR_BUFFER_HPP
+
+#include "Exar/IBuffer.hpp"
+#include "Exar/MinimalCore.hpp"
+
+namespace Exar
+{
+	class BufferView;
+	
+	class Buffer : public IBuffer 
+	{
+	public:
+		Buffer();
+		virtual ~Buffer();
+
+		Buffer(Buffer&) = delete;
+		Buffer& operator=(const Buffer&) = delete;
+
+		virtual BufferDesc getDesc() const noexcept;
+		/*virtual inline IDevice* getDevice() const noexcept override {
+			return mDevice;
+		}*/
+		
+		[[nodiscard]] virtual BufferView getView() const override;
+
+		virtual Memory getCPUAddress() const noexcept override;
+
+		virtual void setCPUAddress(Memory pData) noexcept override {
+			mData = pData;
+		}
+
+	private:
+		BufferDesc mDesc;
+		Device* mDevice; // raw ptn because not owner memory allocation
+		Memory mData;
+
+		friend class Device_;
+	};
+}
+
+#endif // !EXAR_BUFFER_HPP
