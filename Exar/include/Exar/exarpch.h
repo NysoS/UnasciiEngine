@@ -8,10 +8,12 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <limits>
 
 #include <sstream>
 #include <string>
 #include <vector>
+#include <array>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
@@ -19,5 +21,10 @@
 
 #include <thread>
 #include <chrono>
+#include <mutex>
+#include <condition_variable>
+#include <stop_token>
+#include <semaphore>
+#include <assert.h>
 
 #endif // EXARPCH_H

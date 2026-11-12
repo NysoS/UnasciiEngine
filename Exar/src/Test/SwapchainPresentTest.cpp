@@ -10,7 +10,7 @@
 #endif
 
 Exar::SwapchainPresentTest::SwapchainPresentTest()
-	: mDevice(std::make_unique<Device>())
+	: mDevice(new Device_())
 {
 	
 #ifdef WIN32
@@ -59,12 +59,12 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 	lSwapchainInfo.surface = reinterpret_cast<Surface>(hwnd);
 #endif // WIN32
 
-	Result lRes = mDevice->createSwapchain(lSwapchainInfo, &mSwapchain);
+	/*Result lRes = mDevice->createSwapchain(lSwapchainInfo, &mSwapchain);
 	if (lRes != Result::SUCCESS)
 	{
 		std::cerr << "Error when create swpachain " << (u32)lRes << std::endl;
 		return;
-	}
+	}*/
 
 	u32 lMaxTimingLoop = 120;
 	u32 lTime = 0;
@@ -72,19 +72,23 @@ Exar::SwapchainPresentTest::SwapchainPresentTest()
 	{
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 
-		mSwapchain->present();
+		mSwapchain->present(0);
 		mSwapchain->swap();
 
 		lTime++;
 	}
 
-	Result lResult = mDevice->destroySwapchain(mSwapchain);
+	/*Result lResult = mDevice->destroySwapchain(mSwapchain);
 	if (lResult == Result::SUCCESS)
 	{
 		mSwapchain = nullptr;
-	}
+	}*/
 }
 
 Exar::SwapchainPresentTest::~SwapchainPresentTest()
 {
+	if (mDevice) {
+		delete mDevice;
+		mDevice = nullptr;
+	}
 }

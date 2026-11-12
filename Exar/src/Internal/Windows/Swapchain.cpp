@@ -1,14 +1,16 @@
 #include "Exar/Internal/Swapchain.hpp"
 #include "Exar/MinimalCore.hpp"
 #include "Exar/Device.hpp"
+#include "Exar/Semaphore.hpp"
+#include "Exar/Internal/ResourceTypes.h"
 
 #include <Windows.h>
 
 // Buffer de test 16x16 (Damier)
 uint32_t testBuffer[600 * 600] = {};
-uint32_t testBuffer2[600 * 600] = {};
+//uint32_t testBuffer2[600 * 600] = {};
 
-Exar::Swapchain::Swapchain()
+Exar::Swapchain_::Swapchain_()
 	: mInfo{}
 	, mImages(EXAR_NULL_HANDLE)
 {
@@ -20,26 +22,24 @@ Exar::Swapchain::Swapchain()
 		}
 	}
 
-	for (int y = 0; y < 600; y++) {
-		for (int x = 0; x < 600; x++) {
-			bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
-			testBuffer2[y * 600 + x] = white ? 0xFFFF0000 : 0xFF0000FF;
-		}
-	}
+	//for (int y = 0; y < 600; y++) {
+	//	for (int x = 0; x < 600; x++) {
+	//		bool white = ((x / CELL) + (y / CELL)) % 2 == 0;
+	//		testBuffer2[y * 600 + x] = white ? 0xFFFF0000 : 0xFF0000FF;
+	//	}
+	//}
 }
 
-Exar::Swapchain::~Swapchain()
+Exar::Swapchain_::~Swapchain_()
 {
-	delete[] mImages;
-	mImages = nullptr;
 }
 
-Exar::Surface Exar::Swapchain::getSurfaceImageHandle()
+Exar::Surface Exar::Swapchain_::getSurfaceImageHandle()
 {
 	return mInfo.surface;
 }
 
-void Exar::Swapchain::present()
+void Exar::Swapchain_::present(u32 pIndex)
 {
 	HWND lHandle = reinterpret_cast<HWND>(mInfo.surface);
 	if (!lHandle) return;
@@ -55,16 +55,10 @@ void Exar::Swapchain::present()
 	bmi.bmiHeader.biCompression = BI_RGB;
 
 	void* finalBuffer = nullptr;
-	if (index == 0)
-	{
-		finalBuffer = (void*)testBuffer;
-	}
-	else
-	{
-		finalBuffer = (void*)testBuffer2;
-	}
 
-	SetDIBitsToDevice(
+	finalBuffer = mImages[pIndex]->pixels;
+
+	int r = SetDIBitsToDevice(
 		hdc,
 		0, 0,
 		mInfo.extent.w, mInfo.extent.h,
@@ -80,17 +74,17 @@ void Exar::Swapchain::present()
 	ReleaseDC(lHandle, hdc);
 }
 
-void Exar::Swapchain::swap() noexcept
+void Exar::Swapchain_::swap() noexcept
 {
-	index = (index + 1) % 2;
+	mIndex = (mIndex + 1) % 2;
 }
 
-Exar::u32 Exar::Swapchain::getImageCount() const noexcept
+Exar::u32 Exar::Swapchain_::getImageCount() const noexcept
 {
 	return mInfo.minImageCount;
 }
 
-Exar::Result Exar::Swapchain::getImages(Image* pImages)
+Exar::Result Exar::Swapchain_::getImages(Image* pImages)
 {
 	for (size_t i = 0; i < mInfo.minImageCount; ++i)
 	{
@@ -102,9 +96,54 @@ Exar::Result Exar::Swapchain::getImages(Image* pImages)
 	return Result::SUCCESS;
 }
 
-void Exar::Swapchain::initImages()
+void Exar::Swapchain_::initImages()
 {
-	if (mImages != nullptr) return;
+	/*if (mImages != nullptr) return;
 
-	mImages = new Image[mInfo.minImageCount]();
+	mImages = new Image[mInfo.minImageCount]();*/
+}
+
+Exar::Result Exar::Swapchain_::acquireIndex(Semaphore pSemaphore, u32* pIndex) noexcept
+{
+	std::lock_guard<std::mutex> lLoc(mAcquireMutex);
+	u32 lIndex = mIndex;
+	
+	assert((lIndex < mImageUsed.size() && lIndex < mWaitingImagesSemaphores.size()) && "index is out of range");
+	if (lIndex >= mImageUsed.size() || lIndex >= mWaitingImagesSemaphores.size()) return Result::ERROR_INVALID_SIZE;
+
+	swap();
+
+	if (!mImageUsed[lIndex])
+	{
+		if (pSemaphore)
+			pSemaphore->release();
+	}
+	else {
+		assert(mWaitingImagesSemaphores[lIndex] == nullptr && "semaphore en attente ecrase");
+		mWaitingImagesSemaphores[lIndex] = pSemaphore;
+	}
+	mImageUsed[lIndex] = true;
+
+	*pIndex = lIndex;
+
+	return Result::SUCCESS;
+}
+
+Exar::Result Exar::Swapchain_::releaseIndex(u32 pIndex) noexcept
+{
+	std::lock_guard<std::mutex> lLoc(mAcquireMutex);
+	assert((pIndex < mImageUsed.size() && pIndex < mWaitingImagesSemaphores.size()) && "index is out of range");
+	if (pIndex >= mImageUsed.size() || pIndex >= mWaitingImagesSemaphores.size()) return Result::ERROR_INVALID_SIZE;
+
+	assert(mImageUsed[pIndex] && "release d'une image qui n'etait pas acquise");
+
+	if (mWaitingImagesSemaphores[pIndex])
+	{
+		mWaitingImagesSemaphores[pIndex]->release();
+		mWaitingImagesSemaphores[pIndex] = nullptr;
+	}
+	else 
+	{
+		mImageUsed.at(pIndex) = false;
+	}
 }
